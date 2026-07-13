@@ -1,0 +1,15 @@
+id,category,status,excludeReason,serverName,serverVersion,protocol,toolCount,toolsWithFails,schemaValidPct,handshakeMs
+everything,reference,included,,mcp-servers/everything,2.0.0,2025-06-18,13,0,100,566.2
+memory,reference,included,,memory-server,0.6.3,2025-06-18,9,0,100,1627.9
+sequential-thinking,reference,included,,sequential-thinking-server,0.2.0,2025-06-18,1,0,100,2463.2
+filesystem,reference,included,,secure-filesystem-server,0.2.0,2025-06-18,14,0,100,1984.1
+github,reference,included,,github-mcp-server,0.6.2,2024-11-05,26,0,100,2590.8
+brave-search,reference,excluded,needs-credentials,,,,,,,
+slack,reference,excluded,needs-credentials,,,,,,,
+gitlab,reference,excluded,needs-credentials,,,,,,,
+google-maps,reference,excluded,needs-credentials,,,,,,,
+postgres,reference,excluded,handshake-failed,,,,,,,
+context7,community,included,,Context7,3.2.3,2025-06-18,2,0,100,2255.5
+taskmanager,community,included,,task-manager-server,2.0.0,2025-06-18,10,0,100,2006.8
+playwright,community,included,,Playwright,1.62.0-alpha-1783623505000,2025-06-18,24,0,100,4500.1
+sqlite-npx,community,included,,sqlite-manager,0.8.0,2025-06-18,5,0,100,8764.5

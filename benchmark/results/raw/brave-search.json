@@ -1,0 +1,19 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @modelcontextprotocol/server-brave-search",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": false,
+  "server": null,
+  "capabilities": null,
+  "timings": {},
+  "tools": [],
+  "resources": null,
+  "prompts": null,
+  "calls": [],
+  "warnings": [],
+  "errors": [
+    "handshake failed: server exited with code 1",
+    "server stderr: npm warn deprecated @modelcontextprotocol/server-brave-search@0.6.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.\nError: BRAVE_API_KEY environment variable is required"
+  ]
+}

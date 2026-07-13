@@ -1,0 +1,218 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @playwright/mcp",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "Playwright",
+    "version": "1.62.0-alpha-1783623505000"
+  },
+  "capabilities": {
+    "tools": {}
+  },
+  "timings": {
+    "handshakeMs": 4500.1,
+    "toolsListMs": 2
+  },
+  "tools": [
+    {
+      "name": "browser_close",
+      "description": "Close the page",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_resize",
+      "description": "Resize the browser window",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_console_messages",
+      "description": "Returns all console messages",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_handle_dialog",
+      "description": "Handle a dialog",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_evaluate",
+      "description": "Evaluate JavaScript expression on page or element",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_file_upload",
+      "description": "Upload one or multiple files",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_drop",
+      "description": "Drop files or MIME-typed data onto an element, as if dragged from outside the page. At least one of \"paths\" or \"data\" must be provided.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_find",
+      "description": "Search the accessibility snapshot of the current page for text or a regular expression. Returns matching snapshot nodes with a few lines of surrounding context (like search snippets), each shown under its path from the root of the tree, which is cheaper than capturing the whole snapshot when you only need to locate an element and its ref.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_fill_form",
+      "description": "Fill multiple form fields",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_press_key",
+      "description": "Press a key on the keyboard",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_type",
+      "description": "Type text into editable element",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_navigate",
+      "description": "Navigate to a URL",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_navigate_back",
+      "description": "Go back to the previous page in the history",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_network_requests",
+      "description": "Returns a numbered list of network requests since loading the page. Use browser_network_request with the number to get full details.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_network_request",
+      "description": "Returns full details (headers and body) of a single network request, or a single part if `part` is set. Use the number from browser_network_requests.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_run_code_unsafe",
+      "description": "Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright server process and is RCE-equivalent.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_take_screenshot",
+      "description": "Take a screenshot of the current page. You can't perform actions based on the screenshot, use browser_snapshot for actions.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_snapshot",
+      "description": "Capture accessibility snapshot of the current page, this is better than screenshot",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "browser_click",
+      "description": "Perform click on a web page",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_drag",
+      "description": "Perform drag and drop between two elements",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_hover",
+      "description": "Hover over element on page",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_select_option",
+      "description": "Select an option in a dropdown",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_tabs",
+      "description": "List, create, close, or select a browser tab.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "browser_wait_for",
+      "description": "Wait for text to appear or disappear or a specified time to pass",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    }
+  ],
+  "resources": null,
+  "prompts": null,
+  "calls": [],
+  "warnings": [],
+  "errors": [],
+  "negotiatedProtocolVersion": "2025-06-18"
+}

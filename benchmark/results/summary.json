@@ -1,0 +1,183 @@
+{
+  "tool": "mcp-probe",
+  "toolVersion": "0.1.0",
+  "clientProtocolVersion": "2025-06-18",
+  "node": "v25.6.1",
+  "candidateCount": 14,
+  "includedCount": 9,
+  "excludedCount": 5,
+  "excludeBreakdown": {
+    "needs-credentials": 4,
+    "handshake-failed": 1
+  },
+  "RQ1_conformance": {
+    "serversInitialized": 9,
+    "serversHealthy": 9,
+    "totalToolsMeasured": 104,
+    "toolsWithValidSchema": 104,
+    "toolsSchemaValidPct": 100,
+    "toolsFullyClean": 63,
+    "toolsFullyCleanPct": 60.6,
+    "serversWithAllValidSchemas": 9
+  },
+  "RQ2_drift": {
+    "deviationTypes": {
+      "warn:tool has no \"X\" annotation": 41
+    },
+    "protocolVersionsSeen": [
+      "2025-06-18",
+      "2024-11-05"
+    ],
+    "serversWithProtocolMismatch": 1,
+    "serversEmittingNonJsonStdout": 0
+  },
+  "RQ3_reliability_pilot": {
+    "handshakeMs_p50": 2255.5,
+    "handshakeMs_p95": 8764.5,
+    "handshakeMs_min": 566.2,
+    "handshakeMs_max": 8764.5,
+    "note": "Latency includes first-run npx install cost; see STUDY.md threats-to-validity. Malformed-request behavior is out of scope for this baseline run."
+  },
+  "perServer": [
+    {
+      "id": "everything",
+      "category": "reference",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 13,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 566.2
+    },
+    {
+      "id": "memory",
+      "category": "reference",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 9,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 1627.9
+    },
+    {
+      "id": "sequential-thinking",
+      "category": "reference",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 1,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2463.2
+    },
+    {
+      "id": "filesystem",
+      "category": "reference",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 14,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 1984.1
+    },
+    {
+      "id": "github",
+      "category": "reference",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 26,
+      "schemaValidPct": 100,
+      "protocol": "2024-11-05",
+      "handshakeMs": 2590.8
+    },
+    {
+      "id": "brave-search",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "needs-credentials",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "slack",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "needs-credentials",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "gitlab",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "needs-credentials",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "google-maps",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "needs-credentials",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "postgres",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "handshake-failed",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "context7",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 2,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2255.5
+    },
+    {
+      "id": "taskmanager",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 10,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2006.8
+    },
+    {
+      "id": "playwright",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 24,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 4500.1
+    },
+    {
+      "id": "sqlite-npx",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 5,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 8764.5
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @modelcontextprotocol/server-memory",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "memory-server",
+    "version": "0.6.3"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    },
+    "resources": {
+      "listChanged": true,
+      "subscribe": true
+    }
+  },
+  "timings": {
+    "handshakeMs": 1627.9,
+    "toolsListMs": 2.6,
+    "resourcesListMs": 0.3
+  },
+  "tools": [
+    {
+      "name": "create_entities",
+      "description": "Create multiple new entities in the knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "create_relations",
+      "description": "Create multiple new relations between entities in the knowledge graph. Relations should be in active voice",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "add_observations",
+      "description": "Add new observations to existing entities in the knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "delete_entities",
+      "description": "Delete multiple entities and their associated relations from the knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "delete_observations",
+      "description": "Delete specific observations from entities in the knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "delete_relations",
+      "description": "Delete multiple relations from the knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "read_graph",
+      "description": "Read the entire knowledge graph",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "search_nodes",
+      "description": "Search for nodes in the knowledge graph based on a query",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "open_nodes",
+      "description": "Open specific nodes in the knowledge graph by their names",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    }
+  ],
+  "resources": {
+    "count": 1
+  },
+  "prompts": null,
+  "calls": [],
+  "warnings": [],
+  "errors": [],
+  "negotiatedProtocolVersion": "2025-06-18"
+}

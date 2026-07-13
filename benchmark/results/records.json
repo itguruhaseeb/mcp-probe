@@ -1,0 +1,355 @@
+[
+  {
+    "id": "everything",
+    "package": "@modelcontextprotocol/server-everything",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-everything",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 11304,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "mcp-servers/everything",
+      "serverVersion": "2.0.0",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools",
+        "prompts",
+        "resources",
+        "logging",
+        "tasks",
+        "completions"
+      ],
+      "toolCount": 13,
+      "toolsClean": 13,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 566.2,
+      "toolsListMs": 2.1
+    }
+  },
+  {
+    "id": "memory",
+    "package": "@modelcontextprotocol/server-memory",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-memory",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 1723,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "memory-server",
+      "serverVersion": "0.6.3",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools",
+        "resources"
+      ],
+      "toolCount": 9,
+      "toolsClean": 9,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 1627.9,
+      "toolsListMs": 2.6
+    }
+  },
+  {
+    "id": "sequential-thinking",
+    "package": "@modelcontextprotocol/server-sequential-thinking",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-sequential-thinking",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2517,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "sequential-thinking-server",
+      "serverVersion": "0.2.0",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 1,
+      "toolsClean": 1,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 2463.2,
+      "toolsListMs": 2.1
+    }
+  },
+  {
+    "id": "filesystem",
+    "package": "@modelcontextprotocol/server-filesystem",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-filesystem __SANDBOX__",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2039,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "secure-filesystem-server",
+      "serverVersion": "0.2.0",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 14,
+      "toolsClean": 14,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 1984.1,
+      "toolsListMs": 2.6
+    }
+  },
+  {
+    "id": "github",
+    "package": "@modelcontextprotocol/server-github",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-github",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2647,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "github-mcp-server",
+      "serverVersion": "0.6.2",
+      "negotiatedProtocol": "2024-11-05",
+      "protocolMismatch": true,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 26,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 26,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 26
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 2590.8,
+      "toolsListMs": 1.7
+    }
+  },
+  {
+    "id": "brave-search",
+    "package": "@modelcontextprotocol/server-brave-search",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-brave-search",
+    "status": "excluded",
+    "excludeReason": "needs-credentials",
+    "wallMs": 1225,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "slack",
+    "package": "@modelcontextprotocol/server-slack",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-slack",
+    "status": "excluded",
+    "excludeReason": "needs-credentials",
+    "wallMs": 1155,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "gitlab",
+    "package": "@modelcontextprotocol/server-gitlab",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-gitlab",
+    "status": "excluded",
+    "excludeReason": "needs-credentials",
+    "wallMs": 2150,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "google-maps",
+    "package": "@modelcontextprotocol/server-google-maps",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-google-maps",
+    "status": "excluded",
+    "excludeReason": "needs-credentials",
+    "wallMs": 1537,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "postgres",
+    "package": "@modelcontextprotocol/server-postgres",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-postgres",
+    "status": "excluded",
+    "excludeReason": "handshake-failed",
+    "wallMs": 2053,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "context7",
+    "package": "@upstash/context7-mcp",
+    "category": "community",
+    "launch": "npx -y @upstash/context7-mcp",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2311,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "Context7",
+      "serverVersion": "3.2.3",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools",
+        "prompts",
+        "resources"
+      ],
+      "toolCount": 2,
+      "toolsClean": 2,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 2255.5,
+      "toolsListMs": 1.1
+    }
+  },
+  {
+    "id": "taskmanager",
+    "package": "@kazuph/mcp-taskmanager",
+    "category": "community",
+    "launch": "npx -y @kazuph/mcp-taskmanager",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2060,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "task-manager-server",
+      "serverVersion": "2.0.0",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 10,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 10,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 10
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 2006.8,
+      "toolsListMs": 1.7
+    }
+  },
+  {
+    "id": "playwright",
+    "package": "@playwright/mcp",
+    "category": "community",
+    "launch": "npx -y @playwright/mcp",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 4554,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "Playwright",
+      "serverVersion": "1.62.0-alpha-1783623505000",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 24,
+      "toolsClean": 24,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 4500.1,
+      "toolsListMs": 2
+    }
+  },
+  {
+    "id": "sqlite-npx",
+    "package": "mcp-server-sqlite-npx",
+    "category": "community",
+    "launch": "npx -y mcp-server-sqlite-npx __SANDBOX__/study.db",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 8821,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "sqlite-manager",
+      "serverVersion": "0.8.0",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 5,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 5,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 5
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 8764.5,
+      "toolsListMs": 2.4
+    }
+  }
+]

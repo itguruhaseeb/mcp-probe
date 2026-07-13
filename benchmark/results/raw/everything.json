@@ -1,0 +1,239 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @modelcontextprotocol/server-everything",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "mcp-servers/everything",
+    "title": "Everything Reference Server",
+    "version": "2.0.0"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    },
+    "prompts": {
+      "listChanged": true
+    },
+    "resources": {
+      "subscribe": true,
+      "listChanged": true
+    },
+    "logging": {},
+    "tasks": {
+      "list": {},
+      "cancel": {},
+      "requests": {
+        "tools": {
+          "call": {}
+        }
+      }
+    },
+    "completions": {}
+  },
+  "timings": {
+    "handshakeMs": 566.2,
+    "toolsListMs": 2.1,
+    "resourcesListMs": 0.3,
+    "promptsListMs": 0.3
+  },
+  "tools": [
+    {
+      "name": "echo",
+      "description": "Echoes back the input string",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "get-annotated-message",
+      "description": "Demonstrates how annotations can be used to provide metadata about content.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "get-env",
+      "description": "Returns all environment variables, helpful for debugging MCP server configuration",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "get-resource-links",
+      "description": "Returns up to ten resource links that reference different types of resources",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "get-resource-reference",
+      "description": "Returns a resource reference that can be used by MCP clients",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "get-structured-content",
+      "description": "Returns structured content along with an output schema for client data validation",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "get-sum",
+      "description": "Returns the sum of two numbers",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    },
+    {
+      "name": "get-tiny-image",
+      "description": "Returns a tiny MCP logo image.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "gzip-file-as-resource",
+      "description": "Compresses a single file using gzip compression. Depending upon the selected output type, returns either the compressed data as a gzipped resource or a resource link, allowing it to be downloaded in a subsequent request during the current session.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "toggle-simulated-logging",
+      "description": "Toggles simulated, random-leveled logging on or off.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "toggle-subscriber-updates",
+      "description": "Toggles simulated resource subscription updates on or off.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "trigger-long-running-operation",
+      "description": "Demonstrates a long running operation with progress updates.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": true
+    },
+    {
+      "name": "simulate-research-query",
+      "description": "Simulates a deep research operation that gathers, analyzes, and synthesizes information. Demonstrates MCP task-based operations with progress through multiple stages. If 'ambiguous' is true and client supports elicitation, sends an elicitation request for clarification.",
+      "issues": [],
+      "fails": 0,
+      "warns": 0,
+      "safeToCall": false
+    }
+  ],
+  "resources": {
+    "count": 7
+  },
+  "prompts": {
+    "count": 4
+  },
+  "calls": [
+    {
+      "name": "echo",
+      "skipped": true,
+      "reason": "has required parameters"
+    },
+    {
+      "name": "get-annotated-message",
+      "skipped": true,
+      "reason": "has required parameters"
+    },
+    {
+      "name": "get-env",
+      "skipped": false,
+      "ok": true,
+      "ms": 0.7,
+      "isError": false
+    },
+    {
+      "name": "get-resource-links",
+      "skipped": false,
+      "ok": true,
+      "ms": 9.2,
+      "isError": false
+    },
+    {
+      "name": "get-resource-reference",
+      "skipped": false,
+      "ok": true,
+      "ms": 0.4,
+      "isError": false
+    },
+    {
+      "name": "get-structured-content",
+      "skipped": true,
+      "reason": "has required parameters"
+    },
+    {
+      "name": "get-sum",
+      "skipped": true,
+      "reason": "has required parameters"
+    },
+    {
+      "name": "get-tiny-image",
+      "skipped": false,
+      "ok": true,
+      "ms": 0.3,
+      "isError": false
+    },
+    {
+      "name": "gzip-file-as-resource",
+      "skipped": false,
+      "ok": true,
+      "ms": 160.1,
+      "isError": false
+    },
+    {
+      "name": "toggle-simulated-logging",
+      "skipped": false,
+      "ok": true,
+      "ms": 0.7,
+      "isError": false
+    },
+    {
+      "name": "toggle-subscriber-updates",
+      "skipped": false,
+      "ok": true,
+      "ms": 0.2,
+      "isError": false
+    },
+    {
+      "name": "trigger-long-running-operation",
+      "skipped": false,
+      "ok": true,
+      "ms": 10009,
+      "isError": false
+    },
+    {
+      "name": "simulate-research-query",
+      "skipped": true,
+      "reason": "has required parameters"
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "negotiatedProtocolVersion": "2025-06-18"
+}

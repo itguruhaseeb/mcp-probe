@@ -1,0 +1,18 @@
+{
+  "study": "mcp-probe conformance & reliability — v0 baseline pilot",
+  "runDate": "2026-07-13",
+  "runner": "benchmark/run-study.mjs",
+  "sampleFrame": "benchmark/servers.json",
+  "tool": { "name": "mcp-probe", "version": "0.1.0" },
+  "clientProtocolVersion": "2025-06-18",
+  "runtime": { "node": "v25.6.1", "launch": "npx -y <package> [args]", "credentialsSupplied": false },
+  "candidateCount": 14,
+  "includedCount": 9,
+  "excludedCount": 5,
+  "notes": [
+    "Pilot run to establish a reproducible pipeline; absolute percentages will shift as the frame grows.",
+    "Round-trip tool calls disabled for the ecosystem sweep (no side-effecting tools invoked); only the 'everything' reference test server is round-trip-safe.",
+    "Handshake latency includes first-run npx install cost and is not a clean latency measurement (see STUDY.md threats-to-validity).",
+    "Reference-set packages should be pinned to a commit SHA before a citable release; this pilot used the latest npm-published versions on the run date (recorded per-server in summary.csv)."
+  ]
+}

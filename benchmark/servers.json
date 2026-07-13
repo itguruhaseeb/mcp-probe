@@ -1,0 +1,19 @@
+{
+  "_comment": "Sample frame for the mcp-probe conformance study. Each entry is a candidate public MCP server launchable over stdio. The harness (run-study.mjs) attempts every entry and records the outcome; inclusion is decided by the actual run, not by this file. 'expectCreds' is a hint only and is verified empirically. Reference-set packages are the official @modelcontextprotocol/* servers; community entries are public npm-published servers. No credentials are ever supplied, per benchmark/STUDY.md ethics.",
+  "servers": [
+    { "id": "everything",           "category": "reference", "package": "@modelcontextprotocol/server-everything",         "args": [],            "expectCreds": false, "roundTripSafe": true },
+    { "id": "memory",               "category": "reference", "package": "@modelcontextprotocol/server-memory",             "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "sequential-thinking",  "category": "reference", "package": "@modelcontextprotocol/server-sequential-thinking","args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "filesystem",           "category": "reference", "package": "@modelcontextprotocol/server-filesystem",         "args": ["__SANDBOX__"],"expectCreds": false, "roundTripSafe": false },
+    { "id": "github",               "category": "reference", "package": "@modelcontextprotocol/server-github",             "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "brave-search",         "category": "reference", "package": "@modelcontextprotocol/server-brave-search",       "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "slack",                "category": "reference", "package": "@modelcontextprotocol/server-slack",              "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "gitlab",               "category": "reference", "package": "@modelcontextprotocol/server-gitlab",             "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "google-maps",          "category": "reference", "package": "@modelcontextprotocol/server-google-maps",        "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "postgres",             "category": "reference", "package": "@modelcontextprotocol/server-postgres",           "args": [],            "expectCreds": true,  "roundTripSafe": false },
+    { "id": "context7",             "category": "community", "package": "@upstash/context7-mcp",                           "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "taskmanager",          "category": "community", "package": "@kazuph/mcp-taskmanager",                         "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "playwright",           "category": "community", "package": "@playwright/mcp",                                 "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "sqlite-npx",           "category": "community", "package": "mcp-server-sqlite-npx",                           "args": ["__SANDBOX__/study.db"], "expectCreds": false, "roundTripSafe": false }
+  ]
+}
