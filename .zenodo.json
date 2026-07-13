@@ -1,0 +1,22 @@
+{
+  "title": "mcp-probe: a conformance and reliability checker for Model Context Protocol servers",
+  "description": "mcp-probe connects to any Model Context Protocol (MCP) server over stdio, performs the initialize handshake, enumerates advertised tools, validates each tool's JSON Schema against the MCP specification, measures latency, and exercises safe round-trips. It doubles as a reproducible conformance benchmark for empirical studies of the MCP server ecosystem.",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "keywords": [
+    "Model Context Protocol",
+    "MCP",
+    "conformance testing",
+    "reliability",
+    "large language models",
+    "agent tooling",
+    "benchmark"
+  ],
+  "creators": [
+    {
+      "name": "Mohammed Afsar, Haseeb"
+    }
+  ],
+  "_todo_owner": "Add \"orcid\": \"0000-0000-0000-0000\" to the creator once registered at https://orcid.org"
+}

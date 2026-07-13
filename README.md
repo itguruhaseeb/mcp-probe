@@ -157,6 +157,15 @@ node --test                                  # run the linter test suite
 node bin/mcp-probe.js -- node examples/echo-server.js
 ```
 
+## Citing mcp-probe
+
+If you use mcp-probe in academic work, please cite it. Machine-readable metadata
+lives in [`CITATION.cff`](./CITATION.cff) (GitHub renders a "Cite this repository"
+button from it). A tool paper is drafted under [`paper/`](./paper/paper.md), and a
+reproducible conformance-study protocol lives in
+[`benchmark/STUDY.md`](./benchmark/STUDY.md). A versioned DOI is minted per release
+via Zenodo; the DOI will be added here once the first release is archived.
+
 ## License
 
 MIT, Haseeb Mohammed Afsar. See [LICENSE](./LICENSE).

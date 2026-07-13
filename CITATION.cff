@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use mcp-probe in your research, please cite it as below."
+title: "mcp-probe: a conformance and reliability checker for Model Context Protocol servers"
+abstract: >-
+  mcp-probe is a dependency-light command-line tool that connects to any Model
+  Context Protocol (MCP) server over stdio, performs the initialize handshake,
+  enumerates advertised tools, validates each tool's JSON Schema against the MCP
+  specification, measures response latency, and exercises safe round-trips. It is
+  designed both as a developer diagnostic and as a reproducible conformance
+  benchmark for empirical studies of the MCP server ecosystem.
+type: software
+authors:
+  - given-names: Haseeb
+    family-names: "Mohammed Afsar"
+    # TODO(owner): add your ORCID iD once registered at https://orcid.org
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    alias: itguruhaseeb
+repository-code: "https://github.com/itguruhaseeb/mcp-probe"
+url: "https://github.com/itguruhaseeb/mcp-probe"
+license: MIT
+version: 0.1.0
+keywords:
+  - Model Context Protocol
+  - MCP
+  - conformance testing
+  - reliability
+  - large language models
+  - agent tooling
+  - benchmark
+# TODO(owner): after the first GitHub release is archived on Zenodo, add:
+# doi: "10.5281/zenodo.XXXXXXX"
+# date-released: "YYYY-MM-DD"
