@@ -1,0 +1,43 @@
+{
+  "name": "mcp-doctor",
+  "version": "0.1.0",
+  "description": "Lint and health-check any Model Context Protocol (MCP) server over stdio. Handshake, tools/list, JSON Schema validation, latency, and safe round-trips.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cli",
+    "linter",
+    "ai",
+    "llm",
+    "diagnostics"
+  ],
+  "author": "Haseeb Mohammed Afsar",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "mcp-doctor": "bin/mcp-doctor.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itguruhaseeb/mcp-doctor.git"
+  },
+  "homepage": "https://github.com/itguruhaseeb/mcp-doctor#readme",
+  "bugs": {
+    "url": "https://github.com/itguruhaseeb/mcp-doctor/issues"
+  },
+  "files": [
+    "bin",
+    "src",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "start": "node bin/mcp-doctor.js"
+  }
+}
