@@ -8,7 +8,7 @@ Lint and health-check any [Model Context Protocol](https://modelcontextprotocol.
 (MCP) server, over stdio, in one command.
 
 ```
-npx mcp-probe -- node ./my-server.js
+npx @hafsar/mcp-probe -- node ./my-server.js
 ```
 
 ## Why this exists
@@ -31,10 +31,10 @@ No install required. Point it at the command that launches your server, after a
 `--` separator:
 
 ```bash
-npx mcp-probe -- node ./server.js
-npx mcp-probe -- python server.py
-npx mcp-probe --call -- node ./server.js
-npx mcp-probe --json -- npx -y @modelcontextprotocol/server-filesystem /tmp
+npx @hafsar/mcp-probe -- node ./server.js
+npx @hafsar/mcp-probe -- python server.py
+npx @hafsar/mcp-probe --call -- node ./server.js
+npx @hafsar/mcp-probe --json -- npx -y @modelcontextprotocol/server-filesystem /tmp
 ```
 
 Everything after `--` is treated as the server launch command. Requires Node 18
@@ -137,7 +137,7 @@ from, suitable for CI. The process exits non-zero on any hard failure (handshake
 failure or an invalid tool schema), so you can gate a build on it:
 
 ```bash
-npx mcp-probe --json -- node ./server.js || echo "MCP server is unhealthy"
+npx @hafsar/mcp-probe --json -- node ./server.js || echo "MCP server is unhealthy"
 ```
 
 ## Roadmap

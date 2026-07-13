@@ -1,6 +1,9 @@
 {
-  "name": "mcp-probe",
+  "name": "@hafsar/mcp-probe",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Lint and health-check any Model Context Protocol (MCP) server over stdio. Handshake, tools/list, JSON Schema validation, latency, and safe round-trips.",
   "keywords": [
     "mcp",
