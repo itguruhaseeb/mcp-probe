@@ -12,8 +12,7 @@ type: software
 authors:
   - given-names: Haseeb
     family-names: "Mohammed Afsar"
-    # TODO(owner): add your ORCID iD once registered at https://orcid.org
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    orcid: "https://orcid.org/0009-0000-4038-1272"
     alias: itguruhaseeb
 repository-code: "https://github.com/itguruhaseeb/mcp-probe"
 url: "https://github.com/itguruhaseeb/mcp-probe"

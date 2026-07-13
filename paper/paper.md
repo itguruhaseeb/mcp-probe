@@ -10,7 +10,7 @@ tags:
   - JSON Schema
 authors:
   - name: Haseeb Mohammed Afsar
-    orcid: 0000-0000-0000-0000  # TODO(owner): replace with real ORCID
+    orcid: 0009-0000-4038-1272
     affiliation: 1
 affiliations:
   - name: Independent researcher
