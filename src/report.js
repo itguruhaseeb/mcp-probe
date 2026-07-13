@@ -28,7 +28,7 @@ async function timed(fn) {
  */
 export async function runDiagnostics({ command, args, timeout, call }) {
   const result = {
-    tool: 'mcp-doctor',
+    tool: 'mcp-probe',
     version: '0.1.0',
     target: [command, ...args].join(' '),
     clientProtocolVersion: PROTOCOL_VERSION,
@@ -186,7 +186,7 @@ export function renderHuman(r, out = process.stdout) {
   const p = (s = '') => lines.push(s);
 
   p();
-  p(color.bold(`mcp-doctor ${color.dim('v' + r.version)}`));
+  p(color.bold(`mcp-probe ${color.dim('v' + r.version)}`));
   p(color.gray(`target: ${r.target}`));
   p();
 

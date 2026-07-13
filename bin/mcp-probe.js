@@ -1,24 +1,24 @@
 #!/usr/bin/env node
-// mcp-doctor: lint and health-check an MCP (Model Context Protocol) server.
+// mcp-probe: lint and health-check an MCP (Model Context Protocol) server.
 //
 // Usage:
-//   npx mcp-doctor -- <command...>
-//   npx mcp-doctor -- node ./my-server.js
-//   npx mcp-doctor --call --json -- python server.py
+//   npx mcp-probe -- <command...>
+//   npx mcp-probe -- node ./my-server.js
+//   npx mcp-probe --call --json -- python server.py
 
 import { runDiagnostics, renderHuman } from '../src/report.js';
 import { color } from '../src/color.js';
 
-const HELP = `mcp-doctor  lint and health-check any MCP server over stdio
+const HELP = `mcp-probe  lint and health-check any MCP server over stdio
 
 Usage
-  mcp-doctor [options] -- <command...>
+  mcp-probe [options] -- <command...>
 
 Examples
-  mcp-doctor -- node ./server.js
-  mcp-doctor -- python server.py
-  mcp-doctor --call -- node examples/echo-server.js
-  mcp-doctor --json -- node examples/echo-server.js
+  mcp-probe -- node ./server.js
+  mcp-probe -- python server.py
+  mcp-probe --call -- node examples/echo-server.js
+  mcp-probe --json -- node examples/echo-server.js
 
 Options
   --call            attempt a safe round-trip on tools with no required params

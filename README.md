@@ -1,10 +1,14 @@
-# mcp-doctor
+# mcp-probe
+
+[![CI](https://github.com/itguruhaseeb/mcp-probe/actions/workflows/ci.yml/badge.svg)](https://github.com/itguruhaseeb/mcp-probe/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
 
 Lint and health-check any [Model Context Protocol](https://modelcontextprotocol.io)
 (MCP) server, over stdio, in one command.
 
 ```
-npx mcp-doctor -- node ./my-server.js
+npx mcp-probe -- node ./my-server.js
 ```
 
 ## Why this exists
@@ -12,7 +16,7 @@ npx mcp-doctor -- node ./my-server.js
 MCP is spreading fast, but the tooling around it is still immature. Most servers
 are hand-written, their tool `inputSchema` definitions drift out of spec, and the
 first time anyone notices is when an LLM constructs a malformed tool call in
-production. `mcp-doctor` gives you a fast, dependency-light way to point at a
+production. `mcp-probe` gives you a fast, dependency-light way to point at a
 server, run the handshake, and get a straight answer: does it initialize, are its
 tools well-formed, and how fast does it respond. Think of it as `eslint` plus a
 smoke test for MCP servers.
@@ -27,10 +31,10 @@ No install required. Point it at the command that launches your server, after a
 `--` separator:
 
 ```bash
-npx mcp-doctor -- node ./server.js
-npx mcp-doctor -- python server.py
-npx mcp-doctor --call -- node ./server.js
-npx mcp-doctor --json -- npx -y @modelcontextprotocol/server-filesystem /tmp
+npx mcp-probe -- node ./server.js
+npx mcp-probe -- python server.py
+npx mcp-probe --call -- node ./server.js
+npx mcp-probe --json -- npx -y @modelcontextprotocol/server-filesystem /tmp
 ```
 
 Everything after `--` is treated as the server launch command. Requires Node 18
@@ -41,11 +45,11 @@ or newer.
 Run against the bundled example server:
 
 ```bash
-node bin/mcp-doctor.js -- node examples/echo-server.js
+node bin/mcp-probe.js -- node examples/echo-server.js
 ```
 
 ```
-mcp-doctor v0.1.0
+mcp-probe v0.1.0
 target: node examples/echo-server.js
 
 Handshake
@@ -83,7 +87,7 @@ Summary: unhealthy (2 tools, 1 error, 4 warnings)
 
 **Handshake**
 
-- Performs `initialize` with `clientInfo` of `mcp-doctor` and sends
+- Performs `initialize` with `clientInfo` of `mcp-probe` and sends
   `notifications/initialized`.
 - Reports the server name, version, negotiated protocol version, and declared
   capabilities.
@@ -114,7 +118,7 @@ For every tool, it lints the `inputSchema` as a JSON Schema:
 
 - For each tool that has no required parameters, it performs a real `tools/call`
   with empty arguments and reports whether the server returns cleanly. Tools with
-  required parameters are skipped; `mcp-doctor` never fabricates argument values,
+  required parameters are skipped; `mcp-probe` never fabricates argument values,
   so it will not accidentally trigger a destructive operation. Round-trips are
   off by default (list and lint only).
 
@@ -133,7 +137,7 @@ from, suitable for CI. The process exits non-zero on any hard failure (handshake
 failure or an invalid tool schema), so you can gate a build on it:
 
 ```bash
-npx mcp-doctor --json -- node ./server.js || echo "MCP server is unhealthy"
+npx mcp-probe --json -- node ./server.js || echo "MCP server is unhealthy"
 ```
 
 ## Roadmap
@@ -150,7 +154,7 @@ npx mcp-doctor --json -- node ./server.js || echo "MCP server is unhealthy"
 
 ```bash
 node --test                                  # run the linter test suite
-node bin/mcp-doctor.js -- node examples/echo-server.js
+node bin/mcp-probe.js -- node examples/echo-server.js
 ```
 
 ## License

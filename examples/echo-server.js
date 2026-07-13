@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// A minimal, valid stdio MCP server used to exercise mcp-doctor end to end.
+// A minimal, valid stdio MCP server used to exercise mcp-probe end to end.
 // It speaks newline-delimited JSON-RPC 2.0 and exposes two trivial tools:
 //   echo(text) -> returns the same text
 //   add(a, b)  -> returns a + b

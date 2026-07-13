@@ -4,13 +4,13 @@
 // MCP stdio transport frames messages as newline-delimited JSON: each JSON-RPC
 // message is a single line terminated by '\n', with no embedded newlines. We
 // implement exactly that here rather than pulling in @modelcontextprotocol/sdk,
-// which keeps mcp-doctor dependency-light and demonstrates the wire protocol.
+// which keeps mcp-probe dependency-light and demonstrates the wire protocol.
 // (Swapping in the official SDK's StdioClientTransport is a reasonable future
 // option once we want richer transport support such as HTTP/SSE.)
 
 import { spawn } from 'node:child_process';
 
-// The protocol version mcp-doctor advertises during initialize. Servers may
+// The protocol version mcp-probe advertises during initialize. Servers may
 // negotiate a different one back; we surface whatever they return.
 export const PROTOCOL_VERSION = '2025-06-18';
 
@@ -163,7 +163,7 @@ export class McpClient {
     const result = await this.request('initialize', {
       protocolVersion: PROTOCOL_VERSION,
       capabilities: {},
-      clientInfo: { name: 'mcp-doctor', version: '0.1.0' },
+      clientInfo: { name: 'mcp-probe', version: '0.1.0' },
     });
     // Per spec the client confirms readiness before making other calls.
     this.notify('notifications/initialized');

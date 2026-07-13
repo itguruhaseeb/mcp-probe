@@ -1,5 +1,5 @@
 {
-  "name": "mcp-doctor",
+  "name": "mcp-probe",
   "version": "0.1.0",
   "description": "Lint and health-check any Model Context Protocol (MCP) server over stdio. Handshake, tools/list, JSON Schema validation, latency, and safe round-trips.",
   "keywords": [
@@ -18,15 +18,15 @@
     "node": ">=18"
   },
   "bin": {
-    "mcp-doctor": "bin/mcp-doctor.js"
+    "mcp-probe": "bin/mcp-probe.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/itguruhaseeb/mcp-doctor.git"
+    "url": "https://github.com/itguruhaseeb/mcp-probe.git"
   },
-  "homepage": "https://github.com/itguruhaseeb/mcp-doctor#readme",
+  "homepage": "https://github.com/itguruhaseeb/mcp-probe#readme",
   "bugs": {
-    "url": "https://github.com/itguruhaseeb/mcp-doctor/issues"
+    "url": "https://github.com/itguruhaseeb/mcp-probe/issues"
   },
   "files": [
     "bin",
@@ -38,6 +38,6 @@
   ],
   "scripts": {
     "test": "node --test",
-    "start": "node bin/mcp-doctor.js"
+    "start": "node bin/mcp-probe.js"
   }
 }
