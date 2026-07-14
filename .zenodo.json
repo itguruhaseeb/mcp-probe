@@ -18,5 +18,12 @@
       "name": "Mohammed Afsar, Haseeb",
       "orcid": "0009-0000-4038-1272"
     }
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21347997",
+      "relation": "isVersionOf",
+      "scheme": "doi"
+    }
   ]
 }

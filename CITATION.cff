@@ -18,6 +18,15 @@ repository-code: "https://github.com/itguruhaseeb/mcp-probe"
 url: "https://github.com/itguruhaseeb/mcp-probe"
 license: MIT
 version: 0.1.0
+doi: "10.5281/zenodo.21347997"
+date-released: "2026-07-13"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21347997"
+    description: "Concept DOI (always resolves to the latest version)"
+  - type: doi
+    value: "10.5281/zenodo.21347998"
+    description: "DOI for version 0.1.0"
 keywords:
   - Model Context Protocol
   - MCP
@@ -26,6 +35,3 @@ keywords:
   - large language models
   - agent tooling
   - benchmark
-# TODO(owner): after the first GitHub release is archived on Zenodo, add:
-# doi: "10.5281/zenodo.XXXXXXX"
-# date-released: "YYYY-MM-DD"
