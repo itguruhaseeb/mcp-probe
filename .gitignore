@@ -19,3 +19,7 @@ npm-debug.log*
 coverage/
 dist/
 *.tgz
+
+# Census raw frame (8MB+, regenerable via `node benchmark/harvest.mjs`;
+# the versioned copy lives in the Zenodo dataset release, not git).
+benchmark/corpus.json

@@ -185,6 +185,17 @@ a "Cite this repository" button from it). A tool paper is drafted under
 [`paper/`](./paper/paper.md), and a reproducible conformance-study protocol lives in
 [`benchmark/STUDY.md`](./benchmark/STUDY.md).
 
+### Ecosystem census
+
+`benchmark/harvest.mjs` sweeps the entire official MCP registry and measures the
+published population without executing any server code. The latest snapshot
+([`benchmark/results/CENSUS.md`](./benchmark/results/CENSUS.md)) covers **16,548
+unique servers**: ~50% ship as installable packages and ~43% are hosted remotes;
+npm (36%) and PyPI (16%) dominate the package ecosystems; and while most servers
+track the current schema revision, a measurable tail still pins older ones. The
+npm/stdio, credential-free subset it emits is the sampling frame for the behavioral
+conformance probe. Regenerate with `node benchmark/harvest.mjs`.
+
 ## License
 
 MIT, Haseeb Mohammed Afsar. See [LICENSE](./LICENSE).
