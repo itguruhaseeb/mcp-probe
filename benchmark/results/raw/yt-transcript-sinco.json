@@ -1,0 +1,94 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @sinco-lab/mcp-youtube-transcript",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "mcp-youtube-transcript",
+    "version": "0.0.12",
+    "description": "A server built on the Model Context Protocol (MCP) that enables direct downloading of YouTube video transcripts, supporting AI and video analysis workflows."
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": true
+    }
+  },
+  "timings": {
+    "handshakeMs": 2200.7,
+    "toolsListMs": 2
+  },
+  "tools": [
+    {
+      "name": "get_transcripts",
+      "description": "Extract and process transcripts from a YouTube video.\n\n**Parameters:**\n- `url` (string, required): YouTube video URL or ID.\n- `lang` (string, optional): Language code for transcripts (e.g. 'en', 'uk', 'ja', 'ru', 'zh'). If omitted, the best available caption track is used.\n- `enableParagraphs` (boolean, optional, default false): Enable automatic paragraph breaks.\n\n**IMPORTANT:** If the user does *not* specify a language *code*, **DO NOT** include the `lang` parameter in the tool call. Do not guess the language or use parts of the user query as the language code.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    },
+    {
+      "name": "get_transcript",
+      "description": "Alias of `get_transcripts` for compatibility with other YouTube transcript MCP servers. Extract and process transcripts from a YouTube video.\n\n**Parameters:**\n- `url` (string, required): YouTube video URL or ID.\n- `lang` (string, optional): Language code for transcripts. If omitted, the best available caption track is used.\n- `enableParagraphs` (boolean, optional, default false): Enable automatic paragraph breaks.\n\n**IMPORTANT:** If the user does *not* specify a language *code*, **DO NOT** include the `lang` parameter in the tool call.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    },
+    {
+      "name": "get_timed_transcript",
+      "description": "Extract a timestamped transcript from a YouTube video. Use this when the user needs quotes, chapter-like notes, or time-coded references.\n\n**Parameters:**\n- `url` (string, required): YouTube video URL or ID.\n- `lang` (string, optional): Language code for transcripts. If omitted, the best available caption track is used.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    },
+    {
+      "name": "get_video_info",
+      "description": "Fetch basic YouTube video metadata and available transcript languages without returning the full transcript.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    },
+    {
+      "name": "get_available_languages",
+      "description": "List available transcript languages for a YouTube video. Use this before retrying with a specific language code.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    }
+  ],
+  "resources": null,
+  "prompts": null,
+  "calls": [],
+  "warnings": [],
+  "errors": [],
+  "negotiatedProtocolVersion": "2025-06-18"
+}

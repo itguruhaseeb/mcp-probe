@@ -33,9 +33,9 @@
     "completions": {}
   },
   "timings": {
-    "handshakeMs": 566.2,
-    "toolsListMs": 2.1,
-    "resourcesListMs": 0.3,
+    "handshakeMs": 1009.9,
+    "toolsListMs": 2,
+    "resourcesListMs": 0.2,
     "promptsListMs": 0.3
   },
   "tools": [
@@ -172,14 +172,14 @@
       "name": "get-resource-links",
       "skipped": false,
       "ok": true,
-      "ms": 9.2,
+      "ms": 8.8,
       "isError": false
     },
     {
       "name": "get-resource-reference",
       "skipped": false,
       "ok": true,
-      "ms": 0.4,
+      "ms": 0.5,
       "isError": false
     },
     {
@@ -203,28 +203,28 @@
       "name": "gzip-file-as-resource",
       "skipped": false,
       "ok": true,
-      "ms": 160.1,
+      "ms": 266.4,
       "isError": false
     },
     {
       "name": "toggle-simulated-logging",
       "skipped": false,
       "ok": true,
-      "ms": 0.7,
+      "ms": 1.3,
       "isError": false
     },
     {
       "name": "toggle-subscriber-updates",
       "skipped": false,
       "ok": true,
-      "ms": 0.2,
+      "ms": 0.5,
       "isError": false
     },
     {
       "name": "trigger-long-running-operation",
       "skipped": false,
       "ok": true,
-      "ms": 10009,
+      "ms": 10008.3,
       "isError": false
     },
     {

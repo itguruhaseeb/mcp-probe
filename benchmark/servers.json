@@ -14,6 +14,16 @@
     { "id": "context7",             "category": "community", "package": "@upstash/context7-mcp",                           "args": [],            "expectCreds": false, "roundTripSafe": false },
     { "id": "taskmanager",          "category": "community", "package": "@kazuph/mcp-taskmanager",                         "args": [],            "expectCreds": false, "roundTripSafe": false },
     { "id": "playwright",           "category": "community", "package": "@playwright/mcp",                                 "args": [],            "expectCreds": false, "roundTripSafe": false },
-    { "id": "sqlite-npx",           "category": "community", "package": "mcp-server-sqlite-npx",                           "args": ["__SANDBOX__/study.db"], "expectCreds": false, "roundTripSafe": false }
+    { "id": "sqlite-npx",           "category": "community", "package": "mcp-server-sqlite-npx",                           "args": ["__SANDBOX__/study.db"], "expectCreds": false, "roundTripSafe": false },
+    { "id": "desktop-commander",    "category": "community", "package": "@wonderwhy-er/desktop-commander",                "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "puppeteer",            "category": "reference", "package": "@modelcontextprotocol/server-puppeteer",         "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "playwright-ea",        "category": "community", "package": "@executeautomation/playwright-mcp-server",        "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "git",                  "category": "community", "package": "@cyanheads/git-mcp-server",                       "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "quickchart",           "category": "community", "package": "@gongrzhe/quickchart-mcp-server",                 "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "yt-transcript",        "category": "community", "package": "@kimtaeyoon83/mcp-server-youtube-transcript",     "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "yt-transcript-sinco",  "category": "community", "package": "@sinco-lab/mcp-youtube-transcript",               "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "fetcher",              "category": "community", "package": "@jae-jae/fetcher-mcp",                            "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "commands",             "category": "community", "package": "mcp-server-commands",                            "args": [],            "expectCreds": false, "roundTripSafe": false },
+    { "id": "webresearch",          "category": "community", "package": "@mzxrai/mcp-webresearch",                        "args": [],            "expectCreds": false, "roundTripSafe": false }
   ]
 }

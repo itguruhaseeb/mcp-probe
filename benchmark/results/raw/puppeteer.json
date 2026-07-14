@@ -1,7 +1,7 @@
 {
   "tool": "mcp-probe",
   "version": "0.1.0",
-  "target": "npx -y @modelcontextprotocol/server-postgres",
+  "target": "npx -y @modelcontextprotocol/server-puppeteer",
   "clientProtocolVersion": "2025-06-18",
   "ok": false,
   "server": null,
@@ -13,7 +13,6 @@
   "calls": [],
   "warnings": [],
   "errors": [
-    "handshake failed: server exited with code 1",
-    "server stderr: Please provide a database URL as a command-line argument"
+    "handshake failed: timed out after 15000ms waiting for \"initialize\""
   ]
 }

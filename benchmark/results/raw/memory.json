@@ -18,8 +18,8 @@
     }
   },
   "timings": {
-    "handshakeMs": 1627.9,
-    "toolsListMs": 2.6,
+    "handshakeMs": 696.9,
+    "toolsListMs": 2.7,
     "resourcesListMs": 0.3
   },
   "tools": [

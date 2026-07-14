@@ -1,0 +1,46 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y mcp-server-commands",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "mcp-server-commands",
+    "version": "0.8.2",
+    "description": "Run commands on this darwin machine"
+  },
+  "capabilities": {
+    "tools": {},
+    "prompts": {}
+  },
+  "timings": {
+    "handshakeMs": 4401.4,
+    "toolsListMs": 0.3,
+    "promptsListMs": 0.2
+  },
+  "tools": [
+    {
+      "name": "run_process",
+      "description": "Run a process on this darwin machine",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    }
+  ],
+  "resources": null,
+  "prompts": {
+    "count": 1
+  },
+  "calls": [],
+  "warnings": [
+    "server negotiated protocol 2024-11-05 (client offered 2025-06-18)"
+  ],
+  "errors": [],
+  "negotiatedProtocolVersion": "2024-11-05"
+}

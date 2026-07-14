@@ -14,8 +14,8 @@
     }
   },
   "timings": {
-    "handshakeMs": 2463.2,
-    "toolsListMs": 2.1
+    "handshakeMs": 643.1,
+    "toolsListMs": 2.2
   },
   "tools": [
     {

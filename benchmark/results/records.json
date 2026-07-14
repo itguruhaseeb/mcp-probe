@@ -6,7 +6,7 @@
     "launch": "npx -y @modelcontextprotocol/server-everything",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 11304,
+    "wallMs": 11857,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -31,8 +31,8 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 566.2,
-      "toolsListMs": 2.1
+      "handshakeMs": 1009.9,
+      "toolsListMs": 2
     }
   },
   {
@@ -42,7 +42,7 @@
     "launch": "npx -y @modelcontextprotocol/server-memory",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 1723,
+    "wallMs": 798,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -63,8 +63,8 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 1627.9,
-      "toolsListMs": 2.6
+      "handshakeMs": 696.9,
+      "toolsListMs": 2.7
     }
   },
   {
@@ -74,7 +74,7 @@
     "launch": "npx -y @modelcontextprotocol/server-sequential-thinking",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 2517,
+    "wallMs": 696,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -94,8 +94,8 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 2463.2,
-      "toolsListMs": 2.1
+      "handshakeMs": 643.1,
+      "toolsListMs": 2.2
     }
   },
   {
@@ -105,7 +105,7 @@
     "launch": "npx -y @modelcontextprotocol/server-filesystem __SANDBOX__",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 2039,
+    "wallMs": 766,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -125,8 +125,8 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 1984.1,
-      "toolsListMs": 2.6
+      "handshakeMs": 713.3,
+      "toolsListMs": 2.4
     }
   },
   {
@@ -136,7 +136,7 @@
     "launch": "npx -y @modelcontextprotocol/server-github",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 2647,
+    "wallMs": 1184,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -158,8 +158,8 @@
         "warn:tool has no \"X\" annotation": 26
       },
       "nonJsonStdout": false,
-      "handshakeMs": 2590.8,
-      "toolsListMs": 1.7
+      "handshakeMs": 1132.8,
+      "toolsListMs": 1.8
     }
   },
   {
@@ -169,7 +169,7 @@
     "launch": "npx -y @modelcontextprotocol/server-brave-search",
     "status": "excluded",
     "excludeReason": "needs-credentials",
-    "wallMs": 1225,
+    "wallMs": 671,
     "exitCode": 1,
     "derived": null,
     "stderrTail": ""
@@ -181,7 +181,7 @@
     "launch": "npx -y @modelcontextprotocol/server-slack",
     "status": "excluded",
     "excludeReason": "needs-credentials",
-    "wallMs": 1155,
+    "wallMs": 641,
     "exitCode": 1,
     "derived": null,
     "stderrTail": ""
@@ -193,7 +193,7 @@
     "launch": "npx -y @modelcontextprotocol/server-gitlab",
     "status": "excluded",
     "excludeReason": "needs-credentials",
-    "wallMs": 2150,
+    "wallMs": 809,
     "exitCode": 1,
     "derived": null,
     "stderrTail": ""
@@ -205,7 +205,7 @@
     "launch": "npx -y @modelcontextprotocol/server-google-maps",
     "status": "excluded",
     "excludeReason": "needs-credentials",
-    "wallMs": 1537,
+    "wallMs": 682,
     "exitCode": 1,
     "derived": null,
     "stderrTail": ""
@@ -217,7 +217,7 @@
     "launch": "npx -y @modelcontextprotocol/server-postgres",
     "status": "excluded",
     "excludeReason": "handshake-failed",
-    "wallMs": 2053,
+    "wallMs": 655,
     "exitCode": 1,
     "derived": null,
     "stderrTail": ""
@@ -229,7 +229,7 @@
     "launch": "npx -y @upstash/context7-mcp",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 2311,
+    "wallMs": 867,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -251,7 +251,7 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 2255.5,
+      "handshakeMs": 815.3,
       "toolsListMs": 1.1
     }
   },
@@ -262,7 +262,7 @@
     "launch": "npx -y @kazuph/mcp-taskmanager",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 2060,
+    "wallMs": 869,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -284,8 +284,8 @@
         "warn:tool has no \"X\" annotation": 10
       },
       "nonJsonStdout": false,
-      "handshakeMs": 2006.8,
-      "toolsListMs": 1.7
+      "handshakeMs": 817.9,
+      "toolsListMs": 1.3
     }
   },
   {
@@ -295,7 +295,7 @@
     "launch": "npx -y @playwright/mcp",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 4554,
+    "wallMs": 742,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -315,8 +315,8 @@
       "schemaValidPct": 100,
       "deviationTypes": {},
       "nonJsonStdout": false,
-      "handshakeMs": 4500.1,
-      "toolsListMs": 2
+      "handshakeMs": 689,
+      "toolsListMs": 2.1
     }
   },
   {
@@ -326,7 +326,7 @@
     "launch": "npx -y mcp-server-sqlite-npx __SANDBOX__/study.db",
     "status": "included",
     "excludeReason": null,
-    "wallMs": 8821,
+    "wallMs": 775,
     "exitCode": 0,
     "derived": {
       "initializes": true,
@@ -348,8 +348,279 @@
         "warn:tool has no \"X\" annotation": 5
       },
       "nonJsonStdout": false,
-      "handshakeMs": 8764.5,
-      "toolsListMs": 2.4
+      "handshakeMs": 718.1,
+      "toolsListMs": 2.6
     }
+  },
+  {
+    "id": "desktop-commander",
+    "package": "@wonderwhy-er/desktop-commander",
+    "category": "community",
+    "launch": "npx -y @wonderwhy-er/desktop-commander",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 3097,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "desktop-commander",
+      "serverVersion": "0.2.45",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools",
+        "resources",
+        "prompts",
+        "logging"
+      ],
+      "toolCount": 26,
+      "toolsClean": 26,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 2671.5,
+      "toolsListMs": 30.8
+    }
+  },
+  {
+    "id": "puppeteer",
+    "package": "@modelcontextprotocol/server-puppeteer",
+    "category": "reference",
+    "launch": "npx -y @modelcontextprotocol/server-puppeteer",
+    "status": "excluded",
+    "excludeReason": "handshake-failed",
+    "wallMs": 15584,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "playwright-ea",
+    "package": "@executeautomation/playwright-mcp-server",
+    "category": "community",
+    "launch": "npx -y @executeautomation/playwright-mcp-server",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 10531,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "playwright-mcp",
+      "serverVersion": "1.0.11",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "resources",
+        "tools"
+      ],
+      "toolCount": 33,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 33,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 33
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 10414.5,
+      "toolsListMs": 1
+    }
+  },
+  {
+    "id": "git",
+    "package": "@cyanheads/git-mcp-server",
+    "category": "community",
+    "launch": "npx -y @cyanheads/git-mcp-server",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2810,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "@cyanheads/git-mcp-server",
+      "serverVersion": "2.15.1",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "logging",
+        "resources",
+        "tools",
+        "prompts"
+      ],
+      "toolCount": 28,
+      "toolsClean": 28,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 0,
+      "schemaValidPct": 100,
+      "deviationTypes": {},
+      "nonJsonStdout": false,
+      "handshakeMs": 2743.8,
+      "toolsListMs": 7.6
+    }
+  },
+  {
+    "id": "quickchart",
+    "package": "@gongrzhe/quickchart-mcp-server",
+    "category": "community",
+    "launch": "npx -y @gongrzhe/quickchart-mcp-server",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2194,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "quickchart-server",
+      "serverVersion": "1.0.0",
+      "negotiatedProtocol": "2024-11-05",
+      "protocolMismatch": true,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 2,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 2,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 2
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 2141.8,
+      "toolsListMs": 1
+    }
+  },
+  {
+    "id": "yt-transcript",
+    "package": "@kimtaeyoon83/mcp-server-youtube-transcript",
+    "category": "community",
+    "launch": "npx -y @kimtaeyoon83/mcp-server-youtube-transcript",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2097,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "mcp-servers-youtube-transcript",
+      "serverVersion": "0.1.0",
+      "negotiatedProtocol": "2024-11-05",
+      "protocolMismatch": true,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 1,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 1,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 1
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 2044,
+      "toolsListMs": 0.7
+    }
+  },
+  {
+    "id": "yt-transcript-sinco",
+    "package": "@sinco-lab/mcp-youtube-transcript",
+    "category": "community",
+    "launch": "npx -y @sinco-lab/mcp-youtube-transcript",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 2255,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "mcp-youtube-transcript",
+      "serverVersion": "0.0.12",
+      "negotiatedProtocol": "2025-06-18",
+      "protocolMismatch": false,
+      "capabilities": [
+        "tools"
+      ],
+      "toolCount": 5,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 5,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 5
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 2200.7,
+      "toolsListMs": 2
+    }
+  },
+  {
+    "id": "fetcher",
+    "package": "@jae-jae/fetcher-mcp",
+    "category": "community",
+    "launch": "npx -y @jae-jae/fetcher-mcp",
+    "status": "excluded",
+    "excludeReason": "handshake-failed",
+    "wallMs": 689,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
+  },
+  {
+    "id": "commands",
+    "package": "mcp-server-commands",
+    "category": "community",
+    "launch": "npx -y mcp-server-commands",
+    "status": "included",
+    "excludeReason": null,
+    "wallMs": 4476,
+    "exitCode": 0,
+    "derived": {
+      "initializes": true,
+      "handshakeOk": true,
+      "healthy": true,
+      "serverName": "mcp-server-commands",
+      "serverVersion": "0.8.2",
+      "negotiatedProtocol": "2024-11-05",
+      "protocolMismatch": true,
+      "capabilities": [
+        "tools",
+        "prompts"
+      ],
+      "toolCount": 1,
+      "toolsClean": 0,
+      "toolsWithFails": 0,
+      "toolsWithWarns": 1,
+      "schemaValidPct": 100,
+      "deviationTypes": {
+        "warn:tool has no \"X\" annotation": 1
+      },
+      "nonJsonStdout": false,
+      "handshakeMs": 4401.4,
+      "toolsListMs": 0.3
+    }
+  },
+  {
+    "id": "webresearch",
+    "package": "@mzxrai/mcp-webresearch",
+    "category": "community",
+    "launch": "npx -y @mzxrai/mcp-webresearch",
+    "status": "excluded",
+    "excludeReason": "handshake-failed",
+    "wallMs": 15550,
+    "exitCode": 1,
+    "derived": null,
+    "stderrTail": ""
   }
 ]

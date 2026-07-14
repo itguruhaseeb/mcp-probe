@@ -1,7 +1,7 @@
 {
   "tool": "mcp-probe",
   "version": "0.1.0",
-  "target": "npx -y @modelcontextprotocol/server-filesystem /var/folders/lh/vwystt0s1_70000zpvtdb60r0000gq/T/mcp-study-Jvytec",
+  "target": "npx -y @modelcontextprotocol/server-filesystem /var/folders/lh/vwystt0s1_70000zpvtdb60r0000gq/T/mcp-study-WOM7TL",
   "clientProtocolVersion": "2025-06-18",
   "ok": true,
   "server": {
@@ -14,8 +14,8 @@
     }
   },
   "timings": {
-    "handshakeMs": 1984.1,
-    "toolsListMs": 2.6
+    "handshakeMs": 713.3,
+    "toolsListMs": 2.4
   },
   "tools": [
     {

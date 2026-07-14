@@ -14,6 +14,6 @@
   "warnings": [],
   "errors": [
     "handshake failed: server exited with code 1",
-    "server stderr: npm warn deprecated @modelcontextprotocol/server-brave-search@0.6.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.\nError: BRAVE_API_KEY environment variable is required"
+    "server stderr: Error: BRAVE_API_KEY environment variable is required"
   ]
 }

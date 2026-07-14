@@ -3,39 +3,39 @@
   "toolVersion": "0.1.0",
   "clientProtocolVersion": "2025-06-18",
   "node": "v25.6.1",
-  "candidateCount": 14,
-  "includedCount": 9,
-  "excludedCount": 5,
+  "candidateCount": 24,
+  "includedCount": 16,
+  "excludedCount": 8,
   "excludeBreakdown": {
     "needs-credentials": 4,
-    "handshake-failed": 1
+    "handshake-failed": 4
   },
   "RQ1_conformance": {
-    "serversInitialized": 9,
-    "serversHealthy": 9,
-    "totalToolsMeasured": 104,
-    "toolsWithValidSchema": 104,
+    "serversInitialized": 16,
+    "serversHealthy": 16,
+    "totalToolsMeasured": 200,
+    "toolsWithValidSchema": 200,
     "toolsSchemaValidPct": 100,
-    "toolsFullyClean": 63,
-    "toolsFullyCleanPct": 60.6,
-    "serversWithAllValidSchemas": 9
+    "toolsFullyClean": 117,
+    "toolsFullyCleanPct": 58.5,
+    "serversWithAllValidSchemas": 16
   },
   "RQ2_drift": {
     "deviationTypes": {
-      "warn:tool has no \"X\" annotation": 41
+      "warn:tool has no \"X\" annotation": 83
     },
     "protocolVersionsSeen": [
       "2025-06-18",
       "2024-11-05"
     ],
-    "serversWithProtocolMismatch": 1,
+    "serversWithProtocolMismatch": 4,
     "serversEmittingNonJsonStdout": 0
   },
   "RQ3_reliability_pilot": {
-    "handshakeMs_p50": 2255.5,
-    "handshakeMs_p95": 8764.5,
-    "handshakeMs_min": 566.2,
-    "handshakeMs_max": 8764.5,
+    "handshakeMs_p50": 1132.8,
+    "handshakeMs_p95": 10414.5,
+    "handshakeMs_min": 643.1,
+    "handshakeMs_max": 10414.5,
     "note": "Latency includes first-run npx install cost; see STUDY.md threats-to-validity. Malformed-request behavior is out of scope for this baseline run."
   },
   "perServer": [
@@ -47,7 +47,7 @@
       "tools": 13,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 566.2
+      "handshakeMs": 1009.9
     },
     {
       "id": "memory",
@@ -57,7 +57,7 @@
       "tools": 9,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 1627.9
+      "handshakeMs": 696.9
     },
     {
       "id": "sequential-thinking",
@@ -67,7 +67,7 @@
       "tools": 1,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 2463.2
+      "handshakeMs": 643.1
     },
     {
       "id": "filesystem",
@@ -77,7 +77,7 @@
       "tools": 14,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 1984.1
+      "handshakeMs": 713.3
     },
     {
       "id": "github",
@@ -87,7 +87,7 @@
       "tools": 26,
       "schemaValidPct": 100,
       "protocol": "2024-11-05",
-      "handshakeMs": 2590.8
+      "handshakeMs": 1132.8
     },
     {
       "id": "brave-search",
@@ -147,7 +147,7 @@
       "tools": 2,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 2255.5
+      "handshakeMs": 815.3
     },
     {
       "id": "taskmanager",
@@ -157,7 +157,7 @@
       "tools": 10,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 2006.8
+      "handshakeMs": 817.9
     },
     {
       "id": "playwright",
@@ -167,7 +167,7 @@
       "tools": 24,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 4500.1
+      "handshakeMs": 689
     },
     {
       "id": "sqlite-npx",
@@ -177,7 +177,107 @@
       "tools": 5,
       "schemaValidPct": 100,
       "protocol": "2025-06-18",
-      "handshakeMs": 8764.5
+      "handshakeMs": 718.1
+    },
+    {
+      "id": "desktop-commander",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 26,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2671.5
+    },
+    {
+      "id": "puppeteer",
+      "category": "reference",
+      "status": "excluded",
+      "excludeReason": "handshake-failed",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "playwright-ea",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 33,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 10414.5
+    },
+    {
+      "id": "git",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 28,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2743.8
+    },
+    {
+      "id": "quickchart",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 2,
+      "schemaValidPct": 100,
+      "protocol": "2024-11-05",
+      "handshakeMs": 2141.8
+    },
+    {
+      "id": "yt-transcript",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 1,
+      "schemaValidPct": 100,
+      "protocol": "2024-11-05",
+      "handshakeMs": 2044
+    },
+    {
+      "id": "yt-transcript-sinco",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 5,
+      "schemaValidPct": 100,
+      "protocol": "2025-06-18",
+      "handshakeMs": 2200.7
+    },
+    {
+      "id": "fetcher",
+      "category": "community",
+      "status": "excluded",
+      "excludeReason": "handshake-failed",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
+    },
+    {
+      "id": "commands",
+      "category": "community",
+      "status": "included",
+      "excludeReason": null,
+      "tools": 1,
+      "schemaValidPct": 100,
+      "protocol": "2024-11-05",
+      "handshakeMs": 4401.4
+    },
+    {
+      "id": "webresearch",
+      "category": "community",
+      "status": "excluded",
+      "excludeReason": "handshake-failed",
+      "tools": null,
+      "schemaValidPct": null,
+      "protocol": null,
+      "handshakeMs": null
     }
   ]
 }

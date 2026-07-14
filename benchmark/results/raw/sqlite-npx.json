@@ -1,7 +1,7 @@
 {
   "tool": "mcp-probe",
   "version": "0.1.0",
-  "target": "npx -y mcp-server-sqlite-npx /var/folders/lh/vwystt0s1_70000zpvtdb60r0000gq/T/mcp-study-Jvytec/study.db",
+  "target": "npx -y mcp-server-sqlite-npx /var/folders/lh/vwystt0s1_70000zpvtdb60r0000gq/T/mcp-study-WOM7TL/study.db",
   "clientProtocolVersion": "2025-06-18",
   "ok": true,
   "server": {
@@ -14,8 +14,8 @@
     }
   },
   "timings": {
-    "handshakeMs": 8764.5,
-    "toolsListMs": 2.4
+    "handshakeMs": 718.1,
+    "toolsListMs": 2.6
   },
   "tools": [
     {

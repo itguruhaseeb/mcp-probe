@@ -14,6 +14,6 @@
   "warnings": [],
   "errors": [
     "handshake failed: server exited with code 1",
-    "server stderr: npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead\nnpm warn deprecated @modelcontextprotocol/server-gitlab@2025.4.25: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.\nGITLAB_PERSONAL_ACCESS_TOKEN environment variable is not set"
+    "server stderr: GITLAB_PERSONAL_ACCESS_TOKEN environment variable is not set"
   ]
 }

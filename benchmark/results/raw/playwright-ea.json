@@ -1,24 +1,26 @@
 {
   "tool": "mcp-probe",
   "version": "0.1.0",
-  "target": "npx -y @modelcontextprotocol/server-github",
+  "target": "npx -y @executeautomation/playwright-mcp-server",
   "clientProtocolVersion": "2025-06-18",
   "ok": true,
   "server": {
-    "name": "github-mcp-server",
-    "version": "0.6.2"
+    "name": "playwright-mcp",
+    "version": "1.0.11"
   },
   "capabilities": {
+    "resources": {},
     "tools": {}
   },
   "timings": {
-    "handshakeMs": 1132.8,
-    "toolsListMs": 1.8
+    "handshakeMs": 10414.5,
+    "toolsListMs": 1,
+    "resourcesListMs": 0.3
   },
   "tools": [
     {
-      "name": "create_or_update_file",
-      "description": "Create or update a single file in a GitHub repository",
+      "name": "start_codegen_session",
+      "description": "Start a new code generation session to record Playwright actions",
       "issues": [
         {
           "severity": "warn",
@@ -30,8 +32,8 @@
       "safeToCall": false
     },
     {
-      "name": "search_repositories",
-      "description": "Search for GitHub repositories",
+      "name": "end_codegen_session",
+      "description": "End a code generation session and generate the test file",
       "issues": [
         {
           "severity": "warn",
@@ -43,8 +45,8 @@
       "safeToCall": false
     },
     {
-      "name": "create_repository",
-      "description": "Create a new GitHub repository in your account",
+      "name": "get_codegen_session",
+      "description": "Get information about a code generation session",
       "issues": [
         {
           "severity": "warn",
@@ -56,8 +58,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_file_contents",
-      "description": "Get the contents of a file or directory from a GitHub repository",
+      "name": "clear_codegen_session",
+      "description": "Clear a code generation session without generating a test",
       "issues": [
         {
           "severity": "warn",
@@ -69,8 +71,8 @@
       "safeToCall": false
     },
     {
-      "name": "push_files",
-      "description": "Push multiple files to a GitHub repository in a single commit",
+      "name": "playwright_navigate",
+      "description": "Navigate to a URL",
       "issues": [
         {
           "severity": "warn",
@@ -82,8 +84,8 @@
       "safeToCall": false
     },
     {
-      "name": "create_issue",
-      "description": "Create a new issue in a GitHub repository",
+      "name": "playwright_screenshot",
+      "description": "Take a screenshot of the current page or a specific element",
       "issues": [
         {
           "severity": "warn",
@@ -95,8 +97,8 @@
       "safeToCall": false
     },
     {
-      "name": "create_pull_request",
-      "description": "Create a new pull request in a GitHub repository",
+      "name": "playwright_click",
+      "description": "Click an element on the page",
       "issues": [
         {
           "severity": "warn",
@@ -108,8 +110,8 @@
       "safeToCall": false
     },
     {
-      "name": "fork_repository",
-      "description": "Fork a GitHub repository to your account or specified organization",
+      "name": "playwright_iframe_click",
+      "description": "Click an element in an iframe on the page",
       "issues": [
         {
           "severity": "warn",
@@ -121,8 +123,8 @@
       "safeToCall": false
     },
     {
-      "name": "create_branch",
-      "description": "Create a new branch in a GitHub repository",
+      "name": "playwright_iframe_fill",
+      "description": "Fill an element in an iframe on the page",
       "issues": [
         {
           "severity": "warn",
@@ -134,8 +136,8 @@
       "safeToCall": false
     },
     {
-      "name": "list_commits",
-      "description": "Get list of commits of a branch in a GitHub repository",
+      "name": "playwright_fill",
+      "description": "fill out an input field",
       "issues": [
         {
           "severity": "warn",
@@ -147,8 +149,8 @@
       "safeToCall": false
     },
     {
-      "name": "list_issues",
-      "description": "List issues in a GitHub repository with filtering options",
+      "name": "playwright_select",
+      "description": "Select an element on the page with Select tag",
       "issues": [
         {
           "severity": "warn",
@@ -160,8 +162,8 @@
       "safeToCall": false
     },
     {
-      "name": "update_issue",
-      "description": "Update an existing issue in a GitHub repository",
+      "name": "playwright_hover",
+      "description": "Hover an element on the page",
       "issues": [
         {
           "severity": "warn",
@@ -173,8 +175,8 @@
       "safeToCall": false
     },
     {
-      "name": "add_issue_comment",
-      "description": "Add a comment to an existing issue",
+      "name": "playwright_upload_file",
+      "description": "Upload a file to an input[type='file'] element on the page",
       "issues": [
         {
           "severity": "warn",
@@ -186,8 +188,8 @@
       "safeToCall": false
     },
     {
-      "name": "search_code",
-      "description": "Search for code across GitHub repositories",
+      "name": "playwright_evaluate",
+      "description": "Execute JavaScript in the browser console",
       "issues": [
         {
           "severity": "warn",
@@ -199,8 +201,47 @@
       "safeToCall": false
     },
     {
-      "name": "search_issues",
-      "description": "Search for issues and pull requests across GitHub repositories",
+      "name": "playwright_console_logs",
+      "description": "Retrieve console logs from the browser with filtering options",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_resize",
+      "description": "Resize the browser viewport using manual dimensions or device presets. Supports 143+ device presets including iPhone, iPad, Android devices, and desktop browsers with proper user-agent and touch emulation.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_close",
+      "description": "Close the browser and release all resources",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_get",
+      "description": "Perform an HTTP GET request",
       "issues": [
         {
           "severity": "warn",
@@ -212,8 +253,8 @@
       "safeToCall": false
     },
     {
-      "name": "search_users",
-      "description": "Search for users on GitHub",
+      "name": "playwright_post",
+      "description": "Perform an HTTP POST request",
       "issues": [
         {
           "severity": "warn",
@@ -225,8 +266,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_issue",
-      "description": "Get details of a specific issue in a GitHub repository.",
+      "name": "playwright_put",
+      "description": "Perform an HTTP PUT request",
       "issues": [
         {
           "severity": "warn",
@@ -238,8 +279,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_pull_request",
-      "description": "Get details of a specific pull request",
+      "name": "playwright_patch",
+      "description": "Perform an HTTP PATCH request",
       "issues": [
         {
           "severity": "warn",
@@ -251,8 +292,8 @@
       "safeToCall": false
     },
     {
-      "name": "list_pull_requests",
-      "description": "List and filter repository pull requests",
+      "name": "playwright_delete",
+      "description": "Perform an HTTP DELETE request",
       "issues": [
         {
           "severity": "warn",
@@ -264,8 +305,8 @@
       "safeToCall": false
     },
     {
-      "name": "create_pull_request_review",
-      "description": "Create a review on a pull request",
+      "name": "playwright_expect_response",
+      "description": "Ask Playwright to start waiting for a HTTP response. This tool initiates the wait operation but does not wait for its completion.",
       "issues": [
         {
           "severity": "warn",
@@ -277,8 +318,8 @@
       "safeToCall": false
     },
     {
-      "name": "merge_pull_request",
-      "description": "Merge a pull request",
+      "name": "playwright_assert_response",
+      "description": "Wait for and validate a previously initiated HTTP response wait operation.",
       "issues": [
         {
           "severity": "warn",
@@ -290,8 +331,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_pull_request_files",
-      "description": "Get the list of files changed in a pull request",
+      "name": "playwright_custom_user_agent",
+      "description": "Set a custom User Agent for the browser",
       "issues": [
         {
           "severity": "warn",
@@ -303,8 +344,60 @@
       "safeToCall": false
     },
     {
-      "name": "get_pull_request_status",
-      "description": "Get the combined status of all status checks for a pull request",
+      "name": "playwright_get_visible_text",
+      "description": "Get the visible text content of the current page",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_get_visible_html",
+      "description": "Get the HTML content of the current page. By default, all <script> tags are removed from the output unless removeScripts is explicitly set to false.",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_go_back",
+      "description": "Navigate back in browser history",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_go_forward",
+      "description": "Navigate forward in browser history",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": true
+    },
+    {
+      "name": "playwright_drag",
+      "description": "Drag an element to a target location",
       "issues": [
         {
           "severity": "warn",
@@ -316,8 +409,8 @@
       "safeToCall": false
     },
     {
-      "name": "update_pull_request_branch",
-      "description": "Update a pull request branch with the latest changes from the base branch",
+      "name": "playwright_press_key",
+      "description": "Press a keyboard key",
       "issues": [
         {
           "severity": "warn",
@@ -329,8 +422,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_pull_request_comments",
-      "description": "Get the review comments on a pull request",
+      "name": "playwright_save_as_pdf",
+      "description": "Save the current page as a PDF file",
       "issues": [
         {
           "severity": "warn",
@@ -342,8 +435,8 @@
       "safeToCall": false
     },
     {
-      "name": "get_pull_request_reviews",
-      "description": "Get the reviews on a pull request",
+      "name": "playwright_click_and_switch_tab",
+      "description": "Click a link and switch to the newly opened tab",
       "issues": [
         {
           "severity": "warn",
@@ -355,12 +448,12 @@
       "safeToCall": false
     }
   ],
-  "resources": null,
+  "resources": {
+    "count": 1
+  },
   "prompts": null,
   "calls": [],
-  "warnings": [
-    "server negotiated protocol 2024-11-05 (client offered 2025-06-18)"
-  ],
+  "warnings": [],
   "errors": [],
-  "negotiatedProtocolVersion": "2024-11-05"
+  "negotiatedProtocolVersion": "2025-06-18"
 }

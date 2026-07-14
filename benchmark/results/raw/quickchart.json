@@ -1,0 +1,54 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @gongrzhe/quickchart-mcp-server",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "quickchart-server",
+    "version": "1.0.0"
+  },
+  "capabilities": {
+    "tools": {}
+  },
+  "timings": {
+    "handshakeMs": 2141.8,
+    "toolsListMs": 1
+  },
+  "tools": [
+    {
+      "name": "generate_chart",
+      "description": "Generate a chart using QuickChart",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    },
+    {
+      "name": "download_chart",
+      "description": "Download a chart image to a local file",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    }
+  ],
+  "resources": null,
+  "prompts": null,
+  "calls": [],
+  "warnings": [
+    "server negotiated protocol 2024-11-05 (client offered 2025-06-18)"
+  ],
+  "errors": [],
+  "negotiatedProtocolVersion": "2024-11-05"
+}

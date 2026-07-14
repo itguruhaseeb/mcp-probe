@@ -79,33 +79,41 @@ measurements are repeatable across releases of the protocol and the ecosystem.
 # Preliminary findings
 
 To demonstrate `mcp-probe` as a measurement instrument, we ran it as a baseline
-study (`benchmark/run-study.mjs`) over a reproducible sample of 14 candidate public
+study (`benchmark/run-study.mjs`) over a reproducible sample of 24 candidate public
 servers: the official Model Context Protocol reference servers plus a set of
 popular community servers, each launched over stdio via `npx` with no credentials
-supplied. Nine servers initialized without credentials and were included (104 tools
-total); five were excluded and recorded with a reason (four require credentials,
-one requires a connection-string argument). Full protocol, metrics, and
-threats-to-validity are documented in `benchmark/STUDY.md`; raw per-server records
-are archived alongside the dataset.
+supplied. Sixteen servers initialized without credentials and were included (200
+tools total); eight were excluded and recorded with a reason (four require
+credentials, four fail the handshake without a required argument such as a
+connection string or target URL). Full protocol, metrics, and threats-to-validity
+are documented in `benchmark/STUDY.md`; raw per-server records are archived
+alongside the dataset.
 
-Three findings stand out. First, **hard conformance is high**: all 104 measured
+Three findings stand out. First, **hard conformance is high**: all 200 measured
 tools carry valid JSON Schema `inputSchema` definitions with zero fatal violations,
 which does not support the intuition that MCP tool schemas are frequently
-malformed. Second, **the variance is in optional safety metadata**: 41 of 104 tools
-(39%) omit the tool `annotations` (for example `readOnlyHint` and
+malformed. Second, **the variance is in optional safety metadata**: 83 of 200 tools
+(41.5%) omit the tool `annotations` (for example `readOnlyHint` and
 `destructiveHint`) introduced in a later spec revision, and the omission is
-server-level rather than random — three servers annotate no tools while the rest
-annotate every tool. Because annotations are how a client learns whether a tool is
-read-only or destructive *before* invoking it, this is a measurable gap between the
+strictly server-level rather than random — the split is all-or-nothing, with eight
+servers annotating every tool and eight annotating none, and not a single server in
+between. Because annotations are how a client learns whether a tool is read-only or
+destructive *before* invoking it, this is a measurable gap between the
 specification's safety affordances and ecosystem adoption. Third, **protocol
 versions have already fragmented**: two negotiated versions appear across the
-sample, with one official reference server still negotiating the older revision.
+sample, and 4 of the 16 servers (including an official reference server) still
+negotiate the older revision.
 
-These numbers come from a small pilot ($n=9$ servers) whose purpose is to establish
-a reproducible, re-runnable pipeline; the absolute percentages are expected to shift
-as the sample frame grows, but the method and the categories of deviation it surfaces
-are the reusable contribution. Re-running `mcp-probe` at each spec release yields a
-longitudinal series of the same measurements.
+These numbers come from a still-modest sample ($n=16$ servers) whose primary purpose
+is to establish a reproducible, re-runnable pipeline; the absolute percentages are
+expected to shift as the sample frame grows further, but the method and the
+categories of deviation it surfaces are the reusable contribution. Notably, the two
+headline patterns held as the sample nearly doubled from an initial nine-server
+pilot: schema validity stayed at 100% and the annotation gap remained a clean
+server-level split, which strengthens confidence that these are structural
+properties of the ecosystem rather than artifacts of a small sample. Re-running
+`mcp-probe` at each spec release yields a longitudinal series of the same
+measurements.
 
 # Acknowledgements
 

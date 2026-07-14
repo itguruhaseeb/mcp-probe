@@ -1,0 +1,41 @@
+{
+  "tool": "mcp-probe",
+  "version": "0.1.0",
+  "target": "npx -y @kimtaeyoon83/mcp-server-youtube-transcript",
+  "clientProtocolVersion": "2025-06-18",
+  "ok": true,
+  "server": {
+    "name": "mcp-servers-youtube-transcript",
+    "version": "0.1.0"
+  },
+  "capabilities": {
+    "tools": {}
+  },
+  "timings": {
+    "handshakeMs": 2044,
+    "toolsListMs": 0.7
+  },
+  "tools": [
+    {
+      "name": "get_transcript",
+      "description": "Extract transcript from a YouTube video URL or ID",
+      "issues": [
+        {
+          "severity": "warn",
+          "message": "tool has no \"title\" annotation"
+        }
+      ],
+      "fails": 0,
+      "warns": 1,
+      "safeToCall": false
+    }
+  ],
+  "resources": null,
+  "prompts": null,
+  "calls": [],
+  "warnings": [
+    "server negotiated protocol 2024-11-05 (client offered 2025-06-18)"
+  ],
+  "errors": [],
+  "negotiatedProtocolVersion": "2024-11-05"
+}
