@@ -159,12 +159,31 @@ node bin/mcp-probe.js -- node examples/echo-server.js
 
 ## Citing mcp-probe
 
-If you use mcp-probe in academic work, please cite it. Machine-readable metadata
-lives in [`CITATION.cff`](./CITATION.cff) (GitHub renders a "Cite this repository"
-button from it). A tool paper is drafted under [`paper/`](./paper/paper.md), and a
-reproducible conformance-study protocol lives in
-[`benchmark/STUDY.md`](./benchmark/STUDY.md). A versioned DOI is minted per release
-via Zenodo; the DOI will be added here once the first release is archived.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21347997.svg)](https://doi.org/10.5281/zenodo.21347997)
+
+If you use mcp-probe in academic or technical work, please cite it. Every release
+is archived on Zenodo with a permanent DOI:
+
+- **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997)
+- **This version (v0.1.0):** [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998)
+
+BibTeX:
+
+```bibtex
+@software{afsar_mcp_probe_2026,
+  author  = {Afsar, Haseeb Mohammed},
+  title   = {mcp-probe: a conformance and safety-annotation probe for Model Context Protocol servers},
+  year    = {2026},
+  publisher = {Zenodo},
+  doi     = {10.5281/zenodo.21347997},
+  url     = {https://doi.org/10.5281/zenodo.21347997}
+}
+```
+
+Machine-readable metadata lives in [`CITATION.cff`](./CITATION.cff) (GitHub renders
+a "Cite this repository" button from it). A tool paper is drafted under
+[`paper/`](./paper/paper.md), and a reproducible conformance-study protocol lives in
+[`benchmark/STUDY.md`](./benchmark/STUDY.md).
 
 ## License
 
