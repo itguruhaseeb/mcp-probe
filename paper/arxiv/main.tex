@@ -1,0 +1,329 @@
+\documentclass[11pt]{article}
+
+% --- arXiv-safe preamble: only packages present in the arXiv TeX Live tree ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\title{Measuring the Model Context Protocol Server Ecosystem:\\
+A Population-Scale Census and Conformance Study}
+
+\author{Haseeb Mohammed Afsar\\
+  \small Independent researcher\\
+  \small ORCID: \href{https://orcid.org/0009-0000-4038-1272}{0009-0000-4038-1272}}
+
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Model Context Protocol (MCP) is an open standard that lets large language
+model (LLM) applications discover and call external tools through a uniform
+JSON-RPC~2.0 interface. Its adoption has produced a large, rapidly growing
+population of independently authored servers, but the ecosystem has not been
+measured: basic questions about its size, how servers ship, which transports and
+spec revisions are in use, and whether servers conform to the specification and
+behave reliably have gone unanswered. We report a two-tier empirical study. A
+\emph{census tier} sweeps the entire official MCP registry (16{,}548 unique servers
+at a July~2026 snapshot) and measures only self-declared metadata, so it runs no
+third-party code and scales to the whole published population. A \emph{dynamic tier}
+launches a credential-free, stdio-launchable subset and measures actual behavior with
+the open-source \texttt{mcp-probe} tool: handshake success, JSON~Schema validity of
+every advertised tool, presence of safety annotations, protocol-version negotiation,
+and latency. Three results stand out. First, the population is dominated by hosted
+remote servers (42.6\% remote-only) and \texttt{npm}/\texttt{stdio} local packages,
+and it has already fragmented across five \texttt{\$schema} revisions. Second,
+\emph{hard} conformance is high: all 200 tools measured in the behavioral sample carry
+valid JSON~Schema \texttt{inputSchema} definitions with zero fatal violations. Third,
+the real variance is in optional \emph{safety} metadata: 41.5\% of tools omit the
+\texttt{annotations} (\texttt{readOnlyHint}, \texttt{destructiveHint}, \dots) that
+tell an autonomous agent whether a tool is safe to call \emph{before} calling it, and
+the omission is a clean server-level, all-or-nothing decision rather than per-tool
+oversight. We release the full dataset and a re-runnable pipeline so the measurement
+can be repeated at each spec release as a longitudinal series.
+\end{abstract}
+
+\section{Introduction}
+
+The Model Context Protocol (MCP)~\cite{mcp2024} is an open standard for connecting
+LLM applications to external tools, resources, and prompts over a uniform JSON-RPC
+2.0 interface. Since its introduction the number of independently authored MCP
+servers has grown quickly, and with it the variance in their quality: tool
+\texttt{inputSchema} definitions can drift out of spec, handshakes can fail on edge
+cases, and malformed responses may surface only when an LLM constructs an invalid
+tool call at run time. As agentic systems move into production, the reliability of
+the tools they call becomes a first-order concern~\cite{toolreliability}.
+
+Despite this, the MCP server ecosystem has not been measured empirically. We do not
+know how large the published population is, how servers are actually shipped and
+consumed (hosted remote endpoints versus locally installed packages), which
+transports and specification revisions are in use, or whether servers conform to the
+specification and behave reliably in practice. This paper answers those questions
+with a reproducible, two-tier study and releases the underlying dataset and tooling.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item A \textbf{population-scale census} of the official MCP registry
+    (16{,}548 unique servers), classified by deployment model, package ecosystem,
+    transport, lifecycle status, and \texttt{\$schema} revision
+    (Section~\ref{sec:census}). Because it measures only self-declared metadata it
+    runs no third-party code and covers the whole published population.
+  \item A \textbf{behavioral conformance study} of a credential-free,
+    stdio-launchable sample using the open-source \texttt{mcp-probe} instrument,
+    reporting schema validity, safety-annotation coverage, protocol-version drift,
+    and latency (Section~\ref{sec:dynamic}).
+  \item A \textbf{released, re-runnable pipeline and dataset}
+    (Section~\ref{sec:data}) so the measurement can be repeated at each spec release,
+    producing a longitudinal series rather than a one-off snapshot.
+\end{itemize}
+
+\section{Study design}
+\label{sec:design}
+
+\subsection{Research questions}
+\begin{description}
+  \item[RQ0 (census).] How large is the published MCP server population, and how is
+    it distributed across deployment models, package ecosystems, transports, and
+    specification revisions?
+  \item[RQ1 (conformance).] What fraction of public MCP servers initialize
+    successfully and advertise spec-valid tool \texttt{inputSchema} definitions?
+  \item[RQ2 (drift).] Which schema/spec deviations are most common, and do they
+    cluster by authoring pattern?
+  \item[RQ3 (reliability).] What is the latency distribution of protocol operations?
+\end{description}
+
+\subsection{Two measurement tiers}
+The questions above have different \emph{safe} sample sizes, so we measure at two
+scales.
+
+\paragraph{Census tier (population, code-free).}
+A harvester sweeps the entire official MCP registry
+(\url{https://registry.modelcontextprotocol.io/v0/servers}) via cursor pagination
+and records only metadata the registry publishes: deployment model, package
+ecosystem, declared transport, lifecycle status, and pinned \texttt{\$schema}
+revision. Because no server code is executed, this tier safely scales to the whole
+published population and forms the denominator the dynamic tier samples from. The
+sweep records page count, version-row count, and a \texttt{sweepComplete} flag; if a
+pagination backstop is ever hit the run is marked a lower bound rather than silently
+truncated.
+
+\paragraph{Dynamic tier (sampled, behavioral).}
+A credential-free, stdio-launchable subset is launched over stdio and probed with
+\texttt{mcp-probe}, a dependency-light command-line tool that speaks the MCP wire
+protocol directly, performs the \texttt{initialize} handshake, enumerates advertised
+tools via \texttt{tools/list}, validates each tool's JSON~Schema~\cite{jsonschema}
+against the constraints the MCP specification places on tool definitions, and times
+protocol operations. Untrusted code executes in this tier, so it is a vetted,
+sampled subset rather than the whole population.
+
+\subsection{Sample frame}
+The census frame is every server in the official registry at a snapshot timestamp
+recorded with the dataset. The dynamic frame is the reference set
+(\texttt{modelcontextprotocol/servers}) plus the \texttt{npm}-published,
+stdio-launchable, active servers the census emits as candidates. Credential needs are
+verified empirically at run time; every included and excluded server is recorded with
+a reason so the frame is auditable.
+
+\subsection{Ethics and guardrails}
+Public servers only. No credentials are ever supplied. Only read-only or explicitly
+safe calls are exercised; no side-effecting tool is invoked. Findings are reported in
+aggregate as ecosystem health, not as a leaderboard of individual failures.
+
+\section{RQ0: population census}
+\label{sec:census}
+
+At the July~2026 snapshot the sweep fetched 51{,}151 version rows across 512 registry
+pages and resolved 16{,}548 unique servers (latest version each), of which 16{,}377
+are marked active. For context, GitHub reports 20{,}629 repositories under the
+\texttt{topic:mcp-server} tag; we report this only as an indication of how much
+larger the informal universe is than the registry frame we measure.
+
+\paragraph{Deployment model.}
+Table~\ref{tab:deploy} shows how servers ship. A 42.6\% remote-only share means most
+servers are hosted HTTP/SSE endpoints rather than local stdio tools: the ecosystem is
+consumed as much through network integrations (with the attendant auth and
+reliability concerns) as through locally installed packages.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+Deployment model & Count & Share \\
+\midrule
+Package-only (installed locally) & 8340 & 50.4\% \\
+Remote-only (hosted HTTP/SSE)    & 7057 & 42.6\% \\
+Both                             & 852  & 5.1\%  \\
+Neither declared                & 299  & 1.8\%  \\
+\bottomrule
+\end{tabular}
+\caption{Deployment model across the 16{,}548-server population.}
+\label{tab:deploy}
+\end{table}
+
+\paragraph{Package ecosystems and transports.}
+Of servers that ship a package, \texttt{npm} dominates (5880; 35.5\% of all servers),
+followed by \texttt{pypi} (2648; 16\%), \texttt{oci} (562), \texttt{mcpb} (349),
+\texttt{nuget} (83), and a single \texttt{cargo} crate. On transports, package servers
+overwhelmingly declare \texttt{stdio} (9057), while remote servers overwhelmingly
+declare \texttt{streamable-http} (7478) with a long tail of \texttt{sse} (682) ---
+consistent with the spec's shift toward streamable HTTP for hosted deployments.
+
+\paragraph{Specification-version drift.}
+Registry entries pin a \texttt{\$schema} revision, giving a clean, code-free drift
+signal across the whole population (Table~\ref{tab:schema}). A single revision
+(\texttt{2025-12-11}) accounts for 88.2\% of servers, but five revisions are live
+simultaneously, and 11.8\% of the population trails the current one --- a
+population-scale confirmation that the specification is a moving target the ecosystem
+lags.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\texttt{\$schema} revision & Count & Share \\
+\midrule
+2025-12-11 & 14603 & 88.2\% \\
+2025-09-29 & 979   & 5.9\%  \\
+2025-10-17 & 556   & 3.4\%  \\
+2025-07-09 & 271   & 1.6\%  \\
+2025-09-16 & 137   & 0.8\%  \\
+unknown    & 2     & 0.0\%  \\
+\bottomrule
+\end{tabular}
+\caption{Schema-revision spread across the population.}
+\label{tab:schema}
+\end{table}
+
+\paragraph{Dynamic-tier denominator.}
+5804 servers (35.1\% of the population) are \texttt{npm}-published stdio servers and
+thus, in principle, launchable by \texttt{npx} for behavioral probing. This is the
+frame the dynamic tier samples from; actual inclusion is decided empirically because
+many require credentials or a mandatory launch argument.
+
+\section{RQ1--RQ3: behavioral conformance}
+\label{sec:dynamic}
+
+We report a baseline dynamic run over a reproducible sample of 24 candidate servers
+(the official reference servers plus a set of popular community servers), each
+launched over stdio with no credentials. Sixteen initialized without credentials and
+were included (200 tools total); eight were excluded and recorded with a reason (four
+require credentials; four fail the handshake without a required argument such as a
+connection string or target URL). No server was dropped silently.
+
+\subsection{RQ1: conformance}
+All 16 included servers completed the \texttt{initialize} handshake and returned a
+tool list. All \textbf{200 of 200 (100\%)} tool \texttt{inputSchema} definitions are
+valid JSON~Schema with \textbf{zero fatal violations}: no missing schemas, no invalid
+\texttt{type}, no malformed \texttt{properties}/\texttt{required}. 117 of 200 tools
+(58.5\%) are fully clean --- valid schema \emph{and} no warning-level issues. At the
+level of hard schema validity, the surveyed servers are strongly conformant; the
+intuition that MCP tool schemas are frequently malformed is \emph{not} supported. This
+held as the frame nearly doubled from a nine-server pilot (104 to 200 tools, 100\% to
+100\%), which suggests it is a structural property rather than a small-sample artifact.
+
+\subsection{RQ2: drift}
+The dominant deviation is a single one: \emph{missing tool \texttt{annotations}}
+(the \texttt{readOnlyHint} / \texttt{destructiveHint} / \texttt{idempotentHint} /
+\texttt{openWorldHint} metadata introduced in a later spec revision).
+\textbf{83 of 200 tools (41.5\%)} omit it. Critically, the gap is \textbf{strictly
+server-level, not random}: the split is all-or-nothing with \emph{zero} partial
+servers --- 8 servers annotate every tool and 8 annotate none, with not a single
+server in between. Protocol-version fragmentation appears in the behavioral sample
+too: two versions are live (\texttt{2025-06-18} on 12 servers and the older
+\texttt{2024-11-05} on 4), and one official reference server is simultaneously on the
+old protocol version \emph{and} annotates no tools.
+
+Because annotations are how a client or agent learns whether a tool is read-only or
+potentially destructive \emph{before} invoking it, a 41.5\% omission rate means a
+meaningful fraction of tools give an autonomous agent no machine-readable signal about
+their side effects. That the omission is a clean server-level split (never partial)
+indicates a per-project authoring decision rather than per-tool oversight --- a
+measurable, actionable gap between the specification's safety affordances and
+ecosystem adoption.
+
+\subsection{RQ3: reliability}
+Handshake round-trip across the 16 servers was p50~$\approx$~1.13~s,
+p95~$\approx$~10.41~s (min 0.64~s, max 10.41~s). We flag this as a \emph{contaminated}
+measurement: it includes first-run \texttt{npx} install cost. A hardened latency run
+must pre-install and warm servers first; we report the baseline here only to fix the
+method, not as a clean latency estimate.
+
+\section{Discussion}
+
+The two tiers tell a consistent story. At population scale the ecosystem is large,
+majority-hosted, \texttt{npm}/\texttt{stdio}-led where local, and already fragmented
+across five spec revisions with an 11.8\% trailing tail. At the behavioral level, hard
+conformance is essentially solved --- schema validity is 100\% --- but the safety
+layer the spec added on top (annotations) has been adopted by only some authors, in an
+all-or-nothing manner. For agent builders, the practical implication is that schema
+\emph{shape} can be trusted but tool \emph{safety metadata} cannot be assumed present;
+clients that reason about destructiveness before calling a tool must treat missing
+annotations as the common case, not the exception.
+
+\section{Threats to validity}
+The census measures self-declared registry metadata; a server misdeclaring its
+transport or schema is counted as declared. The registry, while authoritative, is one
+view of the ecosystem: servers never published to it are out of frame (hence the
+GitHub topic count reported only as context). The dynamic sample is small
+($n=16$ servers) and restricted to GitHub-visible, \texttt{npm}-launchable,
+credential-free servers, so its absolute percentages are expected to move as the frame
+grows; the reusable contribution is the method and the categories of deviation it
+surfaces. Latency is contaminated by install cost as noted. All numbers are tagged to
+the snapshot date and the client spec baseline (\texttt{2025-06-18}); the pipeline is
+re-runnable to produce a longitudinal series.
+
+\section{Data and code availability}
+\label{sec:data}
+The \texttt{mcp-probe} tool, the harvester, the study protocol, and the full raw
+per-server records are open source at
+\url{https://github.com/itguruhaseeb/mcp-probe}. The versioned dataset and tool
+release are archived on Zenodo under the concept DOI
+\href{https://doi.org/10.5281/zenodo.21347997}{10.5281/zenodo.21347997}, which always
+resolves to the latest version~\cite{mcpprobe_dataset}. Re-running
+\texttt{node benchmark/harvest.mjs} reproduces the census, and
+\texttt{node benchmark/run-study.mjs} reproduces the behavioral run.
+
+\section*{Acknowledgements}
+We thank the maintainers of the Model Context Protocol specification and its
+reference server implementations, against which \texttt{mcp-probe} is tested.
+
+\begin{thebibliography}{9}
+
+\bibitem{mcp2024}
+Anthropic.
+\newblock \emph{Model Context Protocol Specification}.
+\newblock Open standard for connecting large language model applications to external
+  tools and data, 2024.
+\newblock \url{https://modelcontextprotocol.io}.
+
+\bibitem{jsonschema}
+A.~Wright, H.~Andrews, B.~Hutton, and G.~Dennis.
+\newblock \emph{JSON Schema: A Media Type for Describing JSON Documents}.
+\newblock IETF Internet-Draft, 2022.
+\newblock \url{https://json-schema.org/specification}.
+
+\bibitem{mcpprobe_dataset}
+H.~Mohammed Afsar.
+\newblock \emph{mcp-probe: a conformance and reliability checker for Model Context
+  Protocol servers} (software and dataset).
+\newblock Zenodo, 2026.
+\newblock \url{https://doi.org/10.5281/zenodo.21347997}.
+
+\bibitem{toolreliability}
+% TODO(owner): replace with a peer-reviewed reference on LLM tool-use reliability
+% before submission (e.g. a tool-use / agent-reliability benchmark paper).
+Placeholder reference.
+\newblock \emph{Tool-use reliability in large language model agents}.
+\newblock 2025.
+
+\end{thebibliography}
+
+\end{document}
