@@ -90,6 +90,7 @@ export async function runDiagnostics({ command, args, timeout, call }) {
             fails: linted.fails,
             warns: linted.warns,
             safeToCall: safeCallArgs(tool).safe,
+            annotations: tool.annotations ?? null,
           });
           if (linted.fails > 0) result.ok = false;
         }

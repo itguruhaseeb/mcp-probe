@@ -162,6 +162,16 @@ export function lintTool(tool) {
     issues.push(issue(WARN, 'tool has no "title" annotation'));
   }
 
+  // Safety hints (2025-03-26 revision): readOnlyHint / destructiveHint /
+  // idempotentHint / openWorldHint tell a client whether a tool has side
+  // effects BEFORE it is invoked. Warn when none of them is declared.
+  const ann = tool?.annotations;
+  const hasSafetyHint = ann !== undefined && ['readOnlyHint', 'destructiveHint', 'idempotentHint', 'openWorldHint']
+    .some((h) => ann[h] !== undefined);
+  if (!hasSafetyHint) {
+    issues.push(issue(WARN, 'tool declares no safety hints (readOnlyHint/destructiveHint/idempotentHint/openWorldHint)'));
+  }
+
   issues.push(...lintSchema(tool?.inputSchema, 'inputSchema'));
 
   return {
