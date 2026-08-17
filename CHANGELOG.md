@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-08-17
+
+### Added
+- Linter check for MCP safety hints: warn when a tool declares none of
+  `readOnlyHint` / `destructiveHint` / `idempotentHint` / `openWorldHint`,
+  the metadata a client needs to reason about side effects before calling.
+- Raw probe output now records each tool's `annotations` object (or `null`),
+  so downstream studies can measure annotation adoption directly.
+
 ## [0.1.0] - 2026-07-12
 
 Initial release.
