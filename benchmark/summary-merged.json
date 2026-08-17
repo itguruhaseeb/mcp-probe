@@ -1,0 +1,1224 @@
+{
+ "mergedFrom": [
+  "h1",
+  "h2"
+ ],
+ "runDate": "2026-08-17",
+ "candidateCount": 120,
+ "includedCount": 70,
+ "excludeBreakdown": {
+  "needs-credentials": 17,
+  "handshake-failed": 33
+ },
+ "totalTools": 1137,
+ "protocols": {
+  "2025-06-18": 65,
+  "2024-11-05": 5
+ },
+ "latencyMs": {
+  "p50": 2140.6,
+  "p95": 5579.8
+ },
+ "perServer": [
+  {
+   "id": "everything",
+   "category": "reference",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 13,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 5483.9
+  },
+  {
+   "id": "memory",
+   "category": "reference",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 9,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2170.7
+  },
+  {
+   "id": "sequential-thinking",
+   "category": "reference",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 1,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2376.6
+  },
+  {
+   "id": "filesystem",
+   "category": "reference",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 14,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2508.8
+  },
+  {
+   "id": "github",
+   "category": "reference",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 26,
+   "schemaValidPct": 100,
+   "protocol": "2024-11-05",
+   "handshakeMs": 1458.1
+  },
+  {
+   "id": "brave-search",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "slack",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "gitlab",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "google-maps",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "postgres",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "context7",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2981.1
+  },
+  {
+   "id": "taskmanager",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 10,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1716.5
+  },
+  {
+   "id": "playwright",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 24,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2838.4
+  },
+  {
+   "id": "sqlite-npx",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 5,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2665.6
+  },
+  {
+   "id": "desktop-commander",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 26,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 9374.4
+  },
+  {
+   "id": "puppeteer",
+   "category": "reference",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "playwright-ea",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 33,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 5000.4
+  },
+  {
+   "id": "git",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 28,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3257
+  },
+  {
+   "id": "quickchart",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2024-11-05",
+   "handshakeMs": 1813.5
+  },
+  {
+   "id": "yt-transcript",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 1,
+   "schemaValidPct": 100,
+   "protocol": "2024-11-05",
+   "handshakeMs": 1743.9
+  },
+  {
+   "id": "yt-transcript-sinco",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 5,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2028.9
+  },
+  {
+   "id": "fetcher",
+   "category": "community",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "commands",
+   "category": "community",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 1,
+   "schemaValidPct": 100,
+   "protocol": "2024-11-05",
+   "handshakeMs": 1370.8
+  },
+  {
+   "id": "webresearch",
+   "category": "community",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.Grinv-steam-games-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 25,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2134.2
+  },
+  {
+   "id": "io.bighub-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 125,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3532.8
+  },
+  {
+   "id": "io.github.verygoodplugins-mcp-automem",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 6,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 4352.9
+  },
+  {
+   "id": "io.github.codespar-mcp-nequi",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 16,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2035
+  },
+  {
+   "id": "io.github.UltraStarz-x402-sms",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.Chaixueyuan-weapp-agent-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 44,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 5579.8
+  },
+  {
+   "id": "io.github.michielinksee-linksee-memory",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 11,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2002
+  },
+  {
+   "id": "io.github.geraservicesuk-mcp-gerafarm",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.behrensd-mcpwall",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.mindstone-mcp-server-canary",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 1,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3858
+  },
+  {
+   "id": "io.github.ownedbyly-weather",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "com.soulcraftagency-soulcraft-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2030.8
+  },
+  {
+   "id": "io.github.shenwell-stillonline",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 10,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1772.2
+  },
+  {
+   "id": "io.github.GoneTone-mcp-server-taiwan-weather",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.michielinksee-bantou",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.suomimasuda-rightos-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 18,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1821.3
+  },
+  {
+   "id": "io.github.llmops-pro-marketplace-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.nhadaututtheky-neural-memory",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.scka-de-ecb-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 8,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3842.2
+  },
+  {
+   "id": "io.github.ssm82-vk-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.CryptoAPIs-io-mcp-market-data",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.rimysore-standupbot",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 3,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2162.9
+  },
+  {
+   "id": "io.github.souravpn-toggl-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.OndrejLapes-gretl-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 12,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1652.9
+  },
+  {
+   "id": "io.github.barneywohl-hugging-bay",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 102,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1569
+  },
+  {
+   "id": "io.github.dazzle-labs-dazzle",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.declaw-ai-mcp-server",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.martymarkenson-postgres-connector",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.markswendsen-code-taskrabbit",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 9,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3353.1
+  },
+  {
+   "id": "io.github.codespar-mcp-unico",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 18,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2140.6
+  },
+  {
+   "id": "io.github.Cranot-agentskb",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.Dave-London-git",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 28,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2194.7
+  },
+  {
+   "id": "io.github.cyanheads-met-museum-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 3,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3815.6
+  },
+  {
+   "id": "io.github.CryptoAPIs-io-mcp-hd-wallet",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.serkandrgn-convertrilo",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.paladini-mcp-me",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.cyanheads-exchange-rates-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 5,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2606.7
+  },
+  {
+   "id": "io.github.rog0x-env",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.houtini-ai-fmp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.codespar-mcp-stripe-acp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 24,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2009.5
+  },
+  {
+   "id": "io.github.codespar-mcp-clip",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 6,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3730.5
+  },
+  {
+   "id": "io.github.tponscr-debug-oracle-h",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1682.8
+  },
+  {
+   "id": "io.github.infolegalge-legal-ge",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2048.2
+  },
+  {
+   "id": "io.github.dpesch-mantisbt-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 34,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 4198
+  },
+  {
+   "id": "tech.bugbrain-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.learningloons-hash-lithtrix",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 44,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1753.2
+  },
+  {
+   "id": "io.github.ofershap-docker",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 10,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2584.1
+  },
+  {
+   "id": "io.github.teabagkim-interview-mode",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 4,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2184.8
+  },
+  {
+   "id": "io.github.antonpogrebenko-public-rftools",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 5,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 4864.2
+  },
+  {
+   "id": "io.github.Musaraf-M-sentinal-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 8,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2161.5
+  },
+  {
+   "id": "io.github.hernaninverso-eleata-einvoice-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 3,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1619.2
+  },
+  {
+   "id": "io.github.JhostinAleck-brightspace",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.MukundaKatta-diff-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.sshahzaiib-agy-bridge",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 6,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1848.5
+  },
+  {
+   "id": "io.github.lesofi-handinloop-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 6,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1987.3
+  },
+  {
+   "id": "io.speedvault-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 28,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1978.1
+  },
+  {
+   "id": "io.github.strato-space-media-gen-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.haomingkoo-japan-seasons",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 17,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3856.8
+  },
+  {
+   "id": "io.github.arijit-gogoi-mpv-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 17,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1953.2
+  },
+  {
+   "id": "io.github.HTTPayer-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 9,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1816.2
+  },
+  {
+   "id": "io.github.j0hanz-filesystem-context",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.williamechevarria-hivelearn-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.woyaxnini-ozon-seller",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.123Ergo-unphurl",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 16,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2016.9
+  },
+  {
+   "id": "io.github.BenAHammond-code-auditor-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 7,
+   "schemaValidPct": 100,
+   "protocol": "2024-11-05",
+   "handshakeMs": 7173.4
+  },
+  {
+   "id": "io.github.jasonwagao-bit-xuanxue-bazi-matching",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 7,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 3310.6
+  },
+  {
+   "id": "io.github.gogogadgetbytes-smart-connections",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.Hookwarden-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 2,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 4298.3
+  },
+  {
+   "id": "io.github.vighriday-veris",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.mario-andreschak-mcp-abap-abap-adt-api",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.davidmosiah-whoop-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 30,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2188.5
+  },
+  {
+   "id": "io.github.waqarulwahab-llm-cost-estimator",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 3,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1774
+  },
+  {
+   "id": "io.github.CedricKouma-fetch-extract",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.Medhovarsh-forkmind",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.whazeted-paraglide-messages-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.KnockOutEZ-wigolo",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 10,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 12517
+  },
+  {
+   "id": "io.github.runapi-builder-gpt-image-2-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 5,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1836.4
+  },
+  {
+   "id": "io.github.609NFT-vibekit-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 36,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1706.3
+  },
+  {
+   "id": "io.github.theastraway-mind",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.tuckerschreiber-fullrun",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.evalor-dida365",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.goldmembrane-codesafer",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.earonesty-boxpdf-html",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.KarstenKreh-standby-design-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 8,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1689.3
+  },
+  {
+   "id": "io.github.malamutemayhem-exchangerate",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 4,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 2112
+  },
+  {
+   "id": "io.github.openfused-openfuse-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.420247jake-session-forge",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 15,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1911.3
+  },
+  {
+   "id": "io.telemost-telemost-mcp-server",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.codespar-mcp-adyen",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 25,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 4136.3
+  },
+  {
+   "id": "io.github.starecz-karea-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 50,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1822.9
+  },
+  {
+   "id": "io.github.NotHarshhaa-devops-mcp",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 21,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 5150.5
+  },
+  {
+   "id": "io.github.wei-mcp-registry-mcp-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 4,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1568.3
+  },
+  {
+   "id": "io.github.mnemoverse-mcp-memory-server",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 12,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1823.9
+  },
+  {
+   "id": "io.github.stardustxx-kairos",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "handshake-failed",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  },
+  {
+   "id": "io.github.BitmapAsset-dear-agent",
+   "category": "registry-sample",
+   "status": "included",
+   "excludeReason": null,
+   "tools": 11,
+   "schemaValidPct": 100,
+   "protocol": "2025-06-18",
+   "handshakeMs": 1768.3
+  },
+  {
+   "id": "io.github.bluwork-postgres-scout-mcp",
+   "category": "registry-sample",
+   "status": "excluded",
+   "excludeReason": "needs-credentials",
+   "tools": null,
+   "schemaValidPct": null,
+   "protocol": null,
+   "handshakeMs": null
+  }
+ ]
+}

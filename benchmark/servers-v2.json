@@ -1,0 +1,969 @@
+{
+ "_comment": "v2 expanded frame (2026-08-17): the 24 curated v1 candidates plus 96 registry candidates sampled uniformly at random (seed 20260817) from the census-derived npm/stdio candidate list (candidates-registry.json, snapshot 2026-07-14). 120 candidates total. No credentials ever supplied; inclusion decided empirically by the run.",
+ "servers": [
+  {
+   "id": "everything",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-everything",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": true
+  },
+  {
+   "id": "memory",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-memory",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "sequential-thinking",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-sequential-thinking",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "filesystem",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-filesystem",
+   "args": [
+    "__SANDBOX__"
+   ],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "github",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-github",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "brave-search",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-brave-search",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "slack",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-slack",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "gitlab",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-gitlab",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "google-maps",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-google-maps",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "postgres",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-postgres",
+   "args": [],
+   "expectCreds": true,
+   "roundTripSafe": false
+  },
+  {
+   "id": "context7",
+   "category": "community",
+   "package": "@upstash/context7-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "taskmanager",
+   "category": "community",
+   "package": "@kazuph/mcp-taskmanager",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "playwright",
+   "category": "community",
+   "package": "@playwright/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "sqlite-npx",
+   "category": "community",
+   "package": "mcp-server-sqlite-npx",
+   "args": [
+    "__SANDBOX__/study.db"
+   ],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "desktop-commander",
+   "category": "community",
+   "package": "@wonderwhy-er/desktop-commander",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "puppeteer",
+   "category": "reference",
+   "package": "@modelcontextprotocol/server-puppeteer",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "playwright-ea",
+   "category": "community",
+   "package": "@executeautomation/playwright-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "git",
+   "category": "community",
+   "package": "@cyanheads/git-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "quickchart",
+   "category": "community",
+   "package": "@gongrzhe/quickchart-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "yt-transcript",
+   "category": "community",
+   "package": "@kimtaeyoon83/mcp-server-youtube-transcript",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "yt-transcript-sinco",
+   "category": "community",
+   "package": "@sinco-lab/mcp-youtube-transcript",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "fetcher",
+   "category": "community",
+   "package": "@jae-jae/fetcher-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "commands",
+   "category": "community",
+   "package": "mcp-server-commands",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "webresearch",
+   "category": "community",
+   "package": "@mzxrai/mcp-webresearch",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Grinv-steam-games-mcp",
+   "category": "registry-sample",
+   "package": "steam-games-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.bighub-mcp",
+   "category": "registry-sample",
+   "package": "@bighub/bighub-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.verygoodplugins-mcp-automem",
+   "category": "registry-sample",
+   "package": "@verygoodplugins/mcp-automem",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.codespar-mcp-nequi",
+   "category": "registry-sample",
+   "package": "@codespar/mcp-nequi",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.UltraStarz-x402-sms",
+   "category": "registry-sample",
+   "package": "x402-sms-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Chaixueyuan-weapp-agent-mcp",
+   "category": "registry-sample",
+   "package": "@chaixueyuan/weapp-agent-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.michielinksee-linksee-memory",
+   "category": "registry-sample",
+   "package": "linksee-memory",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.geraservicesuk-mcp-gerafarm",
+   "category": "registry-sample",
+   "package": "@gera-services/mcp-gerafarm",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.behrensd-mcpwall",
+   "category": "registry-sample",
+   "package": "mcpwall",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.mindstone-mcp-server-canary",
+   "category": "registry-sample",
+   "package": "@mindstone/mcp-server-canary",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.ownedbyly-weather",
+   "category": "registry-sample",
+   "package": "@ihave2cats/mcp-weather-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "com.soulcraftagency-soulcraft-mcp",
+   "category": "registry-sample",
+   "package": "soulcraft-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.shenwell-stillonline",
+   "category": "registry-sample",
+   "package": "stillonline-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.GoneTone-mcp-server-taiwan-weather",
+   "category": "registry-sample",
+   "package": "@gonetone/mcp-server-taiwan-weather",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.michielinksee-bantou",
+   "category": "registry-sample",
+   "package": "@kansei-link/bantou",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.suomimasuda-rightos-mcp",
+   "category": "registry-sample",
+   "package": "@i-s3/rightos-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.llmops-pro-marketplace-mcp",
+   "category": "registry-sample",
+   "package": "marketplace-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.nhadaututtheky-neural-memory",
+   "category": "registry-sample",
+   "package": "neural-memory-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.scka-de-ecb-mcp",
+   "category": "registry-sample",
+   "package": "ecb-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.ssm82-vk-mcp",
+   "category": "registry-sample",
+   "package": "full-vk-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.CryptoAPIs-io-mcp-market-data",
+   "category": "registry-sample",
+   "package": "@cryptoapis-io/mcp-market-data",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.rimysore-standupbot",
+   "category": "registry-sample",
+   "package": "standupbot-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.souravpn-toggl-mcp",
+   "category": "registry-sample",
+   "package": "@souravpn/toggl-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.OndrejLapes-gretl-mcp",
+   "category": "registry-sample",
+   "package": "gretl-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.barneywohl-hugging-bay",
+   "category": "registry-sample",
+   "package": "hugging-bay-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.dazzle-labs-dazzle",
+   "category": "registry-sample",
+   "package": "@dazzle-labs/cli",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.declaw-ai-mcp-server",
+   "category": "registry-sample",
+   "package": "@declaw/mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.martymarkenson-postgres-connector",
+   "category": "registry-sample",
+   "package": "postgres-connector",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.markswendsen-code-taskrabbit",
+   "category": "registry-sample",
+   "package": "@striderlabs/mcp-taskrabbit",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.codespar-mcp-unico",
+   "category": "registry-sample",
+   "package": "@codespar/mcp-unico",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Cranot-agentskb",
+   "category": "registry-sample",
+   "package": "@agentskb/cli",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Dave-London-git",
+   "category": "registry-sample",
+   "package": "@paretools/git",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.cyanheads-met-museum-mcp-server",
+   "category": "registry-sample",
+   "package": "@cyanheads/met-museum-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.CryptoAPIs-io-mcp-hd-wallet",
+   "category": "registry-sample",
+   "package": "@cryptoapis-io/mcp-hd-wallet",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.serkandrgn-convertrilo",
+   "category": "registry-sample",
+   "package": "@convertrilo/sdk",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.paladini-mcp-me",
+   "category": "registry-sample",
+   "package": "mcp-me",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.cyanheads-exchange-rates-mcp-server",
+   "category": "registry-sample",
+   "package": "@cyanheads/exchange-rates-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.rog0x-env",
+   "category": "registry-sample",
+   "package": "@rog0x/mcp-env-tools",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.houtini-ai-fmp",
+   "category": "registry-sample",
+   "package": "@houtini/fmp-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.codespar-mcp-stripe-acp",
+   "category": "registry-sample",
+   "package": "@codespar/mcp-stripe-acp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.codespar-mcp-clip",
+   "category": "registry-sample",
+   "package": "@codespar/mcp-clip",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.tponscr-debug-oracle-h",
+   "category": "registry-sample",
+   "package": "oracle-h-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.infolegalge-legal-ge",
+   "category": "registry-sample",
+   "package": "@legalge/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.dpesch-mantisbt-mcp-server",
+   "category": "registry-sample",
+   "package": "@dpesch/mantisbt-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "tech.bugbrain-mcp",
+   "category": "registry-sample",
+   "package": "@bugbrain/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.learningloons-hash-lithtrix",
+   "category": "registry-sample",
+   "package": "lithtrix-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.ofershap-docker",
+   "category": "registry-sample",
+   "package": "mcp-docker-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.teabagkim-interview-mode",
+   "category": "registry-sample",
+   "package": "claude-interview-mode",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.antonpogrebenko-public-rftools",
+   "category": "registry-sample",
+   "package": "rftools-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Musaraf-M-sentinal-mcp",
+   "category": "registry-sample",
+   "package": "@md-musaraf/sentinal-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.hernaninverso-eleata-einvoice-mcp",
+   "category": "registry-sample",
+   "package": "eleata-einvoice-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.JhostinAleck-brightspace",
+   "category": "registry-sample",
+   "package": "brightspace-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.MukundaKatta-diff-mcp",
+   "category": "registry-sample",
+   "package": "@mukundakatta/diff-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.sshahzaiib-agy-bridge",
+   "category": "registry-sample",
+   "package": "agy-bridge",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.lesofi-handinloop-mcp-server",
+   "category": "registry-sample",
+   "package": "handinloop-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.speedvault-mcp",
+   "category": "registry-sample",
+   "package": "@speedvault/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.strato-space-media-gen-mcp",
+   "category": "registry-sample",
+   "package": "@strato-space/media-gen-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.haomingkoo-japan-seasons",
+   "category": "registry-sample",
+   "package": "japan-seasons-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.arijit-gogoi-mpv-mcp-server",
+   "category": "registry-sample",
+   "package": "mpv-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.HTTPayer-mcp",
+   "category": "registry-sample",
+   "package": "@httpayer/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.j0hanz-filesystem-context",
+   "category": "registry-sample",
+   "package": "@j0hanz/filesystem-context-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.williamechevarria-hivelearn-mcp",
+   "category": "registry-sample",
+   "package": "hivelearn-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.woyaxnini-ozon-seller",
+   "category": "registry-sample",
+   "package": "@woyax/mcp-ozon-seller",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.123Ergo-unphurl",
+   "category": "registry-sample",
+   "package": "@unphurl/mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.BenAHammond-code-auditor-mcp",
+   "category": "registry-sample",
+   "package": "code-auditor-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.jasonwagao-bit-xuanxue-bazi-matching",
+   "category": "registry-sample",
+   "package": "xuanxue-bazi-matching",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.gogogadgetbytes-smart-connections",
+   "category": "registry-sample",
+   "package": "@gogogadgetbytes/smart-connections-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Hookwarden-mcp",
+   "category": "registry-sample",
+   "package": "@hookwarden/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.vighriday-veris",
+   "category": "registry-sample",
+   "package": "veris-core",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.mario-andreschak-mcp-abap-abap-adt-api",
+   "category": "registry-sample",
+   "package": "mcp-abap-abap-adt-api",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.davidmosiah-whoop-mcp",
+   "category": "registry-sample",
+   "package": "whoop-mcp-unofficial",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.waqarulwahab-llm-cost-estimator",
+   "category": "registry-sample",
+   "package": "llm-cost-estimator-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.CedricKouma-fetch-extract",
+   "category": "registry-sample",
+   "package": "agentforge-fetch-extract-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.Medhovarsh-forkmind",
+   "category": "registry-sample",
+   "package": "forkmind",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.whazeted-paraglide-messages-mcp",
+   "category": "registry-sample",
+   "package": "paraglide-messages-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.KnockOutEZ-wigolo",
+   "category": "registry-sample",
+   "package": "wigolo",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.runapi-builder-gpt-image-2-mcp",
+   "category": "registry-sample",
+   "package": "@runapi.ai/gpt-image-2-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.609NFT-vibekit-mcp",
+   "category": "registry-sample",
+   "package": "vibekit-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.theastraway-mind",
+   "category": "registry-sample",
+   "package": "@astramindapp/mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.tuckerschreiber-fullrun",
+   "category": "registry-sample",
+   "package": "@fullrun/mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.evalor-dida365",
+   "category": "registry-sample",
+   "package": "dida365-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.goldmembrane-codesafer",
+   "category": "registry-sample",
+   "package": "cleaner-code",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.earonesty-boxpdf-html",
+   "category": "registry-sample",
+   "package": "boxpdf-html",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.KarstenKreh-standby-design-mcp",
+   "category": "registry-sample",
+   "package": "standby-design-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.malamutemayhem-exchangerate",
+   "category": "registry-sample",
+   "package": "@unclick/exchangerate-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.openfused-openfuse-mcp",
+   "category": "registry-sample",
+   "package": "openfused",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.420247jake-session-forge",
+   "category": "registry-sample",
+   "package": "session-forge",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.telemost-telemost-mcp-server",
+   "category": "registry-sample",
+   "package": "telemost-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.codespar-mcp-adyen",
+   "category": "registry-sample",
+   "package": "@codespar/mcp-adyen",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.starecz-karea-mcp",
+   "category": "registry-sample",
+   "package": "karea-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.NotHarshhaa-devops-mcp",
+   "category": "registry-sample",
+   "package": "@notharshhaa/devops-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.wei-mcp-registry-mcp-server",
+   "category": "registry-sample",
+   "package": "mcp-registry-mcp-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.mnemoverse-mcp-memory-server",
+   "category": "registry-sample",
+   "package": "@mnemoverse/mcp-memory-server",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.stardustxx-kairos",
+   "category": "registry-sample",
+   "package": "kairos-astrology",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.BitmapAsset-dear-agent",
+   "category": "registry-sample",
+   "package": "dear-agent",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  },
+  {
+   "id": "io.github.bluwork-postgres-scout-mcp",
+   "category": "registry-sample",
+   "package": "postgres-scout-mcp",
+   "args": [],
+   "expectCreds": false,
+   "roundTripSafe": false
+  }
+ ]
+}
