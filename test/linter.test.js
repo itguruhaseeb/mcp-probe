@@ -110,6 +110,7 @@ test('lintTool accepts a fully specified tool', () => {
     name: 'echo',
     title: 'Echo',
     description: 'echo text back',
+    annotations: { readOnlyHint: true },
     inputSchema: {
       type: 'object',
       properties: { text: { type: 'string', description: 't' } },
@@ -118,6 +119,16 @@ test('lintTool accepts a fully specified tool', () => {
   });
   assert.equal(f, 0);
   assert.equal(w, 0);
+});
+
+test('lintTool warns when a tool declares no safety hints', () => {
+  const { issues } = lintTool({
+    name: 'x',
+    title: 'X',
+    description: 'd',
+    inputSchema: { type: 'object', properties: {} },
+  });
+  assert.ok(issues.some((i) => /safety hints/.test(i.message)));
 });
 
 test('safeCallArgs marks no-required-params tools safe', () => {
