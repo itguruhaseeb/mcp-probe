@@ -61,6 +61,36 @@ agentic systems move into production [@toolreliability]. The accompanying study
 protocol (`benchmark/STUDY.md`) documents a sample frame and metrics so that
 measurements are repeatable across releases of the protocol and the ecosystem.
 
+# State of the field
+
+Three kinds of tooling exist around MCP today, and none answers the conformance
+question directly.
+
+The official MCP Inspector is an interactive graphical client for exploring a
+running server by hand. It is built for debugging during development, which makes
+it well suited to diagnosis and unsuited to measurement, because its output is a
+screen rather than a durable record.
+
+The official MCP SDKs provide compliant client implementations. Because their
+purpose is to make integration work, they absorb deviations rather than report
+them: a server returning a subtly malformed tool definition is often handled
+gracefully, which is correct behavior for an integration library and precisely the
+wrong behavior for an audit. An SDK-based check also cannot distinguish a server
+that is conformant from one whose non-conformance the SDK happens to tolerate.
+
+Ad-hoc per-project scripts are the third and most common category. They are
+unpublished, unversioned, and not comparable across authors, so a finding from one
+team cannot be replicated by another.
+
+The gap is a non-interactive, dependency-light checker whose output is a durable
+machine-readable record. This mirrors a familiar pattern in other protocol
+ecosystems, where independent conformance suites developed alongside reference
+implementations precisely because a reference implementation, by design, tolerates
+what a conformance suite must flag. `mcp-probe` occupies that position for MCP.
+Work on agent tool-use reliability such as [@toolreliability] measures whether an
+agent succeeds at a task, one layer above the question here; `mcp-probe` measures
+whether the tool surface an agent is handed is well-formed in the first place.
+
 # Functionality
 
 - **Handshake and capability negotiation.** Performs `initialize` and validates the
@@ -75,6 +105,37 @@ measurements are repeatable across releases of the protocol and the ecosystem.
   invocations to confirm the server responds to a well-formed request.
 - **Reproducible output.** `--json` emits structured results suitable for
   aggregation across many servers.
+
+# Software design
+
+`mcp-probe` is a Node.js command-line program with no runtime dependencies beyond
+the language runtime. That constraint is a design decision rather than an
+aesthetic: a conformance checker that pulls in the SDK it is meant to audit
+inherits that SDK's tolerances, and a checker with a large dependency tree cannot
+credibly claim its results are reproducible years later.
+
+The program is organized into four modules under `src/`, each with a single
+responsibility. `client.js` implements the MCP wire protocol directly: it spawns
+the server under test as a child process, writes newline-delimited JSON-RPC 2.0
+requests to its standard input, reads framed responses from its standard output,
+performs the `initialize` handshake, records the negotiated protocol version, and
+issues `tools/list`. Keeping the transport hand-written is what allows the tool to
+observe deviations an SDK would silently accommodate. `linter.js` holds the
+conformance rules, expressed independently of the transport so the rule set can
+track the specification without touching protocol code. `report.js` renders results
+either as a human-readable summary or, under `--json`, as a structured record; the
+structured form is the one intended for research use, is stable across releases,
+and is what the benchmark pipeline aggregates. `color.js` isolates terminal
+formatting so machine-readable output is never contaminated by escape sequences.
+
+Around these sit `bin/` for the command-line entry point, `test/` for the unit
+suite, `examples/` for runnable sample servers, and `benchmark/` for the study
+harness, sample frame, and archived measurement records.
+
+The separation between protocol, rules, and reporting is what makes the tool usable
+as an instrument. A study can pin a released version, re-run an identical rule set
+against a documented sample frame, and compare across time, because the thing that
+changed between two runs is the ecosystem rather than the measurement.
 
 # Preliminary findings
 
@@ -95,7 +156,7 @@ which does not support the intuition that MCP tool schemas are frequently
 malformed. Second, **the variance is in optional safety metadata**: 83 of 200 tools
 (41.5%) omit the tool `annotations` (for example `readOnlyHint` and
 `destructiveHint`) introduced in a later spec revision, and the omission is
-strictly server-level rather than random — the split is all-or-nothing, with eight
+strictly server-level rather than random: the split is all-or-nothing, with eight
 servers annotating every tool and eight annotating none, and not a single server in
 between. Because annotations are how a client learns whether a tool is read-only or
 destructive *before* invoking it, this is a measurable gap between the
@@ -114,6 +175,44 @@ server-level split, which strengthens confidence that these are structural
 properties of the ecosystem rather than artifacts of a small sample. Re-running
 `mcp-probe` at each spec release yields a longitudinal series of the same
 measurements.
+
+# Research impact statement
+
+`mcp-probe` is offered as a research instrument rather than as a library with an
+established user base, and its contribution should be judged on that basis.
+
+That contribution is a reproducible measurement pipeline for an ecosystem that
+currently has none. Claims about MCP server quality circulate widely and are
+largely anecdotal, because there has been no shared, versioned way to measure them.
+`mcp-probe` turns those claims into checkable ones: a documented sample frame, a
+fixed rule set, deterministic machine-readable output, and archived raw records
+that a third party can re-run without contacting the author.
+
+The baseline study above already produced findings a reader can act on and, more
+importantly, can contest. That hard schema conformance is universal in the sample
+contradicts a common assumption. That safety annotations are omitted in a strictly
+server-level, all-or-nothing pattern is the kind of structural observation that is
+invisible without systematic measurement and that bears directly on client design,
+since annotations are how a client learns whether a tool is destructive before
+calling it.
+
+Because the instrument is versioned and the sample frame documented, re-running it
+at each specification release yields a longitudinal series rather than a one-time
+snapshot. That is the durable output: not the current percentages, which will move,
+but the ability to say how and when they moved, and for anyone else to check. The
+author notes plainly that independent adoption and use are what would demonstrate
+impact rather than argue for it, and that this record is still being built.
+
+# AI usage disclosure
+
+Generative AI assistance was used substantially in this work. AI coding assistants
+were used to draft and refactor the implementation and its test suite, to build and
+run the benchmark harness, and to draft this manuscript. All reported measurements
+were produced by executing the software against live servers rather than generated
+by a model, and the archived raw records permit independent verification of every
+figure reported here. The author reviewed the code and the manuscript, and takes
+full responsibility for the correctness of the implementation, the study protocol,
+and the findings.
 
 # Acknowledgements
 
