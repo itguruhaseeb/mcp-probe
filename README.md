@@ -199,3 +199,13 @@ conformance probe. Regenerate with `node benchmark/harvest.mjs`.
 ## License
 
 MIT, Haseeb Mohammed Afsar. See [LICENSE](./LICENSE).
+
+
+## Exit Codes
+
+
+| Exit Code | Status | Description |
+| :---: | :--- | :--- |
+| **`0`** | Success / Healthy | The probe ran successfully and the MCP server is healthy (successful handshake and zero schema/lint errors). Also returned when printing help (`-h`, `--help`) or version (`-v`, `--version`) information. |
+| **`1`** | Server Unhealthy / Probe Failure | The MCP server failed diagnostics (`result.ok === false`). This occurs on handshake failure, failure querying declared server capabilities, or when one or more tool schemas fail validation/lint checks. |
+| **`2`** | Usage / Execution Error | Invalid CLI arguments (e.g., unknown flags, invalid `--timeout` value), missing target server command after `--`, or an unexpected runtime exception. |
