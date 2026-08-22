@@ -10,6 +10,8 @@
 
 import { spawn } from 'node:child_process';
 
+import { VERSION } from './version.js';
+
 // The protocol version mcp-probe advertises during initialize. Servers may
 // negotiate a different one back; we surface whatever they return.
 export const PROTOCOL_VERSION = '2025-06-18';
@@ -163,7 +165,7 @@ export class McpClient {
     const result = await this.request('initialize', {
       protocolVersion: PROTOCOL_VERSION,
       capabilities: {},
-      clientInfo: { name: 'mcp-probe', version: '0.1.0' },
+      clientInfo: { name: 'mcp-probe', version: VERSION },
     });
     // Per spec the client confirms readiness before making other calls.
     this.notify('notifications/initialized');

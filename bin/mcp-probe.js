@@ -8,6 +8,7 @@
 
 import { runDiagnostics, renderHuman } from '../src/report.js';
 import { color } from '../src/color.js';
+import { VERSION } from '../src/version.js';
 
 const HELP = `mcp-probe  lint and health-check any MCP server over stdio
 
@@ -30,8 +31,6 @@ Options
 Everything after "--" is the command used to launch the target MCP server.
 Exit code is non-zero when a hard failure is found (bad handshake, invalid
 tool schema).`;
-
-const VERSION = '0.1.0';
 
 function parseArgs(argv) {
   const opts = { call: false, json: false, timeout: 10000, command: null, args: [] };

@@ -4,6 +4,7 @@
 import { McpClient, McpError, PROTOCOL_VERSION } from './client.js';
 import { lintTool, safeCallArgs, FAIL, WARN } from './linter.js';
 import { color, glyph } from './color.js';
+import { VERSION } from './version.js';
 
 function now() {
   return Number(process.hrtime.bigint() / 1000000n); // ms as integer
@@ -29,7 +30,7 @@ async function timed(fn) {
 export async function runDiagnostics({ command, args, timeout, call }) {
   const result = {
     tool: 'mcp-probe',
-    version: '0.1.0',
+    version: VERSION,
     target: [command, ...args].join(' '),
     clientProtocolVersion: PROTOCOL_VERSION,
     ok: true,
