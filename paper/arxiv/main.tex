@@ -11,6 +11,10 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usetikzlibrary{positioning,arrows.meta}
 
 \title{What a Random Draw from the MCP Registry Contains,\\
 and What Tool-Use Benchmarks Contain Instead}
@@ -149,6 +153,48 @@ actually deployed.
 \section{Method}
 \label{sec:method}
 
+Figure~\ref{fig:pipeline} shows the whole pipeline and the quantity at each stage.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  stg/.style={draw, rounded corners=2pt, fill=black!5, align=center, inner sep=4pt,
+              minimum height=8.5mm, minimum width=52mm},
+  res/.style={draw, rounded corners=2pt, fill=white, align=center, inner xsep=3pt, inner ysep=4pt,
+              minimum height=8.5mm, text width=25mm, font=\scriptsize},
+  cor/.style={draw, rounded corners=2pt, fill=black!10, align=center, inner sep=4pt,
+              minimum height=8.5mm, minimum width=36mm, font=\scriptsize},
+  ar/.style={-{Latex[length=2mm]}, semithick},
+  nt/.style={font=\scriptsize\itshape, text=black!60, align=left, inner sep=1.5pt},
+]
+\node[stg] (reg) {Official MCP registry \textbf{24{,}135} servers};
+\node[stg, below=8mm of reg] (frm) {\texttt{npm}/\texttt{stdio} candidate frame \textbf{7{,}258}};
+\node[stg, below=8mm of frm] (drw) {Seeded probability draw \textbf{400} servers};
+\draw[ar] (reg) -- node[right, nt] {census sweep, no third-party code run} (frm);
+\draw[ar] (frm) -- node[right, nt] {seed \texttt{20260819}, frame SHA-256 pinned} (drw);
+\node[res, below=11mm of drw, xshift=-58mm] (inc) {\textbf{195} included\\\emph{48.8\%}};
+\node[res, below=11mm of drw, xshift=-19.5mm] (hsf) {\textbf{150} never\\started};
+\node[res, below=11mm of drw, xshift=19.5mm] (crd) {\textbf{53} need\\credentials};
+\node[res, below=11mm of drw, xshift=58mm] (unv) {\textbf{2} package\\unavailable};
+\foreach \n in {inc,hsf,crd,unv} \draw[ar] (drw.south) -- ++(0,-4mm) -| (\n.north);
+\node[cor, below=13mm of inc] (tls) {Real MCP \textbf{2{,}766} tools};
+\node[cor, below=13mm of crd, xshift=-19.5mm] (bf) {BFCL v4 \textbf{8{,}726} records};
+\node[cor, below=13mm of unv] (ul) {UltraTool EN \textbf{14{,}084}};
+\draw[ar] (inc) -- (tls);
+\node[stg, below=10mm of drw.south, yshift=-42mm, minimum width=100mm] (red)
+  {Global deduplication on name $+$ full description, then TF-IDF cosine\\[1pt]
+   \scriptsize one method held constant across all three corpora};
+\foreach \n in {tls,bf,ul} \draw[ar] (\n.south) -- ++(0,-4mm) -| (red.north);
+\end{tikzpicture}
+\caption{The measurement pipeline. The census tier executes no third-party code and
+supplies the sampling frame; the dynamic tier probes each drawn server exactly once,
+with no repair, no credentials and no retry, and records an outcome for all 400. The
+selection points that other MCP studies resolve by curation or repair are the two
+labelled arrows and the four-way split beneath them.}
+\label{fig:pipeline}
+\end{figure}
+
 \subsection{Census tier}
 A harvester sweeps the entire official MCP registry
 (\url{https://registry.modelcontextprotocol.io/v0/servers}) by cursor pagination
@@ -228,6 +274,34 @@ Excluded: package unavailable       & 2   & 0.5\%  \\
 \label{tab:inclusion}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.78\linewidth, height=4.6cm, font=\small,
+  ybar, bar width=20pt, enlarge x limits=0.55,
+  symbolic x coords={inclusion,omission}, xtick=data,
+  xticklabels={servers that start,tools missing annotations},
+  ymin=0, ymax=82, ytick={0,20,40,60}, ylabel={percent},
+  grid=major, grid style={black!10}, tick align=outside,
+  nodes near coords, nodes near coords style={font=\scriptsize},
+  point meta=explicit symbolic,
+  legend style={font=\scriptsize, at={(0.5,1.04)}, anchor=south, legend columns=2,
+                draw=black!25, /tikz/every even column/.append style={column sep=8pt}},
+  legend image code/.code={\draw[#1] (0cm,-0.09cm) rectangle (0.34cm,0.13cm);},
+]
+\addplot[draw=black, fill=black!45] coordinates {(inclusion,66.7)[66.7] (omission,41.5)[41.5]};
+\addlegendentry{hand-curated frame ($n=24$)}
+\addplot[draw=black, fill=black!12] coordinates {(inclusion,48.8)[48.8] (omission,58.8)[58.8]};
+\addlegendentry{random draw ($n=400$)}
+\end{axis}
+\end{tikzpicture}
+\caption{Curation flatters both headline numbers, and in opposite directions. The same
+instrument reports a higher start rate and a lower annotation-omission rate on a
+hand-curated frame than on a probability sample of the same population.}
+\label{fig:curation}
+\end{figure}
+
 Two things follow.
 
 First, \textbf{a random draw includes far less than a curated one}. The same
@@ -241,6 +315,10 @@ server cannot be probed, and it accounts for 53 of 400 draws. Servers that simpl
 do not start account for 150, nearly three times as many. On the frame that
 behavioral MCP studies actually sample from, roughly two in five published entries
 are inert.
+
+Figure~\ref{fig:curation} puts the two curation effects side by side. They run in
+opposite directions, which is what makes curation hard to correct for after the fact:
+it raises the apparent health of the population on one axis and lowers it on the other.
 
 This is the quantity that repair-based pipelines are built to eliminate. That is a
 sound engineering choice for their purposes and it is precisely why their samples
@@ -343,6 +421,42 @@ UltraTool EN (2{,}032) & all           & 0.3\%  & 0.0\% & 0.0\% & 0.0\% \\
 \caption{Redundancy after global deduplication, by cosine threshold.}
 \label{tab:redundancy}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.9\linewidth, height=5.8cm, font=\small,
+  xlabel={cosine similarity threshold}, ylabel={tools with a near-duplicate (\%)},
+  xmin=0.678, xmax=0.922, ymin=-1.4, ymax=19.5,
+  xtick={0.70,0.80,0.85,0.90}, ytick={0,4,8,12,16},
+  grid=major, grid style={black!10}, tick align=outside,
+  legend style={font=\scriptsize, at={(0.985,0.975)}, anchor=north east, draw=black!25,
+                row sep=0.5pt},
+  legend cell align=left,
+]
+\addplot[thick, black, mark=*, mark size=1.7pt] coordinates {(0.70,16.7)(0.80,9.7)(0.85,6.2)(0.90,2.7)};
+\addlegendentry{BFCL v4, all pairs}
+\addplot[thick, black, dashed, mark=o, mark size=2pt] coordinates {(0.70,16.4)(0.80,9.6)(0.85,6.2)(0.90,2.7)};
+\addlegendentry{BFCL v4, cross-task only}
+\addplot[thick, black!50, mark=square*, mark size=1.6pt] coordinates {(0.70,2.8)(0.80,1.1)(0.85,0.5)(0.90,0.0)};
+\addlegendentry{Real MCP, all pairs}
+\addplot[thick, black!50, dashed, mark=square, mark size=1.9pt] coordinates {(0.70,0.0)(0.80,0.0)(0.85,0.0)(0.90,0.0)};
+\addlegendentry{Real MCP, cross-server only}
+\addplot[thick, black!28, mark=triangle*, mark size=2.2pt] coordinates {(0.70,0.3)(0.80,0.0)(0.85,0.0)(0.90,0.0)};
+\addlegendentry{UltraTool EN, all pairs}
+\node[font=\scriptsize\itshape, text=black!65, anchor=west, align=left] (ann) at (axis cs:0.735,6.4)
+  {removing same-server pairs collapses\\real MCP from 2.8\% to zero};
+\draw[-{Latex[length=1.6mm]}, black!55] (axis cs:0.744,5.2) -- (axis cs:0.716,0.25);
+\end{axis}
+\end{tikzpicture}
+\caption{Near-duplication after global deduplication. Solid lines count every pair;
+dashed lines count only pairs spanning different authoring units. BFCL's redundancy
+survives the restriction almost unchanged, so it lies between independently presented
+tasks. Real MCP's does not survive it at all. The Real MCP cross-server series lies on
+zero at every threshold.}
+\label{fig:redundancy}
+\end{figure}
 
 The decomposition changes the finding. \textbf{Every near-duplicate among real
 MCP tools lies inside a single server}: the \texttt{list\_x} / \texttt{get\_x} /
