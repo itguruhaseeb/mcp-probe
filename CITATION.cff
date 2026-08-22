@@ -17,9 +17,9 @@ authors:
 repository-code: "https://github.com/itguruhaseeb/mcp-probe"
 url: "https://github.com/itguruhaseeb/mcp-probe"
 license: MIT
-version: 0.1.0
+version: 0.1.2
 doi: "10.5281/zenodo.21347997"
-date-released: "2026-07-13"
+date-released: "2026-08-22"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.21347997"
