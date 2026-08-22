@@ -140,6 +140,19 @@ failure or an invalid tool schema), so you can gate a build on it:
 npx @hafsar/mcp-probe --json -- node ./server.js || echo "MCP server is unhealthy"
 ```
 
+### Exit codes
+
+`mcp-probe` exposes a stable exit-code contract for scripts and CI pipelines:
+
+| Code | Meaning |
+| --- | --- |
+| `0` | The probe completed without hard failures (or help/version was requested). |
+| `1` | The probe completed with a hard failure, such as a failed handshake or invalid tool schema. |
+| `2` | The command was invoked incorrectly, or the probe stopped because of an unexpected internal error. |
+
+Warnings do not change the exit code. Use `--json` when a pipeline also needs the
+structured diagnostics behind the result.
+
 ## Roadmap
 
 - Deeper JSON Schema validation (nested `$ref`, `oneOf` / `anyOf`, format checks).
