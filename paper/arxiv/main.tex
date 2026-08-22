@@ -12,284 +12,461 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{microtype}
 
-\title{Measuring the Model Context Protocol Server Ecosystem:\\
-A Population-Scale Census and Conformance Study}
+\title{What a Random Draw from the MCP Registry Contains,\\
+and What Tool-Use Benchmarks Contain Instead}
 
 \author{Haseeb Mohammed Afsar\\
   \small Independent researcher\\
   \small ORCID: \href{https://orcid.org/0009-0000-4038-1272}{0009-0000-4038-1272}}
 
-\date{July 2026}
+\date{August 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-The Model Context Protocol (MCP) is an open standard that lets large language
-model (LLM) applications discover and call external tools through a uniform
-JSON-RPC~2.0 interface. Its adoption has produced a large, rapidly growing
-population of independently authored servers, but the ecosystem has not been
-measured: basic questions about its size, how servers ship, which transports and
-spec revisions are in use, and whether servers conform to the specification and
-behave reliably have gone unanswered. We report a two-tier empirical study. A
-\emph{census tier} sweeps the entire official MCP registry (16{,}548 unique servers
-at a July~2026 snapshot) and measures only self-declared metadata, so it runs no
-third-party code and scales to the whole published population. A \emph{dynamic tier}
-launches a credential-free, stdio-launchable subset and measures actual behavior with
-the open-source \texttt{mcp-probe} tool: handshake success, JSON~Schema validity of
-every advertised tool, presence of safety annotations, protocol-version negotiation,
-and latency. Three results stand out. First, the population is dominated by hosted
-remote servers (42.6\% remote-only) and \texttt{npm}/\texttt{stdio} local packages,
-and it has already fragmented across five \texttt{\$schema} revisions. Second,
-\emph{hard} conformance is high: all 200 tools measured in the behavioral sample carry
-valid JSON~Schema \texttt{inputSchema} definitions with zero fatal violations. Third,
-the real variance is in optional \emph{safety} metadata: 41.5\% of tools omit the
-\texttt{annotations} (\texttt{readOnlyHint}, \texttt{destructiveHint}, \dots) that
-tell an autonomous agent whether a tool is safe to call \emph{before} calling it, and
-the omission is a clean server-level, all-or-nothing decision rather than per-tool
-oversight. We release the full dataset and a re-runnable pipeline so the measurement
-can be repeated at each spec release as a longitudinal series.
+Studies of the Model Context Protocol (MCP) server ecosystem draw their samples in
+ways that quietly select for servers that work: reference sets, popularity lists,
+hand-curated frames, or pipelines that repair a server until it starts. We report
+what an unrepaired probability sample actually contains. From a 24{,}135-server
+registry census we draw 400 \texttt{npm}/\texttt{stdio} servers with a published
+seed and probe each one over the wire. Only 48.8\% complete an
+\texttt{initialize} handshake, against 66.7\% for a hand-curated frame measured
+with the same instrument, and the dominant failure is not missing credentials
+(13.3\%) but servers that never start at all (37.5\%). Among the 195 that do run,
+hard conformance is total: zero fatal JSON~Schema violations across 2{,}766
+advertised tools. Optional safety annotations are the real variance, and the
+tool-level omission rate on a random draw is 58.8\% against 41.5\% on the curated
+frame, so curation flatters this figure too. We then compare the tool
+\emph{descriptions} these servers advertise against two tool-use benchmark
+corpora using one method held constant. Real MCP tools show 2.8\% near-duplication
+at cosine 0.70, and \emph{all} of it lies within single servers: cross-author
+near-duplication is 0.0\% at every threshold tested. BFCL~v4 shows 16.7\%, of
+which 16.4 points lie \emph{between} independently presented tasks. UltraTool
+shows 0.3\%, cleaner than real tools, so this is a property of BFCL and not of
+synthetic corpora as a class. Separately, 68.8\% of raw BFCL rows and 85.6\% of
+raw UltraTool rows are exact name-plus-description repeats, against 0.4\% for
+real MCP, so any statistic computed over these releases without global
+deduplication measures repetition rather than tools. All figures regenerate from
+released scripts and a published seed.
 \end{abstract}
 
 \section{Introduction}
 
-The Model Context Protocol (MCP)~\cite{mcp2024} is an open standard for connecting
-LLM applications to external tools, resources, and prompts over a uniform JSON-RPC
-2.0 interface. Since its introduction the number of independently authored MCP
-servers has grown quickly, and with it the variance in their quality: tool
-\texttt{inputSchema} definitions can drift out of spec, handshakes can fail on edge
-cases, and malformed responses may surface only when an LLM constructs an invalid
-tool call at run time. As agentic systems move into production, the reliability of
-the tools they call becomes a first-order concern~\cite{toolreliability}.
+The Model Context Protocol (MCP)~\cite{mcp2024} lets large language model
+applications discover and call external tools over a uniform JSON-RPC~2.0
+interface. Empirical work on the resulting server population has grown quickly,
+and it now includes registry drift measurement~\cite{drift}, internet-facing
+security assessment~\cite{exposed}, ecosystem-scale runtime
+analysis~\cite{mcpzoo}, and repository-level clone
+detection~\cite{cloning}. These studies establish scale. This paper asks a
+narrower question that scale alone does not answer.
 
-Despite this, the MCP server ecosystem has not been measured empirically. We do not
-know how large the published population is, how servers are actually shipped and
-consumed (hosted remote endpoints versus locally installed packages), which
-transports and specification revisions are in use, or whether servers conform to the
-specification and behave reliably in practice. This paper answers those questions
-with a reproducible, two-tier study and releases the underlying dataset and tooling.
+Every behavioral MCP study must solve the same problem: most published servers
+cannot simply be launched and talked to. The solutions in the literature all
+involve selection. Reference sets and popularity lists select for servers people
+already use. Curated frames select for servers the curator could get working.
+MCPZoo~\cite{mcpzoo}, the largest such effort, resolves it by \emph{repairing}
+servers with a multi-agent framework until they run, turning 64{,}611 collected
+servers into 37{,}288 that support dynamic analysis. Each is a reasonable
+engineering answer, and each erases the same quantity: how much of the published
+population is simply dead on arrival.
+
+We measure that quantity by not solving the problem. We draw a probability sample
+from the registry, probe every draw exactly once with no repair and no
+credentials, and record an outcome for all 400, included or excluded with a
+reason.
+
+The second half of the paper turns the same instrument outward. Having collected
+2{,}766 tool descriptions that real, independently authored, deployed servers
+actually advertise, we can ask how they compare with the tool descriptions that
+tool-use benchmarks present to models. Existing benchmark criticism has focused
+on \emph{evaluators}: Bhat et al.~\cite{benchaudit} find an 18.5\% evaluator-human
+misalignment rate across four tool-calling benchmark families including BFCL~v4,
+and score spreads of 18.9 points across repeated runs of one setup. We ask a
+different question about the same artifacts, concerning the \emph{corpora} being
+scored rather than the machinery scoring them.
 
 \paragraph{Contributions.}
 \begin{itemize}
-  \item A \textbf{population-scale census} of the official MCP registry
-    (16{,}548 unique servers), classified by deployment model, package ecosystem,
-    transport, lifecycle status, and \texttt{\$schema} revision
-    (Section~\ref{sec:census}). Because it measures only self-declared metadata it
-    runs no third-party code and covers the whole published population.
-  \item A \textbf{behavioral conformance study} of a credential-free,
-    stdio-launchable sample using the open-source \texttt{mcp-probe} instrument,
-    reporting schema validity, safety-annotation coverage, protocol-version drift,
-    and latency (Section~\ref{sec:dynamic}).
-  \item A \textbf{released, re-runnable pipeline and dataset}
-    (Section~\ref{sec:data}) so the measurement can be repeated at each spec release,
-    producing a longitudinal series rather than a one-off snapshot.
+  \item \textbf{What an unrepaired random draw contains} (Section~\ref{sec:draw}):
+    48.8\% inclusion against 66.7\% curated, with the full failure taxonomy. The
+    dominant exclusion is servers that never start, at nearly three times the
+    credential-gated rate.
+  \item \textbf{What the servers that do run look like}
+    (Section~\ref{sec:behavior}): zero fatal schema violations across 2{,}766
+    tools, and a safety-annotation omission rate that is 17.3 points worse on a
+    random draw than on a curated one.
+  \item \textbf{Benchmark corpora against real deployed tools}
+    (Section~\ref{sec:redundancy}): one similarity method held constant across
+    three corpora, with the within-unit and cross-unit decomposition that
+    separates a project repeating itself from a benchmark repeating itself.
+  \item \textbf{A released, seeded, re-runnable pipeline} (Section~\ref{sec:data}).
+    Every number here regenerates from a committed script, a committed seed, and
+    a hash-pinned frame.
 \end{itemize}
 
-\section{Study design}
-\label{sec:design}
+\section{Related work}
+\label{sec:related}
 
-\subsection{Research questions}
-\begin{description}
-  \item[RQ0 (census).] How large is the published MCP server population, and how is
-    it distributed across deployment models, package ecosystems, transports, and
-    specification revisions?
-  \item[RQ1 (conformance).] What fraction of public MCP servers initialize
-    successfully and advertise spec-valid tool \texttt{inputSchema} definitions?
-  \item[RQ2 (drift).] Which schema/spec deviations are most common, and do they
-    cluster by authoring pattern?
-  \item[RQ3 (reliability).] What is the latency distribution of protocol operations?
-\end{description}
+\paragraph{Registry measurement.}
+Bharti~\cite{drift} tracks 120 snapshots of the MCP registry over 88.6 days across
+19{,}099 servers, and reports that only 8.6\% of servers ever rewrite their
+descriptions while the most active 5\% generate 61\% of change events. That work
+supersedes single-snapshot registry audits on the question of \emph{drift}. Our
+census tier is two snapshots and we make no drift claim; we use it only to size
+the population and to construct a sampling frame.
 
-\subsection{Two measurement tiers}
-The questions above have different \emph{safe} sample sizes, so we measure at two
-scales.
+\paragraph{Behavioral and security measurement.}
+Chen et al.~\cite{mcpzoo} build MCPZoo, the largest runtime collection to date,
+and use it to show that existing MCP security scanners are unreliable: fewer than
+half of sampled alerts survive manual validation. Padilla~\cite{exposed}
+dynamically audits 414 internet-facing MCP servers with a purpose-built
+framework, finding 68 reportable vulnerabilities and reporting that 41.6\% of
+confirmed servers disappear within three days between measurement runs. Our
+behavioral sample is two orders of magnitude smaller than MCPZoo's and we make no
+security claim. The complementarity is specific: MCPZoo's repair pipeline is
+designed to convert non-starting servers into starting ones, and our measurement
+is of exactly the population that pipeline is built to rescue. Padilla's
+three-day disappearance rate is independent corroboration, on the remote tier,
+of the churn our 37.5\% non-start rate implies on the local tier.
 
-\paragraph{Census tier (population, code-free).}
+\paragraph{Duplication.}
+Kim et al.~\cite{cloning} measure repository-level cloning across 7{,}508 MCP
+repositories and 87{,}564 tools using lexical and fuzzy-structural similarity,
+manually verifying 60\% of high-Jaccard and 85\% of high-ssdeep candidates as true
+clones. Their unit is source code; ours is the advertised tool interface. Their
+result and ours are compatible and the tension between them is informative; we
+treat it as a threat to validity and test it directly in
+Section~\ref{sec:threats}.
+
+\paragraph{Benchmark validity.}
+Bhat et al.~\cite{benchaudit} audit the evaluators of four tool-calling benchmark
+families. To our knowledge no published work measures duplication \emph{within}
+these corpora or compares their tool distributions against tools that are
+actually deployed.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Census tier}
 A harvester sweeps the entire official MCP registry
-(\url{https://registry.modelcontextprotocol.io/v0/servers}) via cursor pagination
-and records only metadata the registry publishes: deployment model, package
-ecosystem, declared transport, lifecycle status, and pinned \texttt{\$schema}
-revision. Because no server code is executed, this tier safely scales to the whole
-published population and forms the denominator the dynamic tier samples from. The
-sweep records page count, version-row count, and a \texttt{sweepComplete} flag; if a
-pagination backstop is ever hit the run is marked a lower bound rather than silently
-truncated.
+(\url{https://registry.modelcontextprotocol.io/v0/servers}) by cursor pagination
+and records only self-declared metadata: deployment model, package ecosystem,
+declared transport, lifecycle status, and pinned \texttt{\$schema} revision. No
+third-party code runs, so this tier scales to the whole published population. The
+sweep records page count, version-row count, and a \texttt{sweepComplete} flag, so
+a truncated run is marked a lower bound rather than reported silently.
 
-\paragraph{Dynamic tier (sampled, behavioral).}
-A credential-free, stdio-launchable subset is launched over stdio and probed with
-\texttt{mcp-probe}, a dependency-light command-line tool that speaks the MCP wire
-protocol directly, performs the \texttt{initialize} handshake, enumerates advertised
-tools via \texttt{tools/list}, validates each tool's JSON~Schema~\cite{jsonschema}
-against the constraints the MCP specification places on tool definitions, and times
-protocol operations. Untrusted code executes in this tier, so it is a vetted,
-sampled subset rather than the whole population.
+We report two snapshots, 2026-07-14 and 2026-08-22. Both are complete sweeps. A
+registry sweep cannot be reconstructed after the fact, because the population
+moves; each snapshot is therefore released as an aggregate at the moment it was
+taken.
 
-\subsection{Sample frame}
-The census frame is every server in the official registry at a snapshot timestamp
-recorded with the dataset. The dynamic frame is the reference set
-(\texttt{modelcontextprotocol/servers}) plus the \texttt{npm}-published,
-stdio-launchable, active servers the census emits as candidates. Credential needs are
-verified empirically at run time; every included and excluded server is recorded with
-a reason so the frame is auditable.
+\subsection{Sampling}
+The frame is the \texttt{npm}-published, \texttt{stdio}-declared, active servers
+the census emits, 7{,}258 candidates at the 2026-08-22 snapshot. We draw
+$n=400$ without replacement: canonical sort by registry identifier, then partial
+Fisher--Yates driven by a seeded \texttt{mulberry32} generator, seed
+\texttt{20260819}. The draw manifest records the SHA-256 of the exact frame bytes,
+so a redraw against a moved frame is detected rather than assumed equivalent.
 
-\subsection{Ethics and guardrails}
-Public servers only. No credentials are ever supplied. Only read-only or explicitly
-safe calls are exercised; no side-effecting tool is invoked. Findings are reported in
-aggregate as ecosystem health, not as a leaderboard of individual failures.
+\subsection{Probing}
+Each drawn package is launched over stdio via \texttt{npx} and probed once with
+\texttt{mcp-probe}, which speaks the MCP wire protocol directly, performs the
+\texttt{initialize} handshake, enumerates tools via \texttt{tools/list}, and
+validates each tool's JSON~Schema~\cite{jsonschema} against the constraints the
+specification places on tool definitions. No credentials are ever supplied, no
+side-effecting tool is invoked, no server is repaired or retried, and every draw
+is recorded with an outcome.
 
-\section{RQ0: population census}
-\label{sec:census}
+\subsection{Redundancy measurement}
+Corpora are compared on one method held constant. The unit is tool name
+concatenated with full description. Every corpus is \textbf{globally
+deduplicated} on that exact key before any similarity is computed; this is
+enforced in code rather than left to discipline, because a per-file deduplication
+key in an earlier iteration of this work missed cross-file repeats and inflated a
+measured figure by fourteen points. Vectorisation is TF-IDF over word unigrams and
+bigrams with sublinear term frequency, fit separately per corpus, never on a
+shared vocabulary. Similarity is cosine. \emph{Redundancy at threshold $t$} is the
+share of deduplicated tools having at least one \emph{other} tool at cosine
+$\geq t$; we state the definition because a different one yields a different
+number.
 
-At the July~2026 snapshot the sweep fetched 51{,}151 version rows across 512 registry
-pages and resolved 16{,}548 unique servers (latest version each), of which 16{,}377
-are marked active. For context, GitHub reports 20{,}629 repositories under the
-\texttt{topic:mcp-server} tag; we report this only as an indication of how much
-larger the informal universe is than the registry frame we measure.
+We also report the exact-duplicate rate of each \emph{raw} release, which is a
+distinct and more consequential quantity than the near-duplicate rate.
 
-\paragraph{Deployment model.}
-Table~\ref{tab:deploy} shows how servers ship. A 42.6\% remote-only share means most
-servers are hosted HTTP/SSE endpoints rather than local stdio tools: the ecosystem is
-consumed as much through network integrations (with the attendant auth and
-reliability concerns) as through locally installed packages.
+\subsection{Corpora}
+\emph{Real MCP}: the 2{,}766 tools advertised by the 195 included servers.
+\emph{BFCL~v4}~\cite{bfcl}: every tool definition in every released row's
+\texttt{function} list, 8{,}726 records. Seven of the twenty released files expose no
+\texttt{function} list at all, including the four multi-turn files and the memory
+file, whose tool definitions live separately; those contribute nothing here and
+the multi-turn tool documents are out of scope. \emph{UltraTool}~\cite{ultratool}:
+every tool in every English-split row's \texttt{tools} list, development and test
+together, 14{,}084 records. Every source file is pinned by SHA-256 in the released
+provenance record.
+
+\section{RQ1: what an unrepaired random draw contains}
+\label{sec:draw}
+
+Table~\ref{tab:inclusion} gives the outcome of all 400 draws.
 
 \begin{table}[h]
 \centering
 \begin{tabular}{lrr}
 \toprule
-Deployment model & Count & Share \\
+Outcome & Count & Share \\
 \midrule
-Package-only (installed locally) & 8340 & 50.4\% \\
-Remote-only (hosted HTTP/SSE)    & 7057 & 42.6\% \\
-Both                             & 852  & 5.1\%  \\
-Neither declared                & 299  & 1.8\%  \\
+Included (handshake completed)      & 195 & 48.8\% \\
+Excluded: handshake failed          & 150 & 37.5\% \\
+Excluded: needs credentials         & 53  & 13.3\% \\
+Excluded: package unavailable       & 2   & 0.5\%  \\
 \bottomrule
 \end{tabular}
-\caption{Deployment model across the 16{,}548-server population.}
+\caption{Outcome of every draw. No server was dropped silently.}
+\label{tab:inclusion}
+\end{table}
+
+Two things follow.
+
+First, \textbf{a random draw includes far less than a curated one}. The same
+instrument, run against a 24-server hand-curated frame of reference and popular
+community servers, included 16 of 24, or 66.7\%. The 17.9-point gap is the size of
+the selection effect that curation introduces, measured rather than asserted.
+
+Second, \textbf{the dominant failure mode is not the one the literature
+anticipates}. Credential gating is the standard explanation for why a public MCP
+server cannot be probed, and it accounts for 53 of 400 draws. Servers that simply
+do not start account for 150, nearly three times as many. On the frame that
+behavioral MCP studies actually sample from, roughly two in five published entries
+are inert.
+
+This is the quantity that repair-based pipelines are built to eliminate. That is a
+sound engineering choice for their purposes and it is precisely why their samples
+cannot report this number.
+
+\section{RQ2: what the servers that do run look like}
+\label{sec:behavior}
+
+The 195 included servers advertise 2{,}766 tools; 2{,}759 carry a description.
+Tool counts per server are highly skewed: minimum 1, median 8, 95th percentile 46,
+maximum 300. One included server advertises no tools at all.
+
+\subsection{Hard conformance}
+\textbf{Zero of 2{,}766 tools carry a fatal JSON~Schema violation}, and zero of
+195 servers have any. No missing schema, no invalid \texttt{type}, no malformed
+\texttt{properties} or \texttt{required}. This replicates a 200-tool result from
+the earlier curated frame at roughly fourteen times the scale and on a random
+rather than selected sample, which makes it a structural property rather than a
+small-sample artifact. The intuition that MCP tool schemas are frequently
+malformed is not supported.
+
+\subsection{Safety annotations}
+Optional \texttt{annotations} (\texttt{readOnlyHint}, \texttt{destructiveHint},
+\texttt{idempotentHint}, \texttt{openWorldHint}) tell an agent whether a tool is
+safe to call \emph{before} calling it. Of the 194 included servers advertising at
+least one tool, 72 annotate every tool and 122 annotate none. \textbf{1{,}626 of
+2{,}766 tools (58.8\%) carry no annotations.}
+
+The curated frame gave 41.5\%. Curation therefore flatters this figure by 17.3
+points, for the same reason it flatters inclusion: reference servers annotate, and
+curated frames are full of reference servers. The lower number should not be cited
+as an ecosystem rate.
+
+The split is close to bimodal at the server level: 194 of 194 servers in this
+sample are all-or-nothing, with no partial server observed. We deliberately do not
+state this as an absolute. A single sample observing none of a rare category
+supports an upper bound, not a denial: given 0 of 194, the one-sided 95\% upper
+bound on the prevalence of partial annotation is 1.53\%. An earlier unreleased run
+of this study reported four partial servers at $n=214$; the present run does not
+reproduce that and we report the disagreement without explaining it.
+
+\subsection{Protocol versions}
+Four versions were negotiated across 195 servers: \texttt{2025-06-18} on 192,
+and \texttt{2024-11-05}, \texttt{2025-03-26} and \texttt{2025-11-25} on one each.
+The last of these is \emph{newer} than the baseline our client advertises, so
+version spread in the deployed population runs in both directions and not only as
+a lagging tail.
+
+\section{RQ3: benchmark corpora against real deployed tools}
+\label{sec:redundancy}
+
+\subsection{Raw releases are mostly repetition}
+Table~\ref{tab:exact} reports exact name-plus-description duplicates in each raw
+release.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Corpus & Raw records & Exact duplicates & Share \\
+\midrule
+Real MCP (195 servers)   & 2{,}766  & 10     & 0.4\%  \\
+BFCL v4                  & 8{,}726  & 6{,}002  & 68.8\% \\
+UltraTool EN (dev+test)  & 14{,}084 & 12{,}052 & 85.6\% \\
+\bottomrule
+\end{tabular}
+\caption{Exact-duplicate contamination of the raw releases.}
+\label{tab:exact}
+\end{table}
+
+Any statistic computed over these files without global deduplication measures how
+often a benchmark repeats a task, not how many tools it contains. We note that
+this percentage is sensitive to which files are included, since a benchmark
+reusing one tool across many rows produces a high rate by construction; the
+post-deduplication rates below are considerably more stable and the two should be
+read together.
+
+\subsection{Near-duplication, and where it lives}
+Table~\ref{tab:redundancy} gives the redundancy rate after global deduplication,
+decomposed by whether the near-duplicate partner lies inside the same authoring
+unit or outside it. For real MCP the unit is the server; for the benchmarks it is
+the task row.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llrrrr}
+\toprule
+Corpus (deduplicated $n$) & Pairs counted & 0.70 & 0.80 & 0.85 & 0.90 \\
+\midrule
+Real MCP (2{,}756)     & all           & 2.8\%  & 1.1\% & 0.5\% & 0.0\% \\
+                       & cross-server  & \textbf{0.0\%}  & \textbf{0.0\%} & \textbf{0.0\%} & \textbf{0.0\%} \\
+\addlinespace
+BFCL v4 (2{,}724)      & all           & 16.7\% & 9.7\% & 6.2\% & 2.7\% \\
+                       & cross-task    & \textbf{16.4\%} & \textbf{9.6\%} & \textbf{6.2\%} & \textbf{2.7\%} \\
+\addlinespace
+UltraTool EN (2{,}032) & all           & 0.3\%  & 0.0\% & 0.0\% & 0.0\% \\
+                       & cross-task    & 0.3\%  & 0.0\% & 0.0\% & 0.0\% \\
+\bottomrule
+\end{tabular}
+\caption{Redundancy after global deduplication, by cosine threshold.}
+\label{tab:redundancy}
+\end{table}
+
+The decomposition changes the finding. \textbf{Every near-duplicate among real
+MCP tools lies inside a single server}: the \texttt{list\_x} / \texttt{get\_x} /
+\texttt{create\_x} families that one project naturally produces. Across
+independent authors, near-duplication is 0.0\% at every threshold tested.
+\textbf{BFCL's redundancy is the opposite kind}: 16.4 of its 16.7 points lie
+between independently presented tasks, and it is the only corpus of the three with
+near-duplicates surviving at cosine 0.90.
+
+So the claim is not that BFCL is roughly six times more redundant than real
+tools. It is that \emph{BFCL repeats itself across tasks, and real MCP does not
+repeat itself across authors.}
+
+\textbf{UltraTool is cleaner than real deployed tools}, at 0.3\% against 2.8\%.
+Two synthetic corpora built for the same purpose give opposite answers, so no
+claim about synthetic tool corpora as a class is supported by this evidence, and
+we make none.
+
+\section{Ecosystem context}
+\label{sec:context}
+
+The two census snapshots frame the above. The population grew from 16{,}548 to
+24{,}135 unique servers between 2026-07-14 and 2026-08-22, about 195 net new
+servers per day, and both sweeps completed.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Deployment model & 2026-07-14 & 2026-08-22 & Change \\
+\midrule
+Package-only (installed locally) & 8{,}340 (50.4\%)  & 10{,}530 (43.6\%) & $-6.8$pp \\
+Remote-only (hosted HTTP/SSE)    & 7{,}057 (42.6\%)  & 12{,}004 (49.7\%) & $+7.1$pp \\
+Both                             & 852 (5.1\%)     & 1{,}224 (5.1\%)   & $-0.1$pp \\
+Neither declared                 & 299 (1.8\%)     & 377 (1.6\%)     & $-0.2$pp \\
+\bottomrule
+\end{tabular}
+\caption{Deployment model at two complete sweeps 39 days apart.}
 \label{tab:deploy}
 \end{table}
 
-\paragraph{Package ecosystems and transports.}
-Of servers that ship a package, \texttt{npm} dominates (5880; 35.5\% of all servers),
-followed by \texttt{pypi} (2648; 16\%), \texttt{oci} (562), \texttt{mcpb} (349),
-\texttt{nuget} (83), and a single \texttt{cargo} crate. On transports, package servers
-overwhelmingly declare \texttt{stdio} (9057), while remote servers overwhelmingly
-declare \texttt{streamable-http} (7478) with a long tail of \texttt{sse} (682) ---
-consistent with the spec's shift toward streamable HTTP for hosted deployments.
+Remote-only overtook package-only in this window, growing 70.1\% against 26.3\%.
+Two snapshots cannot establish a trend and we claim none; we report a change
+between two measured endpoints.
 
-\paragraph{Specification-version drift.}
-Registry entries pin a \texttt{\$schema} revision, giving a clean, code-free drift
-signal across the whole population (Table~\ref{tab:schema}). A single revision
-(\texttt{2025-12-11}) accounts for 88.2\% of servers, but five revisions are live
-simultaneously, and 11.8\% of the population trails the current one --- a
-population-scale confirmation that the specification is a moving target the ecosystem
-lags.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lrr}
-\toprule
-\texttt{\$schema} revision & Count & Share \\
-\midrule
-2025-12-11 & 14603 & 88.2\% \\
-2025-09-29 & 979   & 5.9\%  \\
-2025-10-17 & 556   & 3.4\%  \\
-2025-07-09 & 271   & 1.6\%  \\
-2025-09-16 & 137   & 0.8\%  \\
-unknown    & 2     & 0.0\%  \\
-\bottomrule
-\end{tabular}
-\caption{Schema-revision spread across the population.}
-\label{tab:schema}
-\end{table}
-
-\paragraph{Dynamic-tier denominator.}
-5804 servers (35.1\% of the population) are \texttt{npm}-published stdio servers and
-thus, in principle, launchable by \texttt{npx} for behavioral probing. This is the
-frame the dynamic tier samples from; actual inclusion is decided empirically because
-many require credentials or a mandatory launch argument.
-
-\section{RQ1--RQ3: behavioral conformance}
-\label{sec:dynamic}
-
-We report a baseline dynamic run over a reproducible sample of 24 candidate servers
-(the official reference servers plus a set of popular community servers), each
-launched over stdio with no credentials. Sixteen initialized without credentials and
-were included (200 tools total); eight were excluded and recorded with a reason (four
-require credentials; four fail the handshake without a required argument such as a
-connection string or target URL). No server was dropped silently.
-
-\subsection{RQ1: conformance}
-All 16 included servers completed the \texttt{initialize} handshake and returned a
-tool list. All \textbf{200 of 200 (100\%)} tool \texttt{inputSchema} definitions are
-valid JSON~Schema with \textbf{zero fatal violations}: no missing schemas, no invalid
-\texttt{type}, no malformed \texttt{properties}/\texttt{required}. 117 of 200 tools
-(58.5\%) are fully clean --- valid schema \emph{and} no warning-level issues. At the
-level of hard schema validity, the surveyed servers are strongly conformant; the
-intuition that MCP tool schemas are frequently malformed is \emph{not} supported. This
-held as the frame nearly doubled from a nine-server pilot (104 to 200 tools, 100\% to
-100\%), which suggests it is a structural property rather than a small-sample artifact.
-
-\subsection{RQ2: drift}
-The dominant deviation is a single one: \emph{missing tool \texttt{annotations}}
-(the \texttt{readOnlyHint} / \texttt{destructiveHint} / \texttt{idempotentHint} /
-\texttt{openWorldHint} metadata introduced in a later spec revision).
-\textbf{83 of 200 tools (41.5\%)} omit it. Critically, the gap is \textbf{strictly
-server-level, not random}: the split is all-or-nothing with \emph{zero} partial
-servers --- 8 servers annotate every tool and 8 annotate none, with not a single
-server in between. Protocol-version fragmentation appears in the behavioral sample
-too: two versions are live (\texttt{2025-06-18} on 12 servers and the older
-\texttt{2024-11-05} on 4), and one official reference server is simultaneously on the
-old protocol version \emph{and} annotates no tools.
-
-Because annotations are how a client or agent learns whether a tool is read-only or
-potentially destructive \emph{before} invoking it, a 41.5\% omission rate means a
-meaningful fraction of tools give an autonomous agent no machine-readable signal about
-their side effects. That the omission is a clean server-level split (never partial)
-indicates a per-project authoring decision rather than per-tool oversight --- a
-measurable, actionable gap between the specification's safety affordances and
-ecosystem adoption.
-
-\subsection{RQ3: reliability}
-Handshake round-trip across the 16 servers was p50~$\approx$~1.13~s,
-p95~$\approx$~10.41~s (min 0.64~s, max 10.41~s). We flag this as a \emph{contaminated}
-measurement: it includes first-run \texttt{npx} install cost. A hardened latency run
-must pre-install and warm servers first; we report the baseline here only to fix the
-method, not as a clean latency estimate.
-
-\section{Discussion}
-
-The two tiers tell a consistent story. At population scale the ecosystem is large,
-majority-hosted, \texttt{npm}/\texttt{stdio}-led where local, and already fragmented
-across five spec revisions with an 11.8\% trailing tail. At the behavioral level, hard
-conformance is essentially solved --- schema validity is 100\% --- but the safety
-layer the spec added on top (annotations) has been adopted by only some authors, in an
-all-or-nothing manner. For agent builders, the practical implication is that schema
-\emph{shape} can be trusted but tool \emph{safety metadata} cannot be assumed present;
-clients that reason about destructiveness before calling a tool must treat missing
-annotations as the common case, not the exception.
+The consequence that matters for this paper is methodological. The
+\texttt{npm}/\texttt{stdio} slice, which is what a local behavioral instrument can
+reach, grew in absolute terms from 5{,}804 to 7{,}414 servers but \emph{fell} as a
+share of the population, from 35.1\% to 30.7\%. A stdio-only instrument therefore
+covers a shrinking minority of the ecosystem, and this applies to our behavioral
+tier as much as to anyone else's.
 
 \section{Threats to validity}
-The census measures self-declared registry metadata; a server misdeclaring its
-transport or schema is counted as declared. The registry, while authoritative, is one
-view of the ecosystem: servers never published to it are out of frame (hence the
-GitHub topic count reported only as context). The dynamic sample is small
-($n=16$ servers) and restricted to GitHub-visible, \texttt{npm}-launchable,
-credential-free servers, so its absolute percentages are expected to move as the frame
-grows; the reusable contribution is the method and the categories of deviation it
-surfaces. Latency is contaminated by install cost as noted. All numbers are tagged to
-the snapshot date and the client spec baseline (\texttt{2025-06-18}); the pipeline is
-re-runnable to produce a longitudinal series.
+\label{sec:threats}
+
+\paragraph{The handshake filter, tested directly.}
+Kim et al.~\cite{cloning} find pervasive code cloning in the MCP repository
+population. Our cross-author redundancy of 0.0\% would be flattering rather than
+informative if our probe systematically discarded clones, since we observe only
+the 48.8\% of draws that start. We tested this three ways. First, using the
+npm-authored package description, which exists for started and non-started servers
+alike, both groups show 0.0\% near-duplication at every threshold; this test has
+low power, since it reads descriptions rather than code and both groups sit at
+zero. Second, author-family concentration by npm scope is comparable across the
+two groups, with the largest family in the sample (7 packages) entirely included
+and the next (8 packages) entirely excluded. Third, and most directly, the author
+shipping the most servers that all started contributes 125 tools across 7 servers
+with a maximum \emph{cross-server} cosine of 0.623, below the lowest threshold
+reported. We find no evidence that the filter selects against clones. We cannot
+exclude the possibility that clones copy implementations while rewriting tool
+descriptions, which our method would miss and theirs would catch; if that is what
+is happening, the gap between code-level and interface-level duplication is itself
+a result worth reporting.
+
+\paragraph{The cross-unit columns are not power-matched.}
+After deduplication BFCL averages 1.8 tools per task row against real MCP's 14.2
+per server, so removing same-unit pairs subtracts far less from BFCL by
+construction. The BFCL cross-task figure sitting near its all-pairs figure is
+partly an artifact of this. The real MCP collapse from 2.8\% to 0.0\% runs in the
+opposite direction and is not explained by it.
+
+\paragraph{Corpus rate and large servers.}
+Capping the real MCP corpus at 10, 25 and 50 tools per server yields 0.9\%, 2.2\%
+and 3.0\% at threshold 0.70, bracketing the uncapped 2.8\%. The rate is not driven
+by the two servers advertising 300 and 122 tools.
+
+\paragraph{Scope of the behavioral tier.}
+\texttt{npm}/\texttt{stdio} only, which is 30.7\% of the population and falling.
+Remote servers, PyPI and OCI packages are out of frame. Inclusion is decided by a
+single probe attempt with no retry, so transient failures are counted as
+exclusions and 48.8\% is a lower bound on the fraction that could ever start.
+
+\paragraph{Similarity is lexical.}
+TF-IDF cosine measures lexical overlap, not semantic equivalence. Two tools doing
+the same thing in different words are counted as distinct in every corpus. This
+biases all three rates downward and we have no reason to think it biases them
+unequally, but we have not shown that.
+
+\paragraph{Census.}
+Registry metadata is self-declared; a server misdeclaring its transport is counted
+as declared. Two snapshots support a difference, not a trend. A GitHub topic count
+reported in an earlier version of this work as ecosystem context was unavailable
+on the second sweep and is not used in any claim.
+
+\paragraph{Timing.}
+Wall-clock times were collected but include first-run \texttt{npx} install cost
+and were measured under concurrency with a kill timeout. They are not a latency
+measurement and none is reported.
 
 \section{Data and code availability}
 \label{sec:data}
-The \texttt{mcp-probe} tool, the harvester, the study protocol, and the full raw
-per-server records are open source at
-\url{https://github.com/itguruhaseeb/mcp-probe}. The versioned dataset and tool
-release are archived on Zenodo under the concept DOI
-\href{https://doi.org/10.5281/zenodo.21347997}{10.5281/zenodo.21347997}, which always
-resolves to the latest version~\cite{mcpprobe_dataset}. Re-running
-\texttt{node benchmark/harvest.mjs} reproduces the census, and
-\texttt{node benchmark/run-study.mjs} reproduces the behavioral run.
+
+The \texttt{mcp-probe} instrument, the harvester, the seeded draw script, the
+resumable probe runner, the aggregation script, the redundancy measurement with
+its self-test, and the threat-test suite are open source at
+\url{https://github.com/itguruhaseeb/mcp-probe}. The tool release and dataset are
+archived on Zenodo under the concept DOI
+\href{https://doi.org/10.5281/zenodo.21347997}{10.5281/zenodo.21347997}, which
+always resolves to the latest version~\cite{mcpprobe_dataset}.
+
+Every figure in this paper regenerates from a committed script plus the published
+seed \texttt{20260819} and the frame hash recorded in the draw manifest. The
+per-server outcome of all 400 draws is released, so the aggregates can be
+independently recounted rather than trusted.
 
 \section*{Acknowledgements}
 We thank the maintainers of the Model Context Protocol specification and its
@@ -300,8 +477,8 @@ reference server implementations, against which \texttt{mcp-probe} is tested.
 \bibitem{mcp2024}
 Anthropic.
 \newblock \emph{Model Context Protocol Specification}.
-\newblock Open standard for connecting large language model applications to external
-  tools and data, 2024.
+\newblock Open standard for connecting large language model applications to
+  external tools and data, 2024.
 \newblock \url{https://modelcontextprotocol.io}.
 
 \bibitem{jsonschema}
@@ -310,12 +487,40 @@ A.~Wright, H.~Andrews, B.~Hutton, and G.~Dennis.
 \newblock IETF Internet-Draft, 2022.
 \newblock \url{https://json-schema.org/specification}.
 
-\bibitem{mcpprobe_dataset}
-H.~Mohammed Afsar.
-\newblock \emph{mcp-probe: a conformance and reliability checker for Model Context
-  Protocol servers} (software and dataset).
-\newblock Zenodo, 2026.
-\newblock \url{https://doi.org/10.5281/zenodo.21347997}.
+\bibitem{mcpzoo}
+P.~Chen, B.~An, M.~Wu, B.~Wan, G.~Hong, J.~Chen, X.~Pan, J.~Dai, and M.~Yang.
+\newblock \emph{Rethinking MCP Security: A Large-Scale Study of Runtime MCP
+  Servers and Security Scanner Reliability}.
+\newblock arXiv:2607.11086, 2026.
+\newblock \url{https://arxiv.org/abs/2607.11086}.
+
+\bibitem{drift}
+G.~Bharti.
+\newblock \emph{Registry Descriptions Go Stale Unevenly: An 89-Day Measurement
+  of Model Context Protocol Drift, and Why Drift-Ranked Re-Auditing
+  Under-Covers It}.
+\newblock arXiv:2608.00997, 2026.
+\newblock \url{https://arxiv.org/abs/2608.00997}.
+
+\bibitem{exposed}
+N.~Padilla.
+\newblock \emph{Exposed by Design: A Dynamic Security Assessment of
+  Internet-Facing MCP Servers at Scale}.
+\newblock arXiv:2608.00150, 2026.
+\newblock \url{https://arxiv.org/abs/2608.00150}.
+
+\bibitem{cloning}
+T.~Kim, D.~Jiang, Y.~Hu, Y.~Jia, and N.~Gong.
+\newblock \emph{Evaluating Tool Cloning in Agentic-AI Ecosystems}.
+\newblock arXiv:2605.09817, 2026.
+\newblock \url{https://arxiv.org/abs/2605.09817}.
+
+\bibitem{benchaudit}
+V.~Bhat, J.~Vaghasiya, M.~A.~Mohsin, and A.~Aali.
+\newblock \emph{Benchmarking the Benchmarks: A Validity Audit of Tool-Calling
+  Evaluation}.
+\newblock arXiv:2607.02577, 2026.
+\newblock \url{https://arxiv.org/abs/2607.02577}.
 
 \bibitem{toolreliability}
 S.~Yao, N.~Shinn, P.~Razavi, and K.~Narasimhan.
@@ -323,6 +528,23 @@ S.~Yao, N.~Shinn, P.~Razavi, and K.~Narasimhan.
   Real-World Domains}.
 \newblock arXiv:2406.12045, 2024.
 \newblock \url{https://doi.org/10.48550/arXiv.2406.12045}.
+
+\bibitem{bfcl}
+Berkeley Function Calling Leaderboard, v4 evaluation data.
+\newblock Gorilla project repository, accessed 2026-08-22.
+\newblock \url{https://github.com/ShishirPatil/gorilla}.
+
+\bibitem{ultratool}
+UltraTool, English dataset.
+\newblock Repository, accessed 2026-08-22.
+\newblock \url{https://github.com/JoeYing1019/UltraTool}.
+
+\bibitem{mcpprobe_dataset}
+H.~Mohammed Afsar.
+\newblock \emph{mcp-probe: a conformance and reliability checker for Model
+  Context Protocol servers} (software and dataset).
+\newblock Zenodo, 2026.
+\newblock \url{https://doi.org/10.5281/zenodo.21347997}.
 
 \end{thebibliography}
 
