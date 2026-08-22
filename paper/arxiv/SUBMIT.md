@@ -1,85 +1,96 @@
-# arXiv submission guide — MCP ecosystem study
+# arXiv submission guide
 
-This folder is the **arXiv-ready preprint** of the empirical study (the census +
-behavioral conformance run). It is distinct from `../paper.md`, which is the
-JOSS-style *software* paper for the tool itself. Submit this one to arXiv; keep the
-JOSS paper for a software-journal track later.
+This folder holds the arXiv-ready preprint. It is distinct from `../paper.md`,
+which is the JOSS-style *software* paper for the tool itself.
+
+**Nothing here has been submitted. Publication requires Haseeb's explicit
+approval, per channel.**
 
 ## What to upload
-arXiv builds LaTeX from source (do **not** upload a PDF; upload the source).
-- `main.tex` — self-contained, standard `article` class, bibliography embedded via
-  `thebibliography` (no external `.bib` needed, so nothing else to upload).
 
-That single file is the whole submission.
+arXiv builds LaTeX from source. Upload the source, not a PDF.
 
-## Metadata to paste into the arXiv submission form
+- `main.tex` is self-contained: standard `article` class, bibliography embedded
+  via `thebibliography`, no external `.bib`. That single file is the whole
+  submission.
 
-- **Title:** Measuring the Model Context Protocol Server Ecosystem: A
-  Population-Scale Census and Conformance Study
+### Build check
+
+Verified 2026-08-22 with `pdflatex` (two passes): 9 pages, no errors, no
+undefined references or citations, zero overfull boxes. Preamble uses only
+packages present in the arXiv TeX Live tree. `lmodern` is required, because
+`microtype` font expansion needs a scalable font.
+
+## Metadata for the submission form
+
+- **Title:** What a Random Draw from the MCP Registry Contains, and What
+  Tool-Use Benchmarks Contain Instead
 - **Author:** Haseeb Mohammed Afsar (ORCID 0009-0000-4038-1272)
 - **Primary category:** cs.SE (Software Engineering)
 - **Cross-list:** cs.AI (Artificial Intelligence)
-- **License:** CC BY 4.0 (recommended for max reuse/citation) — pick on the form
-- **Comments (optional but recommended):** e.g. "10 pages. Dataset and re-runnable
-  pipeline: https://github.com/itguruhaseeb/mcp-probe ; archived at
+- **License:** CC BY 4.0, recommended for reuse and citation
+- **Comments:** "9 pages. Seeded, re-runnable pipeline and per-server outcomes:
+  https://github.com/itguruhaseeb/mcp-probe ; archived at
   doi:10.5281/zenodo.21347997"
-- **Abstract:** paste the plain-text version below.
+- **Abstract:** paste the plain-text version from the paper's abstract
+  environment, with LaTeX markup stripped.
 
-### Abstract (plain text for the form)
-The Model Context Protocol (MCP) is an open standard that lets large language model
-(LLM) applications discover and call external tools through a uniform JSON-RPC 2.0
-interface. Its adoption has produced a large, rapidly growing population of
-independently authored servers, but the ecosystem has not been measured: basic
-questions about its size, how servers ship, which transports and spec revisions are in
-use, and whether servers conform to the specification and behave reliably have gone
-unanswered. We report a two-tier empirical study. A census tier sweeps the entire
-official MCP registry (16,548 unique servers at a July 2026 snapshot) and measures only
-self-declared metadata, so it runs no third-party code and scales to the whole
-published population. A dynamic tier launches a credential-free, stdio-launchable
-subset and measures actual behavior with the open-source mcp-probe tool: handshake
-success, JSON Schema validity of every advertised tool, presence of safety
-annotations, protocol-version negotiation, and latency. Three results stand out.
-First, the population is dominated by hosted remote servers (42.6% remote-only) and
-npm/stdio local packages, and it has already fragmented across five schema revisions.
-Second, hard conformance is high: all 200 tools measured in the behavioral sample
-carry valid JSON Schema inputSchema definitions with zero fatal violations. Third, the
-real variance is in optional safety metadata: 41.5% of tools omit the annotations
-(readOnlyHint, destructiveHint, ...) that tell an autonomous agent whether a tool is
-safe to call before calling it, and the omission is a clean server-level,
-all-or-nothing decision rather than per-tool oversight. We release the full dataset
-and a re-runnable pipeline so the measurement can be repeated at each spec release as a
-longitudinal series.
+## The one remaining blocker
 
-## Two things to settle BEFORE you can submit
+**arXiv endorsement.** First-time cs.* submitters must be endorsed by an
+established arXiv author unless the account auto-qualifies (an institutional
+email or prior arXiv activity often does). Register at arxiv.org and start the
+submission; the system says immediately whether you are auto-endorsed for cs.SE.
+If not, the endorsement form generates a code for a colleague who has posted to
+cs.SE or cs.AI. One endorser is enough. This needs a human account and a human
+endorser and cannot be cleared from a sandbox.
 
-1. **Endorsement.** arXiv requires first-time submitters in cs.* to be *endorsed* by
-   an established arXiv author, unless your account is auto-endorsed (institutional
-   email / prior arXiv activity often auto-qualifies). As an independent researcher on
-   a first cs.SE submission you may hit the endorsement gate. Options:
-   - Register at arxiv.org and start the submission; the system tells you immediately
-     whether you're auto-endorsed for cs.SE.
-   - If not, request endorsement from a colleague who has posted to cs.SE/cs.AI (the
-     form generates a code they enter). One endorser is enough.
-   I cannot clear this for you — it needs your account and a human endorser.
+The placeholder-citation warning that used to sit here is **resolved**. It was
+fixed in commit 39ed6e5 and the current bibliography contains no placeholders.
+Every reference was checked against its own arXiv abstract page on 2026-08-22,
+not cited from memory.
 
-2. **The one placeholder citation.** `main.tex` has a clearly-marked `TODO(owner)`
-   bibitem (`toolreliability`) — a placeholder for a peer-reviewed tool-use/agent-
-   reliability reference. Either (a) drop that one sentence + citation from the intro,
-   or (b) swap in a real reference you're comfortable citing. I did **not** invent a
-   citation. Everything else (MCP spec, JSON Schema, the Zenodo dataset DOI) is real.
+## Venue recommendation, with the evidence
 
-## Steps (you drive these — submission is a public, permanent publish)
-1. Resolve the two items above.
-2. arxiv.org → Login → Submit → Start new submission.
-3. Subject class: cs.SE primary, cross-list cs.AI.
-4. Upload `main.tex`. Let arXiv's build run; check the generated PDF preview.
-5. Paste title/authors/abstract/comments; choose CC BY 4.0.
-6. Add your ORCID on the author record.
-7. Submit. arXiv holds for moderation, then assigns the arXiv ID + DOI.
+**Recommendation: arXiv first, then MSR or an ICSE/FSE short track.**
 
-## After it's live (I can do these on your say-so)
-- Add the arXiv ID to `README.md` (a second badge next to the Zenodo one) and to
-  `CITATION.cff` as a `preferred-citation` of type `article`.
+Why arXiv first. Every paper this one engages with appeared on arXiv between
+2026-05 and 2026-08 (2605.09817, 2607.02577, 2607.11086, 2608.00150,
+2608.00997). This subfield is moving on a weeks-long clock and is currently
+publishing preprint-first. A paper measuring a registry that grows by roughly 195
+servers a day loses value on a six-month review cycle, and the deployment
+crossover reported in Section 6 is already partly historical.
+
+Why MSR next. The paper is a registry-mining study with a seeded sample, a
+hash-pinned frame, released scripts, and per-server outcomes published so the
+aggregates can be recounted. That is squarely the MSR data-and-tool profile, and
+the artifact is already in the shape their evaluation asks for.
+
+Why not JOSS for this one. JOSS rejected the *tool* paper on scope and
+significance in August 2026 (openjournals/joss-reviews#11164). This is a research
+paper, not a software paper, and it is better used as one of the citing works
+that supplies the demonstrated impact JOSS asked for when the tool paper is
+resubmitted.
+
+Honest caveat on positioning. Three contributions this lane originally planned
+are outscaled by the work above, and the paper says so in Section 2 rather than
+ignoring it. The claim it makes is narrow on purpose. See
+`.workstream/research/RELATED-WORK.md` in the private workstream repo for the
+full assessment.
+
+## Steps, which Haseeb drives
+
+1. Clear the endorsement gate.
+2. arxiv.org, log in, Submit, start new submission.
+3. Subject class cs.SE primary, cross-list cs.AI.
+4. Upload `main.tex`, let arXiv build, check the generated PDF preview.
+5. Paste title, authors, abstract, comments. Choose CC BY 4.0.
+6. Add ORCID to the author record.
+7. Submit. arXiv holds for moderation, then assigns the ID and DOI.
+
+## After it is live, on his say-so
+
+- Add the arXiv ID to `README.md` and to `CITATION.cff` as a `preferred-citation`
+  of type `article`.
 - Add the arXiv ID as a related identifier on the Zenodo record.
-- Seed the citation: a launch post/Note with the arXiv link, and list it on the
-  awesome-mcp / registry-adjacent lists.
+- Announce it. That is a separate approval, per channel.
