@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- The version string is now read from `package.json` in one place
+  (`src/version.js`) instead of being hardcoded separately in the CLI, the
+  report, and the MCP `clientInfo`. Those three copies had drifted: 0.1.1
+  reported itself as 0.1.0 in `--version` output, in the `version` field of
+  every `--json` report, and to every server it handshook with.
+
+### Added
+- Exit code contract documented in the README and asserted in `test/cli.test.js`,
+  so it cannot drift silently between releases. Thanks to @poweichen00.
+
 ## [0.1.1] - 2026-08-17
 
 ### Added
