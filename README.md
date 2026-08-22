@@ -49,23 +49,29 @@ node bin/mcp-probe.js -- node examples/echo-server.js
 ```
 
 ```
-mcp-probe v0.1.0
+mcp-probe v0.1.2
 target: node examples/echo-server.js
 
 Handshake
-  ✓ initialized in 41.5ms
+  ✓ initialized in 49.4ms
   • server: echo-server v1.0.0
   • protocol: 2025-06-18
   • capabilities: tools
 
 Tools (3)
-  ✓ echo
-  ✓ add
-  ✓ ping
-  tools/list in 0.1ms
+  ! echo: 1 warning
+      ! tool declares no safety hints (readOnlyHint/destructiveHint/idempotentHint/openWorldHint)
+  ! add: 1 warning
+      ! tool declares no safety hints (readOnlyHint/destructiveHint/idempotentHint/openWorldHint)
+  ! ping: 1 warning
+      ! tool declares no safety hints (readOnlyHint/destructiveHint/idempotentHint/openWorldHint)
+  tools/list in 0.4ms
 
-Summary: healthy (3 tools, 0 errors, 0 warnings)
+Summary: healthy (3 tools, 0 errors, 3 warnings)
 ```
+
+The bundled example server deliberately declares no safety annotations, so this
+run doubles as a demonstration of that check. Warnings do not fail the run.
 
 Against a server with schema problems, it points at the exact issue and exits
 non-zero:
@@ -178,7 +184,7 @@ If you use mcp-probe in academic or technical work, please cite it. Every releas
 is archived on Zenodo with a permanent DOI:
 
 - **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997)
-- **This version (v0.1.0):** [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998)
+- **Version-specific DOIs** are listed on the [Zenodo record](https://doi.org/10.5281/zenodo.21347997). The v0.1.0 archive is [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998).
 
 BibTeX:
 
