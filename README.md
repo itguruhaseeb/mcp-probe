@@ -159,6 +159,47 @@ npx @hafsar/mcp-probe --json -- node ./server.js || echo "MCP server is unhealth
 Warnings do not change the exit code. Use `--json` when a pipeline also needs the
 structured diagnostics behind the result.
 
+### Rule ids
+
+Every finding carries a stable `id` alongside its message, in both the human
+report's underlying data and the `--json` output:
+
+```json
+{
+  "id": "schema/required-not-in-properties",
+  "severity": "fail",
+  "message": "inputSchema.required references \"ghost\" which is not in properties"
+}
+```
+
+Filter and count on the id, never on the message. Messages get reworded; ids do
+not. Renaming one is a breaking change, the same as changing an exit code.
+
+| Rule id | Severity | What it means |
+| --- | --- | --- |
+| `schema/empty-contract` | warning | object schema declares no properties |
+| `schema/invalid-type` | error | type is not a valid JSON Schema type |
+| `schema/missing` | error | inputSchema is absent |
+| `schema/no-type` | warning | root schema declares no type |
+| `schema/non-object-root` | warning | root schema type is not object |
+| `schema/not-an-object` | error | inputSchema is not a JSON object |
+| `schema/properties-not-an-object` | error | properties is not an object |
+| `schema/property-not-a-schema` | error | a property value is not a schema object |
+| `schema/required-duplicate` | warning | required lists the same key twice |
+| `schema/required-non-string` | error | required contains a non-string entry |
+| `schema/required-not-an-array` | error | required is not an array |
+| `schema/required-not-in-properties` | error | required names a key absent from properties |
+| `schema/required-without-properties` | error | required is set but properties is absent |
+| `schema/type-not-a-string` | error | type is neither a string nor an array of strings |
+| `tool/missing-description` | warning | tool has no description |
+| `tool/missing-name` | error | tool has no name |
+| `tool/missing-title` | warning | tool has no title |
+| `tool/no-safety-hints` | warning | tool declares no safety annotations |
+
+The registry lives in `RULES` in [`src/linter.js`](./src/linter.js) and is
+asserted against a literal list in `test/rules.test.js`, so the set cannot change
+without a visible diff.
+
 ## Roadmap
 
 - Deeper JSON Schema validation (nested `$ref`, `oneOf` / `anyOf`, format checks).
