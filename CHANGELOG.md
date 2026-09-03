@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Every linter finding now carries a stable `id` (for example
+  `schema/required-not-in-properties`) alongside its message, in the `--json`
+  output and in the underlying report data. The registry lives in `RULES` in
+  `src/linter.js`, the ids are documented in the README, and `test/rules.test.js`
+  asserts the set against a literal list so it cannot change silently. Filter on
+  the id rather than the message. This is the prerequisite for SARIF output.
+
 ## [0.1.2] - 2026-08-22
 
 ### Fixed
