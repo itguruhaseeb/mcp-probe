@@ -134,9 +134,14 @@ For every tool, it lints the `inputSchema` as a JSON Schema:
 | ---------------- | ------------------------------------------------------------------ |
 | `--call`         | attempt a safe round-trip on tools with no required parameters     |
 | `--json`         | emit machine-readable JSON instead of the human report             |
+| `--sarif`        | emit SARIF 2.1.0 instead of the human report                       |
+| `--sarif-artifact <path>` | file the SARIF findings are attributed to                 |
 | `--timeout <ms>` | per-request timeout in milliseconds (default `10000`)              |
 | `-h`, `--help`   | show help                                                          |
 | `-v`, `--version`| show version                                                       |
+
+`--json` and `--sarif` both write to stdout, so asking for both is a usage error
+(exit `2`) rather than a file that is neither format.
 
 The `--json` output is the same structured object the human report is rendered
 from, suitable for CI. The process exits non-zero on any hard failure (handshake
@@ -199,6 +204,52 @@ not. Renaming one is a breaking change, the same as changing an exit code.
 The registry lives in `RULES` in [`src/linter.js`](./src/linter.js) and is
 asserted against a literal list in `test/rules.test.js`, so the set cannot change
 without a visible diff.
+
+### SARIF output
+
+`--sarif` emits a SARIF 2.1.0 log, which is the format GitHub code scanning
+ingests. Uploading it turns a conformance run into annotations on the pull
+request instead of text in a job log.
+
+```bash
+npx @hafsar/mcp-probe --sarif -- node ./server.js > mcp-probe.sarif
+```
+
+In a workflow, with `security-events: write` permission:
+
+```yaml
+- name: Probe the MCP server
+  run: npx @hafsar/mcp-probe --sarif -- node ./server.js > mcp-probe.sarif
+  continue-on-error: true
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: mcp-probe.sarif
+```
+
+`continue-on-error` is there on purpose: without it a failing probe ends the job
+before the findings are uploaded, so you lose the annotations that explain why.
+
+The mapping is thin and mechanical:
+
+| SARIF | Source |
+| --- | --- |
+| `tool.driver.rules` | the `RULES` registry in `src/linter.js`, every rule, always |
+| `result.ruleId` | the finding's `id` |
+| `result.level` | the finding's severity, `fail` to `error` and `warn` to `warning` |
+| `result.message.text` | the tool name, then the finding's message |
+| `partialFingerprints` | tool name plus rule id, so re-runs update an alert rather than duplicating it |
+| `invocations[0].toolExecutionNotifications` | handshake failures, protocol mismatches and other run-level problems, which belong to no rule |
+
+SARIF results are shaped around files, and `mcp-probe` inspects a live process.
+Findings are attributed to the server's entry script when it can be identified
+inside the working directory (`node ./server.js` attributes to `server.js`, not
+to the node binary). When no such file exists, for instance when the server is a
+global binary or runs in a container, the log falls back to a synthetic
+`mcp-probe://` URI and says so on stderr: it uploads and validates, but the
+alerts will not anchor to a line of code. Use `--sarif-artifact <path>` to point
+them at the right file yourself.
+
+Exit codes are unchanged under `--sarif`.
 
 ## Roadmap
 

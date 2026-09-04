@@ -7,6 +7,7 @@
 //   npx mcp-probe --call --json -- python server.py
 
 import { runDiagnostics, renderHuman } from '../src/report.js';
+import { toSarif, resolveArtifact } from '../src/sarif.js';
 import { color } from '../src/color.js';
 import { VERSION } from '../src/version.js';
 
@@ -20,10 +21,15 @@ Examples
   mcp-probe -- python server.py
   mcp-probe --call -- node examples/echo-server.js
   mcp-probe --json -- node examples/echo-server.js
+  mcp-probe --sarif -- node examples/echo-server.js > mcp-probe.sarif
 
 Options
   --call            attempt a safe round-trip on tools with no required params
   --json            emit machine-readable JSON instead of the human report
+  --sarif           emit SARIF 2.1.0 for GitHub code scanning
+  --sarif-artifact <path>
+                    file the SARIF findings are attributed to (default: the
+                    server entry script, when it is inside the working dir)
   --timeout <ms>    per-request timeout in milliseconds (default 10000)
   -h, --help        show this help
   -v, --version     show version
@@ -33,7 +39,15 @@ Exit code is non-zero when a hard failure is found (bad handshake, invalid
 tool schema).`;
 
 function parseArgs(argv) {
-  const opts = { call: false, json: false, timeout: 10000, command: null, args: [] };
+  const opts = {
+    call: false,
+    json: false,
+    sarif: false,
+    sarifArtifact: null,
+    timeout: 10000,
+    command: null,
+    args: [],
+  };
   let i = 0;
   for (; i < argv.length; i++) {
     const a = argv[i];
@@ -41,11 +55,19 @@ function parseArgs(argv) {
       const rest = argv.slice(i + 1);
       opts.command = rest[0] || null;
       opts.args = rest.slice(1);
-      return opts;
+      break;
     } else if (a === '--call') {
       opts.call = true;
     } else if (a === '--json') {
       opts.json = true;
+    } else if (a === '--sarif') {
+      opts.sarif = true;
+    } else if (a === '--sarif-artifact') {
+      const val = argv[++i];
+      if (!val) {
+        throw new UsageError('--sarif-artifact expects a path');
+      }
+      opts.sarifArtifact = val;
     } else if (a === '--timeout') {
       const val = Number(argv[++i]);
       if (!Number.isFinite(val) || val <= 0) {
@@ -60,6 +82,15 @@ function parseArgs(argv) {
       throw new UsageError(`unknown option "${a}" (did you forget "--" before the command?)`);
     }
   }
+
+  // Two machine formats on one stdout would produce a file that is neither.
+  if (opts.json && opts.sarif) {
+    throw new UsageError('--json and --sarif both write to stdout; pick one');
+  }
+  if (opts.sarifArtifact && !opts.sarif) {
+    throw new UsageError('--sarif-artifact has no effect without --sarif');
+  }
+
   return opts;
 }
 
@@ -96,7 +127,27 @@ async function main() {
     call: opts.call,
   });
 
-  if (opts.json) {
+  if (opts.sarif) {
+    const artifact = resolveArtifact({
+      command: opts.command,
+      args: opts.args,
+      override: opts.sarifArtifact,
+    });
+    if (artifact.synthetic) {
+      // Worth saying out loud: the upload will still be accepted, but the
+      // alerts will not anchor to a file in the repository. stderr, so the
+      // SARIF on stdout stays clean.
+      process.stderr.write(
+        color.yellow(
+          `warning: no server file found in the working directory, attributing findings to ${artifact.uri}\n` +
+            '         pass --sarif-artifact <path> to anchor them to a file in the repo\n'
+        )
+      );
+    }
+    process.stdout.write(
+      JSON.stringify(toSarif(result, { artifactUri: artifact.uri }), null, 2) + '\n'
+    );
+  } else if (opts.json) {
     process.stdout.write(JSON.stringify(result, null, 2) + '\n');
   } else {
     renderHuman(result);
