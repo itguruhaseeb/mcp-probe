@@ -13,6 +13,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `src/linter.js`, the ids are documented in the README, and `test/rules.test.js`
   asserts the set against a literal list so it cannot change silently. Filter on
   the id rather than the message. This is the prerequisite for SARIF output.
+- `--sarif` emits a SARIF 2.1.0 log for GitHub code scanning, so a conformance
+  run can surface as annotations on a pull request instead of as text in a job
+  log. The rules array is built by iterating `RULES`, so a new linter rule
+  cannot go missing from the SARIF. Run-level problems such as a failed
+  handshake are reported as invocation notifications rather than as rule
+  results. `--sarif-artifact <path>` sets the file findings are attributed to;
+  by default it is the server entry script when one can be found inside the
+  working directory. Exit codes are unchanged.
 
 ## [0.1.2] - 2026-08-22
 
