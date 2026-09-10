@@ -134,9 +134,14 @@ For every tool, it lints the `inputSchema` as a JSON Schema:
 | ---------------- | ------------------------------------------------------------------ |
 | `--call`         | attempt a safe round-trip on tools with no required parameters     |
 | `--json`         | emit machine-readable JSON instead of the human report             |
+| `--sarif`        | emit SARIF 2.1.0 instead of the human report                       |
+| `--sarif-artifact <path>` | file the SARIF findings are attributed to                 |
 | `--timeout <ms>` | per-request timeout in milliseconds (default `10000`)              |
 | `-h`, `--help`   | show help                                                          |
 | `-v`, `--version`| show version                                                       |
+
+`--json` and `--sarif` both write to stdout, so asking for both is a usage error
+(exit `2`) rather than a file that is neither format.
 
 The `--json` output is the same structured object the human report is rendered
 from, suitable for CI. The process exits non-zero on any hard failure (handshake
@@ -158,6 +163,93 @@ npx @hafsar/mcp-probe --json -- node ./server.js || echo "MCP server is unhealth
 
 Warnings do not change the exit code. Use `--json` when a pipeline also needs the
 structured diagnostics behind the result.
+
+### Rule ids
+
+Every finding carries a stable `id` alongside its message, in both the human
+report's underlying data and the `--json` output:
+
+```json
+{
+  "id": "schema/required-not-in-properties",
+  "severity": "fail",
+  "message": "inputSchema.required references \"ghost\" which is not in properties"
+}
+```
+
+Filter and count on the id, never on the message. Messages get reworded; ids do
+not. Renaming one is a breaking change, the same as changing an exit code.
+
+| Rule id | Severity | What it means |
+| --- | --- | --- |
+| `schema/empty-contract` | warning | object schema declares no properties |
+| `schema/invalid-type` | error | type is not a valid JSON Schema type |
+| `schema/missing` | error | inputSchema is absent |
+| `schema/no-type` | warning | root schema declares no type |
+| `schema/non-object-root` | warning | root schema type is not object |
+| `schema/not-an-object` | error | inputSchema is not a JSON object |
+| `schema/properties-not-an-object` | error | properties is not an object |
+| `schema/property-not-a-schema` | error | a property value is not a schema object |
+| `schema/required-duplicate` | warning | required lists the same key twice |
+| `schema/required-non-string` | error | required contains a non-string entry |
+| `schema/required-not-an-array` | error | required is not an array |
+| `schema/required-not-in-properties` | error | required names a key absent from properties |
+| `schema/required-without-properties` | error | required is set but properties is absent |
+| `schema/type-not-a-string` | error | type is neither a string nor an array of strings |
+| `tool/missing-description` | warning | tool has no description |
+| `tool/missing-name` | error | tool has no name |
+| `tool/missing-title` | warning | tool has no title |
+| `tool/no-safety-hints` | warning | tool declares no safety annotations |
+
+The registry lives in `RULES` in [`src/linter.js`](./src/linter.js) and is
+asserted against a literal list in `test/rules.test.js`, so the set cannot change
+without a visible diff.
+
+### SARIF output
+
+`--sarif` emits a SARIF 2.1.0 log, which is the format GitHub code scanning
+ingests. Uploading it turns a conformance run into annotations on the pull
+request instead of text in a job log.
+
+```bash
+npx @hafsar/mcp-probe --sarif -- node ./server.js > mcp-probe.sarif
+```
+
+In a workflow, with `security-events: write` permission:
+
+```yaml
+- name: Probe the MCP server
+  run: npx @hafsar/mcp-probe --sarif -- node ./server.js > mcp-probe.sarif
+  continue-on-error: true
+- uses: github/codeql-action/upload-sarif@v3
+  with:
+    sarif_file: mcp-probe.sarif
+```
+
+`continue-on-error` is there on purpose: without it a failing probe ends the job
+before the findings are uploaded, so you lose the annotations that explain why.
+
+The mapping is thin and mechanical:
+
+| SARIF | Source |
+| --- | --- |
+| `tool.driver.rules` | the `RULES` registry in `src/linter.js`, every rule, always |
+| `result.ruleId` | the finding's `id` |
+| `result.level` | the finding's severity, `fail` to `error` and `warn` to `warning` |
+| `result.message.text` | the tool name, then the finding's message |
+| `partialFingerprints` | tool name plus rule id, so re-runs update an alert rather than duplicating it |
+| `invocations[0].toolExecutionNotifications` | handshake failures, protocol mismatches and other run-level problems, which belong to no rule |
+
+SARIF results are shaped around files, and `mcp-probe` inspects a live process.
+Findings are attributed to the server's entry script when it can be identified
+inside the working directory (`node ./server.js` attributes to `server.js`, not
+to the node binary). When no such file exists, for instance when the server is a
+global binary or runs in a container, the log falls back to a synthetic
+`mcp-probe://` URI and says so on stderr: it uploads and validates, but the
+alerts will not anchor to a line of code. Use `--sarif-artifact <path>` to point
+them at the right file yourself.
+
+Exit codes are unchanged under `--sarif`.
 
 ## Roadmap
 
