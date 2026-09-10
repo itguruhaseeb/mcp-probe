@@ -1,0 +1,41 @@
+{
+  "measuredAt": "2026-08-22",
+  "method": {
+    "unit": "name + ' ' + description",
+    "dedup": "GLOBAL, on name plus full description, before any similarity is computed",
+    "vectorizer": "TF-IDF, word unigrams+bigrams, sublinear_tf, fit per corpus",
+    "similarity": "cosine",
+    "redundancyDefinition": "share of deduplicated tools with at least one OTHER tool at cosine >= threshold",
+    "thresholds": [0.7, 0.8, 0.85, 0.9]
+  },
+  "corpora": {
+    "mcp": {
+      "rawTools": 2766,
+      "exactDuplicateRows": 10,
+      "exactDuplicatePct": 0.4,
+      "dedupedTools": 2756,
+      "vocabulary": 70738,
+      "redundancyPct": { "0.70": 2.8, "0.80": 1.1, "0.85": 0.5, "0.90": 0.0 },
+      "redundantTools": { "0.70": 78, "0.80": 29, "0.85": 14, "0.90": 0 }
+    },
+    "bfcl": {
+      "rawTools": 8726,
+      "exactDuplicateRows": 6002,
+      "exactDuplicatePct": 68.8,
+      "dedupedTools": 2724,
+      "vocabulary": 24962,
+      "redundancyPct": { "0.70": 16.7, "0.80": 9.7, "0.85": 6.2, "0.90": 2.7 },
+      "redundantTools": { "0.70": 455, "0.80": 263, "0.85": 169, "0.90": 73 }
+    },
+    "ultratool": {
+      "rawTools": 14084,
+      "exactDuplicateRows": 12052,
+      "exactDuplicatePct": 85.6,
+      "dedupedTools": 2032,
+      "vocabulary": 13475,
+      "redundancyPct": { "0.70": 0.3, "0.80": 0.0, "0.85": 0.0, "0.90": 0.0 },
+      "redundantTools": { "0.70": 6, "0.80": 0, "0.85": 0, "0.90": 0 }
+    }
+  },
+  "_sourceHashes": "see provenance.json in this directory"
+}

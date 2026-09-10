@@ -1,0 +1,57 @@
+{
+  "tool": "mcp-probe harvest",
+  "source": "https://registry.modelcontextprotocol.io/v0/servers",
+  "snapshotDate": "2026-08-22T02:06:22.994Z",
+  "registryPagesSwept": 790,
+  "versionRowsFetched": 78901,
+  "sweepComplete": true,
+  "uniqueServers": 24135,
+  "activeServers": 23881,
+  "githubTopicMcpServerRepos": null,
+  "lifecycle": {
+    "active": 23881,
+    "deprecated": 254
+  },
+  "deploymentModel": {
+    "counts": {
+      "remote": 12004,
+      "package": 10530,
+      "both": 1224,
+      "none": 377
+    },
+    "pct": {
+      "remoteOnly": 49.7,
+      "packageOnly": 43.6,
+      "both": 5.1,
+      "none": 1.6
+    }
+  },
+  "packageEcosystems": {
+    "npm": 7501,
+    "pypi": 3332,
+    "oci": 733,
+    "mcpb": 516,
+    "nuget": 101,
+    "cargo": 31
+  },
+  "packageTransports": {
+    "stdio": 11563,
+    "streamable-http": 444,
+    "sse": 28
+  },
+  "remoteTransports": {
+    "streamable-http": 12499,
+    "sse": 1016
+  },
+  "schemaVersionDrift": {
+    "2025-12-11": 21561,
+    "2025-09-29": 1351,
+    "2025-10-17": 589,
+    "2025-07-09": 487,
+    "2025-09-16": 145,
+    "unknown": 2
+  },
+  "launchableNpmStdio": 7414,
+  "launchableNpmStdioPct": 30.7,
+  "_provenance": "Produced by an unmodified benchmark/harvest.mjs from itguruhaseeb/mcp-probe @ 39ed6e5, run with NODE_USE_ENV_PROXY=1. githubTopicMcpServerRepos is null because api.github.com was not reachable on this run; it was context only and no claim depends on it."
+}

@@ -1,0 +1,51 @@
+{
+  "study": "MCP registry probability sample, behavioral tier",
+  "probedAt": "2026-08-22",
+  "sample": {
+    "seed": 20260819,
+    "n": 400,
+    "frameSha256": "78b5a0a79ddbc576dbf784f269b1e75a1806bb7d2c5fb95b9961a0966253e1f9",
+    "frameCount": 7258,
+    "frameSnapshotDate": "2026-08-22T02:06:22.994Z"
+  },
+  "probed": 400,
+  "included": 195,
+  "includedPct": 48.8,
+  "excluded": 205,
+  "excludeBreakdown": {
+    "handshake-failed": 150,
+    "needs-credentials": 53,
+    "package-unavailable": 2
+  },
+  "RQ1_conformance": {
+    "totalToolsMeasured": 2766,
+    "toolsWithDescriptions": 2759,
+    "toolsWithSchemaFailures": 0,
+    "serversWithAnySchemaFailure": 0,
+    "serversWithZeroTools": 1
+  },
+  "RQ2_annotations": {
+    "serversWithTools": 194,
+    "all": 72,
+    "none": 122,
+    "partial": 0,
+    "bimodalPct": 100,
+    "partialServers": [],
+    "toolsMissingAnnotations": 1626,
+    "toolsMissingAnnotationsPct": 58.8,
+    "_caveat": "partial=0 is a NEGATIVE result in one sample, not proof that partial servers do not exist. See FINDINGS.md. The 95 percent one-sided upper bound on partial prevalence given 0 of 194 is 1.53 percent."
+  },
+  "RQ2_protocol": {
+    "2025-06-18": 192,
+    "2024-11-05": 1,
+    "2025-03-26": 1,
+    "2025-11-25": 1
+  },
+  "RQ3_walltime": {
+    "note": "Wall time includes first-run npx install cost. This is NOT a clean latency measurement and must not be reported as one.",
+    "p50": 10854,
+    "p95": 14848,
+    "min": 3337,
+    "max": 15527
+  }
+}
