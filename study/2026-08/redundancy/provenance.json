@@ -1,0 +1,41 @@
+{
+  "_comment": "sha256 of every source file the extraction read. A re-run against different bytes is a different measurement and these hashes say so.",
+  "bfcl": {
+    "rawTools": 8726,
+    "sources": [
+      { "file": "BFCL_v4_format_sensitivity.json", "sha256": "1e7ebd0ec441198d3f7d3b60be73d0c9eba54094d2c3731b830f5da7a2c63c19", "tools": 0 },
+      { "file": "BFCL_v4_irrelevance.json", "sha256": "2b6ed4c2e992cdcf5f1678a701851f944bef7550ee026ed1ddb89efed5be01a6", "tools": 240 },
+      { "file": "BFCL_v4_live_irrelevance.json", "sha256": "6559fda2beaceb609a2cd2e504c65b4a56cb448e1ef88fddfd199e163d163349", "tools": 2066 },
+      { "file": "BFCL_v4_live_multiple.json", "sha256": "fd8ccfad4d911420d0e3341dbe2fff77d1d341da934248b9bb2bda24ab3a10c8", "tools": 4178 },
+      { "file": "BFCL_v4_live_parallel.json", "sha256": "6c26e9fdc3350cf596e6d1ea9c179cbff834761bccf562f4141ed29a839ca421", "tools": 18 },
+      { "file": "BFCL_v4_live_parallel_multiple.json", "sha256": "21d4b9319c1faac431e22757b367ea28917fe467364c3a4b17f16ec06d4f6e79", "tools": 95 },
+      { "file": "BFCL_v4_live_relevance.json", "sha256": "e03f9e241657a137cba48a89ee12f47bf3fcb7e4f6274263e9c699a0c974203a", "tools": 44 },
+      { "file": "BFCL_v4_live_simple.json", "sha256": "1af2ac87dca47556db7b7e37e51e28b459a38b594e3c7b3c792b4903598ca0c4", "tools": 258 },
+      { "file": "BFCL_v4_memory.json", "sha256": "40fc21d4528af53c6b44204def89e81515d0101654229e2c2e82bbf5f047b14f", "tools": 0 },
+      { "file": "BFCL_v4_multi_turn_base.json", "sha256": "1a21a995d06fd6f20ba55de7bced30ef953ec35e998f502ec2ecf4d66ef1c43a", "tools": 0 },
+      { "file": "BFCL_v4_multi_turn_long_context.json", "sha256": "78c3268c5cc8e97c0f4ec6c811b3b9a2bba14323b1830b7a874b06d822749324", "tools": 0 },
+      { "file": "BFCL_v4_multi_turn_miss_func.json", "sha256": "87d28ce10e37d864b72de85d5732eef2a867b241d6c1c99b4ae682c9e3ea921c", "tools": 0 },
+      { "file": "BFCL_v4_multi_turn_miss_param.json", "sha256": "f0c66dda3795f5f53e3e1c0cc8ba0246b6761c8f58bdba8317203bf451ab8838", "tools": 0 },
+      { "file": "BFCL_v4_multiple.json", "sha256": "aef168155ebd74b7ac2401198b201343bc7d16d7a3d7e0d4e6d8ee82c6969b2a", "tools": 557 },
+      { "file": "BFCL_v4_parallel.json", "sha256": "19f51a82eff42e5d62541aa500115a056eb78f437c2ba1f10415fd7c8e5dda84", "tools": 200 },
+      { "file": "BFCL_v4_parallel_multiple.json", "sha256": "8863ea8433239f55c5f016154cf0830853c89f693c6ea270396a2fa121960579", "tools": 520 },
+      { "file": "BFCL_v4_simple_java.json", "sha256": "13d2303a125b08754f0e41995b9273b5005fa8ed8ebfaa24ef53b4d83c4b5c6e", "tools": 100 },
+      { "file": "BFCL_v4_simple_javascript.json", "sha256": "329e67fedf79a6243d93dbda4b388d12bd2d31f1f2163d92cb6ef676d1764f44", "tools": 50 },
+      { "file": "BFCL_v4_simple_python.json", "sha256": "82dd63ba502eb2520c6b5d1d9a5c4b590e03ff261565175561f6228a367d1991", "tools": 400 },
+      { "file": "BFCL_v4_web_search.json", "sha256": "6fc41d96d003dc849028966a782923560d2fc127ed2088aa967f06daaafa4268", "tools": 0 }
+    ]
+  },
+  "ultratool": {
+    "rawTools": 14084,
+    "sources": [
+      { "file": "dev.json", "sha256": "36aa559ab12c30b67f59eb79d03d66a94493f176df30e52a9064b7591d20b419", "tools": 11952 },
+      { "file": "test.json", "sha256": "659a445f952d6f783a426b976208e9e77cfd374d70503d4ca5d7892da600b6c7", "tools": 2132 }
+    ]
+  },
+  "mcp": {
+    "rawTools": 2766,
+    "sources": [
+      { "file": "mcp-tools-2026-08-22.json", "sha256": "f1c8605d022e55a47bf535db447b7f58da048a7ec5c634eb4aa37180bd73c5ed", "tools": 2766 }
+    ]
+  }
+}
