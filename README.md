@@ -338,13 +338,36 @@ protocol lives in [`benchmark/STUDY.md`](./benchmark/STUDY.md).
 ### Ecosystem census
 
 `benchmark/harvest.mjs` sweeps the entire official MCP registry and measures the
-published population without executing any server code. The latest snapshot
-([`benchmark/results/CENSUS.md`](./benchmark/results/CENSUS.md)) covers **16,548
-unique servers**: ~50% ship as installable packages and ~43% are hosted remotes;
-npm (36%) and PyPI (16%) dominate the package ecosystems; and while most servers
-track the current schema revision, a measurable tail still pins older ones. The
-npm/stdio, credential-free subset it emits is the sampling frame for the behavioral
-conformance probe. Regenerate with `node benchmark/harvest.mjs`.
+published population without executing any server code. Two complete sweeps are
+released, and the change between them matters more than either one alone.
+
+| | 2026-07-14 | 2026-08-22 |
+| --- | --- | --- |
+| unique servers | 16,548 | **24,135** |
+| package-only (installed locally) | 50.4% | 43.6% |
+| remote-only (hosted HTTP/SSE) | 42.6% | **49.7%** |
+| npm / PyPI share of the population | 36% / 16% | 31% / 14% |
+| on the current schema revision | 88.3% | 89.3% |
+| npm/stdio, the probeable frame | 5,804 (35.1%) | 7,414 (30.7%) |
+
+**Remote-only overtook package-only** in those 39 days, a measured crossover
+between two verified endpoints rather than an interpolation. Both sweeps report
+`sweepComplete: true`, so neither is a truncated lower bound.
+
+The consequence for this tool is worth stating plainly: the npm/stdio slice it
+can probe **grew in absolute terms while shrinking as a share**, from 35.1% to
+30.7% of the population. A stdio-only instrument covers less of this ecosystem
+every month, and any stdio-only sampling frame is a narrowing view of it.
+
+The August aggregate is at
+[`study/2026-08/census/census-2026-08-22.json`](./study/2026-08/census/census-2026-08-22.json),
+the July one at [`benchmark/results/CENSUS.md`](./benchmark/results/CENSUS.md),
+and the full series with its provenance notes at
+[`study/2026-08/census/CENSUS-SERIES.md`](./study/2026-08/census/CENSUS-SERIES.md).
+Regenerate with `node benchmark/harvest.mjs`, which also emits the npm/stdio,
+credential-free sampling frame the behavioral probe draws from. A re-run produces
+a **new** snapshot, not a copy of either column: commit the aggregate immediately
+or the point is lost.
 
 ## License
 
