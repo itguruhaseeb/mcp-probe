@@ -3,6 +3,7 @@
 [![CI](https://github.com/itguruhaseeb/mcp-probe/actions/workflows/ci.yml/badge.svg)](https://github.com/itguruhaseeb/mcp-probe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
+[![arXiv](https://img.shields.io/badge/arXiv-2609.10962-b31b1b.svg)](https://arxiv.org/abs/2609.10962)
 
 Lint and health-check any [Model Context Protocol](https://modelcontextprotocol.io)
 (MCP) server, over stdio, in one command.
@@ -268,12 +269,50 @@ node --test                                  # run the linter test suite
 node bin/mcp-probe.js -- node examples/echo-server.js
 ```
 
+## The paper
+
+[![arXiv](https://img.shields.io/badge/arXiv-2609.10962-b31b1b.svg)](https://arxiv.org/abs/2609.10962)
+
+**What a Random Draw from the MCP Registry Contains, and What Tool-Use Benchmarks
+Contain Instead.** arXiv:2609.10962, cs.SE, cross-listed cs.AI, CC BY 4.0.
+
+Most studies of the MCP ecosystem draw samples in ways that quietly select for
+servers that work. This one reports what an **unrepaired** probability sample
+contains: 400 npm/stdio servers drawn from a 24,135-server census with a
+published seed, each probed once over the wire with no repair, no credentials and
+no retry. 48.8% complete a handshake against 66.7% on a hand-curated frame, and
+the dominant failure is not missing credentials but servers that never start.
+Among those that run, hard conformance is total: zero fatal JSON Schema
+violations across 2,766 tools.
+
+It then compares those real tool descriptions against two benchmark corpora under
+one method. Real MCP tools show 2.8% near-duplication at cosine 0.70 and **all of
+it sits inside single servers**, so cross-author near-duplication is 0.0% at
+every threshold tested. BFCL v4 shows 16.7%, of which 16.4 points lie between
+independently presented tasks.
+
+Everything it reports regenerates from [`study/2026-08/`](./study/2026-08/): the
+seeded draw, the resumable probe runner, the aggregator, the redundancy
+measurement with its self-test, the threat tests, and the per-server outcome of
+all 400 draws.
+
+```bibtex
+@article{afsar_mcp_random_draw_2026,
+  author  = {Afsar, Haseeb Mohammed},
+  title   = {What a Random Draw from the {MCP} Registry Contains, and What Tool-Use Benchmarks Contain Instead},
+  journal = {arXiv preprint arXiv:2609.10962},
+  year    = {2026},
+  doi     = {10.48550/arXiv.2609.10962},
+  url     = {https://arxiv.org/abs/2609.10962}
+}
+```
+
 ## Citing mcp-probe
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21347997.svg)](https://doi.org/10.5281/zenodo.21347997)
 
-If you use mcp-probe in academic or technical work, please cite it. Every release
-is archived on Zenodo with a permanent DOI:
+**Cite the paper for the findings. Cite the DOI below for the tool itself or for
+the dataset.** Every release is archived on Zenodo with a permanent DOI:
 
 - **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997)
 - **Version-specific DOIs** are listed on the [Zenodo record](https://doi.org/10.5281/zenodo.21347997). The v0.1.0 archive is [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998).
@@ -292,9 +331,9 @@ BibTeX:
 ```
 
 Machine-readable metadata lives in [`CITATION.cff`](./CITATION.cff) (GitHub renders
-a "Cite this repository" button from it). A tool paper is drafted under
-[`paper/`](./paper/paper.md), and a reproducible conformance-study protocol lives in
-[`benchmark/STUDY.md`](./benchmark/STUDY.md).
+a "Cite this repository" button from it, which now offers the paper). A tool paper
+is drafted under [`paper/`](./paper/paper.md), and a reproducible conformance-study
+protocol lives in [`benchmark/STUDY.md`](./benchmark/STUDY.md).
 
 ### Ecosystem census
 
