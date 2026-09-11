@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use mcp-probe in your research, please cite it as below."
+message: "If you use mcp-probe in your research, please cite the paper below. To cite the software or the dataset specifically, use the Zenodo DOI."
 title: "mcp-probe: a conformance and reliability checker for Model Context Protocol servers"
 abstract: >-
   mcp-probe is a dependency-light command-line tool that connects to any Model
@@ -27,6 +27,22 @@ identifiers:
   - type: doi
     value: "10.5281/zenodo.21347998"
     description: "DOI for version 0.1.0"
+preferred-citation:
+  type: article
+  title: "What a Random Draw from the MCP Registry Contains, and What Tool-Use Benchmarks Contain Instead"
+  authors:
+    - given-names: Haseeb
+      family-names: "Mohammed Afsar"
+      orcid: "https://orcid.org/0009-0000-4038-1272"
+  year: 2026
+  month: 9
+  journal: "arXiv"
+  doi: "10.48550/arXiv.2609.10962"
+  url: "https://arxiv.org/abs/2609.10962"
+  identifiers:
+    - type: other
+      value: "arXiv:2609.10962"
+      description: "arXiv identifier, primary class cs.SE, cross-listed cs.AI"
 keywords:
   - Model Context Protocol
   - MCP
