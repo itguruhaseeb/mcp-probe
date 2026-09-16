@@ -24,6 +24,12 @@
       "identifier": "10.5281/zenodo.21347997",
       "relation": "isVersionOf",
       "scheme": "doi"
+    },
+    {
+      "identifier": "arXiv:2609.10962",
+      "relation": "isSupplementTo",
+      "scheme": "arxiv",
+      "resource_type": "publication-preprint"
     }
   ]
 }

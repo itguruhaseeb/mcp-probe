@@ -26,10 +26,21 @@ redundancy/   the three-corpus near-duplicate measurement and its threat tests
 
 The sample is reproducible only against the same frame, because the registry grows
 by roughly 195 servers a day. `draw-sample.mjs` records the SHA-256 of the frame
-bytes it drew from, and the committed manifest hash is
-`78b5a0a79ddbc576dbf784f269b1e75a1806bb7d2c5fb95b9961a0966253e1f9` over 7,258
-candidates. A run against a different frame is a different sample, and the hash
-mismatch says so rather than silently pretending otherwise.
+bytes it drew from, and `sample/summary-2026-08-22.json` carries that hash,
+`78b5a0a79ddbc576dbf784f269b1e75a1806bb7d2c5fb95b9961a0966253e1f9`, over 7,258
+candidates at snapshot `2026-08-22T02:06:22.994Z`. A run against a different frame
+is a different sample, and the hash mismatch says so rather than silently
+pretending otherwise.
+
+**That frame is not in this repository and is not published anywhere.** The
+`benchmark/candidates-registry.json` committed here is the earlier `2026-07-14`
+frame of 5,671 candidates, kept for the static tier; a draw against it produces a
+different sample and a hash that does not match. Step 1 below re-harvests a
+*current* frame, which will not match either. So the August 2026 draw can be
+checked but not re-executed: what is verifiable is the recorded hash, count and
+snapshot time, and what is independently recountable is the outcome of all 400
+draws in `sample/study-2026-08-22.tsv`. That is a real limit on this artifact and
+is stated here rather than left to be discovered.
 
 ```bash
 # 1. sweep the registry (writes benchmark/candidates-registry.json)
@@ -57,8 +68,12 @@ for every source file it reads; those hashes are in `redundancy/provenance.json`
 
 ## What is deliberately not here
 
-* **The 8MB raw registry frame.** Regenerable with `benchmark/harvest.mjs`, and
-  the versioned copy lives in the Zenodo dataset release rather than in git.
+* **The raw registry dump and the August candidate frame.** `benchmark/harvest.mjs`
+  writes a full-population `corpus.json` and, derived from it, the npm/stdio
+  `candidates-registry.json`. Neither the August run's `corpus.json` nor its
+  7,258-candidate frame survived the sandbox that produced them, so neither is in
+  git and neither is in the Zenodo archive. Re-running the harvester yields a
+  current snapshot, not that one. See the note under "Reproducing" above.
 * **The per-server probe record files.** Their contents are summarised row by row
   in `sample/study-2026-08-22.tsv`, which is the artifact the paper releases.
 * **The BFCL and UltraTool source files.** Third-party releases. Fetch them from
