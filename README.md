@@ -314,8 +314,9 @@ all 400 draws.
 **Cite the paper for the findings. Cite the DOI below for the tool itself or for
 the dataset.** Every release is archived on Zenodo with a permanent DOI:
 
-- **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997)
-- **Version-specific DOIs** are listed on the [Zenodo record](https://doi.org/10.5281/zenodo.21347997). The v0.1.0 archive is [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998).
+- **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997). It currently resolves to [`10.5281/zenodo.22781122`](https://doi.org/10.5281/zenodo.22781122), the v0.1.2 archive, which holds the tool **and** the `study/2026-08/` artifacts every number in the paper is counted from.
+- **Version-specific DOIs**: v0.1.2 is [`10.5281/zenodo.22781122`](https://doi.org/10.5281/zenodo.22781122); v0.1.0 is [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998).
+- **One stray record, explained rather than hidden.** [`10.5281/zenodo.22052219`](https://doi.org/10.5281/zenodo.22052219) is the GitHub release archive of the `v0.1.2` tag. It was deposited automatically under its own concept DOI (`10.5281/zenodo.22052218`) instead of joining the chain above, and it contains the tool at that tag but **not** `study/2026-08/`, which was committed after the tag was cut. Cite `10.5281/zenodo.21347997`. The stray record stays where it is, because withdrawing a published DOI is worse than describing it.
 
 BibTeX:
 
@@ -348,11 +349,19 @@ released, and the change between them matters more than either one alone.
 | remote-only (hosted HTTP/SSE) | 42.6% | **49.7%** |
 | npm / PyPI share of the population | 36% / 16% | 31% / 14% |
 | on the current schema revision | 88.3% | 89.3% |
-| npm/stdio, the probeable frame | 5,804 (35.1%) | 7,414 (30.7%) |
+| npm/stdio launchable | 5,804 (35.1%) | 7,414 (30.7%) |
+| of those, active: the frame actually drawn from | 5,671 | **7,258** |
 
 **Remote-only overtook package-only** in those 39 days, a measured crossover
 between two verified endpoints rather than an interpolation. Both sweeps report
 `sweepComplete: true`, so neither is a truncated lower bound.
+
+The last two rows are not the same number and should not be quoted as one.
+`launchableNpmStdio` counts every npm-published stdio server in the census,
+including the deprecated ones; `candidates-registry.json` additionally keeps only
+`status: active`, which is what the behavioral probe can be pointed at. The
+August draw was made against **7,258** candidates, not 7,414, and the paper's
+sampling section says 7,258 for that reason.
 
 The consequence for this tool is worth stating plainly: the npm/stdio slice it
 can probe **grew in absolute terms while shrinking as a share**, from 35.1% to
