@@ -7,7 +7,9 @@ abstract: >-
   enumerates advertised tools, validates each tool's JSON Schema against the MCP
   specification, measures response latency, and exercises safe round-trips. It is
   designed both as a developer diagnostic and as a reproducible conformance
-  benchmark for empirical studies of the MCP server ecosystem.
+  benchmark for empirical studies of the MCP server ecosystem. The archive under
+  the concept DOI also carries study/2026-08, the census, sample and redundancy
+  artifacts that arXiv:2609.10962 counts from.
 type: software
 authors:
   - given-names: Haseeb
@@ -24,6 +26,9 @@ identifiers:
   - type: doi
     value: "10.5281/zenodo.21347997"
     description: "Concept DOI (always resolves to the latest version)"
+  - type: doi
+    value: "10.5281/zenodo.22781122"
+    description: "DOI for version 0.1.2, the archive holding the tool and the study/2026-08 artifacts"
   - type: doi
     value: "10.5281/zenodo.21347998"
     description: "DOI for version 0.1.0"

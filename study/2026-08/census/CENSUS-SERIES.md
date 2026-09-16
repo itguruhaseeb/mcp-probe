@@ -99,6 +99,13 @@ off two points.
 |---|---|---|---|
 | npm/stdio launchable | 5,804 | 7,414 | +27.7% |
 | as a share of population | 35.1% | 30.7% | -4.4pp |
+| of those, active: the drawn frame | 5,671 | 7,258 | +28.0% |
+
+The last row is the one the behavioral tier actually draws from, and it is not
+the row above it. `launchableNpmStdio` counts npm/stdio servers including the
+deprecated ones; `candidates-registry.json` additionally filters on
+`status: active`. The August sample was drawn against 7,258 candidates. Quoting
+7,414 as the sampling frame is wrong by the 156 deprecated servers between them.
 
 The locally-probeable slice grew in absolute terms but **shrank as a share**,
 which follows directly from the shift to hosted remote servers. This is a real
