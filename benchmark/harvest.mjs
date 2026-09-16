@@ -340,8 +340,9 @@ ${top(c.schemaVersionDrift)}
 ## Sampling frame for the dynamic tier
 
 **${c.launchableNpmStdio}** servers (${c.launchableNpmStdioPct}% of the population) are
-npm-published stdio servers — i.e. launchable by \`npx\` for the dynamic conformance
-probe. \`candidates-registry.json\` holds these ${candidateCount} candidates; the probe
+npm-published stdio servers, i.e. launchable by \`npx\`. That count includes deprecated
+servers. The sampling frame is the active subset: \`candidates-registry.json\` holds
+**${candidateCount}** candidates, and that is the number to quote as the frame. The probe
 decides inclusion empirically (credential needs verified at run time, per STUDY.md).
 
 ## Honest limitations
