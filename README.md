@@ -291,10 +291,13 @@ it sits inside single servers**, so cross-author near-duplication is 0.0% at
 every threshold tested. BFCL v4 shows 16.7%, of which 16.4 points lie between
 independently presented tasks.
 
-Everything it reports regenerates from [`study/2026-08/`](./study/2026-08/): the
+Most of what it reports regenerates from [`study/2026-08/`](./study/2026-08/): the
 seeded draw, the resumable probe runner, the aggregator, the redundancy
 measurement with its self-test, the threat tests, and the per-server outcome of
-all 400 draws.
+all 400 draws. The curated-frame comparison recounts from
+[`benchmark/results/summary.json`](./benchmark/results/summary.json). Three figures
+do **not** recount from released data, and
+[`study/2026-08/README.md`](./study/2026-08/README.md) names which three and why.
 
 ```bibtex
 @article{afsar_mcp_random_draw_2026,
@@ -380,6 +383,10 @@ or the point is lost.
 
 ## License
 
-MIT for the code, CC BY 4.0 for the study data and documentation. See
-[LICENSE](./LICENSE) and
-[`study/2026-08/LICENSE-DATA.md`](./study/2026-08/LICENSE-DATA.md).
+MIT for the code, CC BY 4.0 for the data and documentation.
+[`study/2026-08/LICENSE-DATA.md`](./study/2026-08/LICENSE-DATA.md) names every
+data file in the repository and which of the two covers it, including the census
+and curated-frame files under `benchmark/results/`. The MIT text is in
+[LICENSE](./LICENSE). `benchmark/candidates-registry.json` is registry metadata
+rather than our measurement; the grant there covers the selection and arrangement
+and does not relicense the registry's own content.
