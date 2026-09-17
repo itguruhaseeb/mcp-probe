@@ -85,6 +85,12 @@ for every source file it reads; those hashes are in `redundancy/provenance.json`
   `research/census/` map onto `study/2026-08/redundancy/` and
   `study/2026-08/census/` here, and `lanes/research.md` is not published.
 
+## Licence
+
+The data and documentation here are CC BY 4.0; the scripts stay MIT with the rest
+of the repository. `LICENSE-DATA.md` in this directory says which file is which,
+by name.
+
 ## A note on the numbers that are not here
 
 `census/CENSUS-SERIES.md` carries a provenance correction rather than a tidy
