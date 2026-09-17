@@ -314,8 +314,8 @@ all 400 draws.
 **Cite the paper for the findings. Cite the DOI below for the tool itself or for
 the dataset.** Every release is archived on Zenodo with a permanent DOI:
 
-- **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997). It currently resolves to [`10.5281/zenodo.22781122`](https://doi.org/10.5281/zenodo.22781122), the v0.1.2 archive, which holds the tool **and** the `study/2026-08/` artifacts every number in the paper is counted from.
-- **Version-specific DOIs**: v0.1.2 is [`10.5281/zenodo.22781122`](https://doi.org/10.5281/zenodo.22781122); v0.1.0 is [`10.5281/zenodo.21347998`](https://doi.org/10.5281/zenodo.21347998).
+- **Cite this DOI** (always resolves to the latest version): [`10.5281/zenodo.21347997`](https://doi.org/10.5281/zenodo.21347997). Whatever it resolves to holds the tool **and** the `study/2026-08/` artifacts every number in the paper is counted from. This line deliberately does not name the current version DOI: a copy of this file is inside each archive, and a file that names its own successor is wrong the moment the next one is cut. The version list lives on the Zenodo record, which stays current by construction.
+- **Version history** is on the [Zenodo record](https://doi.org/10.5281/zenodo.21347997). Every archive of the same software release carries a `+archive.N` suffix, because Zenodo cannot replace files on a published record, so a documentation fix means a new archive rather than an edit.
 - **One stray record, explained rather than hidden.** [`10.5281/zenodo.22052219`](https://doi.org/10.5281/zenodo.22052219) is the GitHub release archive of the `v0.1.2` tag. It was deposited automatically under its own concept DOI (`10.5281/zenodo.22052218`) instead of joining the chain above, and it contains the tool at that tag but **not** `study/2026-08/`, which was committed after the tag was cut. Cite `10.5281/zenodo.21347997`. The stray record stays where it is, because withdrawing a published DOI is worse than describing it.
 
 BibTeX:
@@ -380,4 +380,6 @@ or the point is lost.
 
 ## License
 
-MIT, Haseeb Mohammed Afsar. See [LICENSE](./LICENSE).
+MIT for the code, CC BY 4.0 for the study data and documentation. See
+[LICENSE](./LICENSE) and
+[`study/2026-08/LICENSE-DATA.md`](./study/2026-08/LICENSE-DATA.md).
