@@ -21,6 +21,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   results. `--sarif-artifact <path>` sets the file findings are attributed to;
   by default it is the server entry script when one can be found inside the
   working directory. Exit codes are unchanged.
+- The `--json` report carries `failureReason`, a machine-readable cause for a
+  run-level failure: `timeout`, `spawn`, `transport`, `protocol` or `unknown`,
+  and `null` when the run did not fail at that level. Until now a consumer had
+  to regex the English prose in `errors[]` to tell a hung server apart from a
+  crashed one. It also carries `timeoutMs`, the limit the run was measured
+  against, so a timeout can be read rather than guessed at. Only the first
+  run-level failure sets `failureReason`; a later one is a consequence of it.
+- `examples/unresponsive-server.js`, a server that accepts a connection and then
+  never replies. It makes the timeout path reproducible by hand and testable in
+  CI, which it was not before. Closes #5.
+
+### Fixed
+- The per-request timeout default was the literal `10000` in both `parseArgs`
+  and the `McpClient` constructor, where the two could drift apart, and a third
+  time in the help text. It is now `DEFAULT_TIMEOUT_MS` in `src/client.js`, and
+  the help text interpolates it.
 
 ## [0.1.2] - 2026-08-22
 
