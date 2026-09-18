@@ -426,4 +426,3 @@ and curated-frame files under `benchmark/results/`. The MIT text is in
 [LICENSE](./LICENSE). `benchmark/candidates-registry.json` is registry metadata
 rather than our measurement; the grant there covers the selection and arrangement
 and does not relicense the registry's own content.
-</content>
