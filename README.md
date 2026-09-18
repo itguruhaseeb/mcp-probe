@@ -165,6 +165,42 @@ npx @hafsar/mcp-probe --json -- node ./server.js || echo "MCP server is unhealth
 Warnings do not change the exit code. Use `--json` when a pipeline also needs the
 structured diagnostics behind the result.
 
+### Failure reasons
+
+Exit code `1` covers every hard failure, so it does not tell a pipeline whether
+the server hung, crashed or answered with an error. The `--json` report carries
+that distinction in `failureReason`, alongside the English message in `errors[]`:
+
+```json
+{
+  "ok": false,
+  "timeoutMs": 2000,
+  "failureReason": "timeout",
+  "errors": ["handshake failed: timed out after 2000ms waiting for \"initialize\""]
+}
+```
+
+| `failureReason` | Meaning |
+| --- | --- |
+| `timeout` | A request was not answered within `--timeout` milliseconds. |
+| `spawn` | The server command could not be launched at all. |
+| `transport` | The process exited, or the pipe closed, before answering. |
+| `protocol` | The server answered, with a JSON-RPC error. |
+| `unknown` | A real failure that fits none of the above. |
+| `null` | No run-level failure. A schema failure alone leaves this `null`. |
+
+`timeoutMs` reports the limit the run was measured against, so a `timeout` can be
+read as a slow server or an impatient probe rather than guessed at. Switch on
+these values instead of matching on the message text; the messages are for
+humans and are not part of the contract.
+
+To see it by hand, `examples/unresponsive-server.js` accepts a connection and
+then never replies:
+
+```bash
+node bin/mcp-probe.js --json --timeout 500 -- node examples/unresponsive-server.js
+```
+
 ### Rule ids
 
 Every finding carries a stable `id` alongside its message, in both the human
@@ -390,3 +426,4 @@ and curated-frame files under `benchmark/results/`. The MIT text is in
 [LICENSE](./LICENSE). `benchmark/candidates-registry.json` is registry metadata
 rather than our measurement; the grant there covers the selection and arrangement
 and does not relicense the registry's own content.
+</content>
