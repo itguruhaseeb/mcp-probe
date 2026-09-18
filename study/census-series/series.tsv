@@ -1,0 +1,7 @@
+# One row per complete sweep, appended the hour it was taken. Columns are read
+# straight out of census-<date>.json; nothing here is derived or rounded by hand.
+# Rows with sweepComplete=false are truncated lower bounds and must not be used.
+date	snapshot	sweepComplete	unique	active	deprecated	remoteOnlyPct	packageOnlyPct	bothPct	npmStdio	npmStdioPct	activeFrame	pages	versionRows	ghTopicRepos
+2026-07-14	2026-07-14T03:22:19.367Z	true	16548	16377	171	42.6	50.4	5.1	5804	35.1	5671	512	51151	20629
+2026-08-22	2026-08-22T02:06:22.994Z	true	24135	23881	254	49.7	43.6	5.1	7414	30.7	7258	790	78901	
+2026-09-18	2026-09-18T19:59:31.085Z	true	33346	32994	352	56.9	37.0	4.8	8697	26.1	8511	1080	107934	29221
