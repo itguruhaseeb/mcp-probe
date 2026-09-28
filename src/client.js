@@ -16,13 +16,41 @@ import { VERSION } from './version.js';
 // negotiate a different one back; we surface whatever they return.
 export const PROTOCOL_VERSION = '2025-06-18';
 
+// The per-request timeout used when the caller does not supply one. Named here
+// so the CLI default, the help text and the client default cannot drift apart.
+export const DEFAULT_TIMEOUT_MS = 10000;
+
+// Machine-readable causes for a run-level failure. These are part of the
+// --json contract: consumers switch on one of these strings instead of
+// regexing the English message in errors[]. Add a member here rather than
+// inventing a string at a call site.
+export const FAILURE_REASONS = Object.freeze({
+  // A request was not answered within the per-request timeout.
+  TIMEOUT: 'timeout',
+  // The server process could not be launched at all.
+  SPAWN: 'spawn',
+  // The process exited, or the pipe closed, before answering.
+  TRANSPORT: 'transport',
+  // The server answered, with a JSON-RPC error.
+  PROTOCOL: 'protocol',
+  // A failure that is real but does not fit any of the above.
+  UNKNOWN: 'unknown',
+});
+
 export class McpError extends Error {
-  constructor(message, { code, data } = {}) {
+  constructor(message, { code, data, reason } = {}) {
     super(message);
     this.name = 'McpError';
     this.code = code;
     this.data = data;
+    // One of FAILURE_REASONS, or undefined when the caller did not classify it.
+    this.reason = reason;
   }
+}
+
+/** Classify any thrown value into one of FAILURE_REASONS. */
+export function failureReasonOf(err) {
+  return err instanceof McpError && err.reason ? err.reason : FAILURE_REASONS.UNKNOWN;
 }
 
 export class McpClient {
@@ -32,7 +60,7 @@ export class McpClient {
    * @param {object} opts
    * @param {number} opts.timeout  per-request timeout in ms
    */
-  constructor(command, args = [], { timeout = 10000 } = {}) {
+  constructor(command, args = [], { timeout = DEFAULT_TIMEOUT_MS } = {}) {
     this.command = command;
     this.args = args;
     this.timeout = timeout;
@@ -62,7 +90,11 @@ export class McpClient {
     });
 
     this.child.on('error', (err) => {
-      this._fail(new McpError(`failed to launch "${this.command}": ${err.message}`));
+      this._fail(
+        new McpError(`failed to launch "${this.command}": ${err.message}`, {
+          reason: FAILURE_REASONS.SPAWN,
+        })
+      );
     });
 
     this.child.on('exit', (code, signal) => {
@@ -71,7 +103,12 @@ export class McpClient {
           ? `server exited via signal ${signal}`
           : `server exited with code ${code}`;
       this._closeReason = reason;
-      this._fail(new McpError(reason, { data: { stderr: this._stderr.trim() } }));
+      this._fail(
+        new McpError(reason, {
+          data: { stderr: this._stderr.trim() },
+          reason: FAILURE_REASONS.TRANSPORT,
+        })
+      );
     });
   }
 
@@ -109,6 +146,7 @@ export class McpClient {
         new McpError(msg.error.message || 'server returned an error', {
           code: msg.error.code,
           data: msg.error.data,
+          reason: FAILURE_REASONS.PROTOCOL,
         })
       );
     } else {
@@ -127,7 +165,11 @@ export class McpClient {
   }
 
   _send(obj) {
-    if (this._closed) throw new McpError(this._closeReason || 'connection closed');
+    if (this._closed) {
+      throw new McpError(this._closeReason || 'connection closed', {
+        reason: FAILURE_REASONS.TRANSPORT,
+      });
+    }
     this.child.stdin.write(JSON.stringify(obj) + '\n');
   }
 
@@ -140,7 +182,11 @@ export class McpClient {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         this._pending.delete(id);
-        reject(new McpError(`timed out after ${this.timeout}ms waiting for "${method}"`));
+        reject(
+          new McpError(`timed out after ${this.timeout}ms waiting for "${method}"`, {
+            reason: FAILURE_REASONS.TIMEOUT,
+          })
+        );
       }, this.timeout);
       this._pending.set(id, { resolve, reject, timer });
       try {

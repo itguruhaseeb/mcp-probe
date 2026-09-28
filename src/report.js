@@ -1,7 +1,13 @@
 // Orchestrates a full health check against an MCP server and renders the report
 // either as colorized human output or as a machine-readable JSON document.
 
-import { McpClient, McpError, PROTOCOL_VERSION } from './client.js';
+import {
+  McpClient,
+  McpError,
+  PROTOCOL_VERSION,
+  DEFAULT_TIMEOUT_MS,
+  failureReasonOf,
+} from './client.js';
 import { lintTool, safeCallArgs, FAIL, WARN } from './linter.js';
 import { color, glyph } from './color.js';
 import { VERSION } from './version.js';
@@ -27,13 +33,19 @@ async function timed(fn) {
  * @param {number} opts.timeout
  * @param {boolean} opts.call   attempt safe round-trips
  */
-export async function runDiagnostics({ command, args, timeout, call }) {
+export async function runDiagnostics({ command, args, timeout = DEFAULT_TIMEOUT_MS, call }) {
   const result = {
     tool: 'mcp-probe',
     version: VERSION,
     target: [command, ...args].join(' '),
     clientProtocolVersion: PROTOCOL_VERSION,
     ok: true,
+    // The limit a "timeout" failureReason was measured against. Without it a
+    // consumer cannot tell a slow server from an impatient probe.
+    timeoutMs: timeout,
+    // One of FAILURE_REASONS when the run hit a run-level failure, else null.
+    // Machine-readable counterpart to the English strings in errors[].
+    failureReason: null,
     server: null,
     capabilities: null,
     timings: {},
@@ -57,6 +69,7 @@ export async function runDiagnostics({ command, args, timeout, call }) {
       result.timings.handshakeMs = t.ms;
     } catch (err) {
       result.ok = false;
+      result.failureReason = failureReasonOf(err);
       result.errors.push(`handshake failed: ${err.message}`);
       if (err instanceof McpError && err.data?.stderr) {
         result.errors.push(`server stderr: ${err.data.stderr}`);
@@ -98,6 +111,9 @@ export async function runDiagnostics({ command, args, timeout, call }) {
       } catch (err) {
         if (caps.tools !== undefined) {
           result.ok = false;
+          // Only the first run-level failure sets this. A later one is a
+          // consequence of the first, and overwriting would hide the cause.
+          if (result.failureReason === null) result.failureReason = failureReasonOf(err);
           result.errors.push(`tools/list failed: ${err.message}`);
         } else {
           result.warnings.push(`tools/list not available: ${err.message}`);
