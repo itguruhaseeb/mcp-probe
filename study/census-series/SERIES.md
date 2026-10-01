@@ -96,9 +96,17 @@ are present rather than assuming a daily grid.
   every month, which is a dataset deposit rather than a git object, so it goes to
   the archive under the concept DOI rather than into this directory.
 
-The 2026-09-18 frame, 8,511 active `npm`/`stdio` candidates, is held for the next
-deposit. Until that deposit exists this line describes an intention, not a fact,
-and it says so rather than the other way round.
+The 2026-09-18 frame, 8,511 active `npm`/`stdio` candidates, was held for the
+next deposit and **did not survive**: the sandbox holding it was reset before
+the deposit was made, the same way the August frame was lost. Its hash was
+never committed, so it cannot even be checked. The 2026-10-01 frame (9,956
+candidates) is the first one pinned by hash in git at the moment of the draw
+(`study/2026-10/DEPOSIT-MANIFEST.md`,
+`77864abc4812476abfeb666e45fbefa1f8a6fe78d8caf1d97c36794e6cda813d`) and is
+packaged for the deposit together with the same-hour declarations sweep. The
+rule that follows from losing two frames: a frame is hashed into git the hour
+it is harvested, and the deposit happens before the sandbox is trusted to keep
+anything.
 
 ## Reproduce
 
