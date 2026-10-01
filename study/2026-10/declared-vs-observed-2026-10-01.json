@@ -1,0 +1,49 @@
+{
+  "question": "Does a declared REQUIRED environment variable predict that a server fails to start?",
+  "probeSnapshot": "2026-08-22",
+  "registryReadAt": "2026-10-01T00:56:40.367Z",
+  "limitation": "The probe outcomes and the registry declarations were taken at different times. A declaration may have changed in between. A same-snapshot replication is required before any of this is stated as settled.",
+  "drawn": 400,
+  "matchedToRegistry": 399,
+  "registryPagesSwept": 1271,
+  "groups": {
+    "included": {
+      "n": 194,
+      "declaresAnyEnv": 102,
+      "declaresRequired": 53,
+      "declaresRequiredPct": 27.3
+    },
+    "hs": {
+      "n": 150,
+      "declaresAnyEnv": 81,
+      "declaresRequired": 39,
+      "declaresRequiredPct": 26
+    },
+    "cred": {
+      "n": 53,
+      "declaresAnyEnv": 44,
+      "declaresRequired": 38,
+      "declaresRequiredPct": 71.7
+    },
+    "na": {
+      "n": 2,
+      "declaresAnyEnv": 2,
+      "declaresRequired": 1,
+      "declaresRequiredPct": 50
+    }
+  },
+  "primaryComparison": {
+    "note": "handshake-failed against started-fine. The credential-labelled group is EXCLUDED here because the probe assigned that label by reading stderr for credential words, so its agreement with the registry is partly circular and would inflate the result.",
+    "brokenDeclaresRequiredPct": 26,
+    "startedDeclaresRequiredPct": 27.3,
+    "z": -0.274,
+    "p": 0.7839
+  },
+  "circularComparisonReportedForTransparency": {
+    "note": "Do not quote this as the finding. It mostly measures that the probe and the registry agree about what a credential error looks like.",
+    "credDeclaresRequiredPct": 71.7,
+    "startedDeclaresRequiredPct": 27.3,
+    "z": 5.936,
+    "p": 0
+  }
+}
