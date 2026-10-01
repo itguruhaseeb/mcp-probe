@@ -86,7 +86,11 @@ export async function runDiagnostics({ command, args, timeout, call }) {
           const linted = lintTool(tool);
           result.tools.push({
             name: linted.name,
+            title: tool.title ?? tool.annotations?.title ?? null,
             description: tool.description || null,
+            // The schema the server actually sent, verbatim, so a consumer of
+            // --json can audit a tool without re-running the handshake.
+            inputSchema: tool.inputSchema ?? null,
             issues: linted.issues,
             fails: linted.fails,
             warns: linted.warns,

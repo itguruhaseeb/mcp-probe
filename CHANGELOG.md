@@ -21,6 +21,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   results. `--sarif-artifact <path>` sets the file findings are attributed to;
   by default it is the server entry script when one can be found inside the
   working directory. Exit codes are unchanged.
+- Each tool in the `--json` output now carries its `title` (the top-level
+  field, falling back to `annotations.title`) and the `inputSchema` the server
+  sent, verbatim. Before this the JSON kept only name, description, lint
+  issues, and annotations, so anything that needed the schema or the title had
+  to re-run the handshake. Added for the October 2026 study, which audits
+  annotations tool by tool. Additive; existing fields are unchanged.
+
+### Fixed
+- `--json` and `--sarif` output was silently truncated at 64 KiB when stdout
+  was a pipe, because the process exited before the kernel pipe buffer had
+  drained. A server reporting a large tool catalog (a few hundred tools is
+  enough) therefore produced unparseable JSON for any consumer reading through
+  a pipe, which is how CI steps, `| jq`, and the study harness all read it,
+  while the same command printed to a terminal or a file looked fine. The
+  write is now awaited before exit. Found on 2026-10-01 when a 1,083-tool
+  server in the October registry draw came back as "launch-failed" with exit
+  code 0; see `study/2026-10/sample/README.md` for what that did and did not
+  change in the published numbers. `examples/large-catalog-server.js` and a
+  test in `test/cli.test.js` pin the fix.
 
 ## [0.1.2] - 2026-08-22
 

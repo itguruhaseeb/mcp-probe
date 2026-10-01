@@ -144,16 +144,26 @@ async function main() {
         )
       );
     }
-    process.stdout.write(
-      JSON.stringify(toSarif(result, { artifactUri: artifact.uri }), null, 2) + '\n'
-    );
+    await writeOut(JSON.stringify(toSarif(result, { artifactUri: artifact.uri }), null, 2) + '\n');
   } else if (opts.json) {
-    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+    await writeOut(JSON.stringify(result, null, 2) + '\n');
   } else {
     renderHuman(result);
   }
 
   process.exit(result.ok ? 0 : 1);
+}
+
+// When stdout is a pipe (a CI step, a harness, `| jq`), process.exit() drops
+// whatever has not yet left the kernel pipe buffer, which on Linux is 64 KiB.
+// A server that reports a large tool catalog therefore came back as truncated,
+// unparseable JSON to any consumer reading through a pipe, while the same
+// command printed to a file or terminal looked fine. Waiting for the write
+// callback before exiting is the whole fix.
+function writeOut(text) {
+  return new Promise((resolve, reject) => {
+    process.stdout.write(text, (err) => (err ? reject(err) : resolve()));
+  });
 }
 
 main().catch((err) => {

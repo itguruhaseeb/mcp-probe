@@ -252,9 +252,11 @@ export function lintTool(tool) {
   // Safety hints (2025-03-26 revision): readOnlyHint / destructiveHint /
   // idempotentHint / openWorldHint tell a client whether a tool has side
   // effects BEFORE it is invoked. Warn when none of them is declared.
+  // `annotations: null` and non-object values are treated as absent rather
+  // than thrown on; a throw here used to abort the whole tools/list pass.
   const ann = tool?.annotations;
-  const hasSafetyHint = ann !== undefined && ['readOnlyHint', 'destructiveHint', 'idempotentHint', 'openWorldHint']
-    .some((h) => ann[h] !== undefined);
+  const hasSafetyHint = ann !== null && typeof ann === 'object' &&
+    ['readOnlyHint', 'destructiveHint', 'idempotentHint', 'openWorldHint'].some((h) => ann[h] !== undefined);
   if (!hasSafetyHint) {
     issues.push(
       issue(

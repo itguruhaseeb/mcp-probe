@@ -144,3 +144,9 @@ test('safeCallArgs marks required-params tools unsafe', () => {
   });
   assert.equal(r.safe, false);
 });
+
+test('annotations: null is treated as "no safety hints", not thrown on', () => {
+  const r = lintTool({ name: 'x', description: 'd', inputSchema: { type: 'object' }, annotations: null });
+  assert.ok(r.issues.some((i) => i.id === 'tool/no-safety-hints'));
+  assert.equal(r.fails, 0);
+});
