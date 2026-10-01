@@ -1,0 +1,103 @@
+{
+  "catalog": "catalog/",
+  "serversCaptured": 196,
+  "serversCounted": 196,
+  "dropped": {
+    "secondPassFailed": [],
+    "toolCountChanged": []
+  },
+  "definitions": {
+    "title": "tool has `title` (top-level or annotations.title); rule tool/missing-title; what the pre-2026-10-01 harness reported as \"annotations\"",
+    "safetyHints": "tool has at least one of readOnlyHint, destructiveHint, idempotentHint, openWorldHint; rule tool/no-safety-hints; what the write-ups described"
+  },
+  "title": {
+    "serversWithTools": 196,
+    "all": 86,
+    "none": 107,
+    "partial": 3,
+    "bimodalPct": 98.5,
+    "partialPrevalenceUpper95Pct": 3.9,
+    "partialServers": [
+      {
+        "package": "0nmcp",
+        "version": "4.5.1",
+        "missing": 1079,
+        "total": 1083
+      },
+      {
+        "package": "@antonytm/mcp-sitecore-server",
+        "version": "1.3.2",
+        "missing": 117,
+        "total": 123
+      },
+      {
+        "package": "headless-tracker",
+        "version": "1.0.17",
+        "missing": 13,
+        "total": 15
+      }
+    ],
+    "tools": 4258,
+    "toolsMissing": 2984,
+    "toolsMissingPct": 70.1
+  },
+  "safetyHints": {
+    "serversWithTools": 196,
+    "all": 71,
+    "none": 120,
+    "partial": 5,
+    "bimodalPct": 97.4,
+    "partialPrevalenceUpper95Pct": 5.3,
+    "partialServers": [
+      {
+        "package": "@bolthub/mcp",
+        "version": "0.7.2",
+        "missing": 8,
+        "total": 22
+      },
+      {
+        "package": "@exactpdf/mcp",
+        "version": "0.2.3",
+        "missing": 30,
+        "total": 34
+      },
+      {
+        "package": "@abhishekmcp/github",
+        "version": "0.2.0",
+        "missing": 14,
+        "total": 16
+      },
+      {
+        "package": "@chrischall/pickuppatrol-mcp",
+        "version": "1.1.2",
+        "missing": 3,
+        "total": 14
+      },
+      {
+        "package": "wellness-cycle-coach",
+        "version": "0.3.5",
+        "missing": 1,
+        "total": 17
+      }
+    ],
+    "tools": 4258,
+    "toolsMissing": 2707,
+    "toolsMissingPct": 63.6
+  },
+  "serverLevelCrossTab": {
+    "title=none hints=partial": 3,
+    "title=none hints=none": 91,
+    "title=all hints=all": 57,
+    "title=all hints=none": 27,
+    "title=none hints=all": 13,
+    "title=partial hints=none": 2,
+    "title=all hints=partial": 2,
+    "title=partial hints=all": 1
+  },
+  "readOnlyHint": {
+    "true": 790,
+    "false": 698,
+    "undefined": 2770,
+    "serversWithAnyTrue": 74
+  }
+}

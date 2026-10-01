@@ -1,0 +1,73 @@
+{
+  "study": "MCP registry probability sample, behavioral tier",
+  "sample": {
+    "seed": 20261001,
+    "n": 400,
+    "frameSha256": "77864abc4812476abfeb666e45fbefa1f8a6fe78d8caf1d97c36794e6cda813d",
+    "frameCount": 9956,
+    "frameSnapshotDate": "2026-10-01T12:26:07.857Z"
+  },
+  "probed": 400,
+  "included": 196,
+  "includedPct": 49,
+  "excluded": 204,
+  "excludeBreakdown": {
+    "handshake-failed": 162,
+    "needs-credentials": 41,
+    "package-unavailable": 1
+  },
+  "RQ1_conformance": {
+    "totalToolsMeasured": 4258,
+    "toolsWithDescriptions": 4258,
+    "toolsWithSchemaFailures": 0,
+    "serversWithAnySchemaFailure": 0,
+    "serversWithZeroTools": 0
+  },
+  "RQ2_annotations": {
+    "_measures": "TITLE presence per tool (rule tool/missing-title), NOT safety hints. Historical field name kept so summaries stay comparable; see RQ2_safetyHints and study/2026-10/august-recount/README.md.",
+    "serversWithTools": 196,
+    "all": 86,
+    "none": 107,
+    "partial": 3,
+    "bimodalPct": 98.5,
+    "partialPrevalenceUpper95Pct": 3.9,
+    "partialServers": [
+      {
+        "id": "io.github.0nork-0nMCP",
+        "package": "0nmcp",
+        "missing": 1079,
+        "total": 1083
+      },
+      {
+        "id": "io.github.Antonytm-mcp-sitecore-server",
+        "package": "@antonytm/mcp-sitecore-server",
+        "missing": 117,
+        "total": 123
+      },
+      {
+        "id": "io.github.tamasPetki-headless-tracker",
+        "package": "headless-tracker",
+        "missing": 13,
+        "total": 15
+      }
+    ],
+    "toolsMissingAnnotations": 2984,
+    "toolsMissingAnnotationsPct": 70.1,
+    "_caveat": "partial=0 is a NEGATIVE result in one sample, never proof that partial servers do not exist. Report partialPrevalenceUpper95Pct alongside it."
+  },
+  "RQ2_safetyHints": {
+    "_note": "result files predate the 2026-10-01 harness fix and carry no safetyHints field; compute from a captured catalog instead (study/2026-10/sample/annotation-stats.mjs)."
+  },
+  "RQ2_protocol": {
+    "2025-06-18": 189,
+    "2024-11-05": 6,
+    "2025-11-25": 1
+  },
+  "RQ3_walltime": {
+    "note": "Wall time includes first-run npx install cost and is measured under concurrency. NOT a latency measurement.",
+    "p50": 9857,
+    "p95": 14392,
+    "min": 1864,
+    "max": 15321
+  }
+}

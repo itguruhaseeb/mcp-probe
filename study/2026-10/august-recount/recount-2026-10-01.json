@@ -1,0 +1,436 @@
+{
+  "catalog": "../august-recount/catalog/",
+  "serversCaptured": 195,
+  "serversCounted": 166,
+  "dropped": {
+    "secondPassFailed": [
+      {
+        "package": "dnd-oracle",
+        "version": "0.1.0"
+      },
+      {
+        "package": "@torknetwork/mcp-server",
+        "version": "1.5.1"
+      },
+      {
+        "package": "kadenzo-mcp",
+        "version": "1.3.1"
+      },
+      {
+        "package": "weavatrix-git",
+        "version": "0.3.1"
+      },
+      {
+        "package": "vision-squeezer",
+        "version": "0.6.1"
+      },
+      {
+        "package": "mcp-await",
+        "version": "0.1.3"
+      },
+      {
+        "package": "aicomglobal",
+        "version": "1.0.1"
+      },
+      {
+        "package": "routara-mcp",
+        "version": "1.0.1"
+      },
+      {
+        "package": "abapilot",
+        "version": "1.0.2"
+      },
+      {
+        "package": "apick-mcp",
+        "version": "1.1.0"
+      },
+      {
+        "package": "levels-of-self-mcp-server",
+        "version": "1.0.1"
+      }
+    ],
+    "toolCountChanged": [
+      {
+        "package": "@stacksfinder/mcp-server",
+        "version": "1.3.7",
+        "firstPass": 26,
+        "secondPass": 23
+      },
+      {
+        "package": "@automatelab/ai-seo-mcp",
+        "version": "0.1.1",
+        "firstPass": 20,
+        "secondPass": 13
+      },
+      {
+        "package": "tavily-mcp",
+        "version": "0.2.15",
+        "firstPass": 5,
+        "secondPass": 4
+      },
+      {
+        "package": "agentfolio-mcp-server",
+        "version": "1.1.1",
+        "firstPass": 13,
+        "secondPass": 8
+      },
+      {
+        "package": "source-map-parser-mcp",
+        "version": "1.3.2",
+        "firstPass": 3,
+        "secondPass": 2
+      },
+      {
+        "package": "safebot-mcp",
+        "version": "0.1.1",
+        "firstPass": 8,
+        "secondPass": 5
+      },
+      {
+        "package": "make-mcp-server",
+        "version": "1.3.3",
+        "firstPass": 8,
+        "secondPass": 7
+      },
+      {
+        "package": "@invaro/opentax",
+        "version": "0.2.1",
+        "firstPass": 15,
+        "secondPass": 14
+      },
+      {
+        "package": "@chaprola/mcp-server",
+        "version": "1.4.3",
+        "firstPass": 65,
+        "secondPass": 45
+      },
+      {
+        "package": "pmll-memory-mcp",
+        "version": "0.1.1",
+        "firstPass": 15,
+        "secondPass": 5
+      },
+      {
+        "package": "@paretools/github",
+        "version": "0.8.1",
+        "firstPass": 36,
+        "secondPass": 15
+      },
+      {
+        "package": "@payaion/mcp",
+        "version": "1.0.5",
+        "firstPass": 14,
+        "secondPass": 9
+      },
+      {
+        "package": "@syke1/mcp-server",
+        "version": "1.5.4",
+        "firstPass": 9,
+        "secondPass": 8
+      },
+      {
+        "package": "@unfragile/mcp-server",
+        "version": "0.3.2",
+        "firstPass": 6,
+        "secondPass": 10
+      },
+      {
+        "package": "@tethral/acr-mcp",
+        "version": "2.1.1",
+        "firstPass": 7,
+        "secondPass": 21
+      },
+      {
+        "package": "@mtop-devtools/mcp-server",
+        "version": "1.37.0",
+        "firstPass": 35,
+        "secondPass": 29
+      },
+      {
+        "package": "@theyahia/kontur-focus-mcp",
+        "version": "1.0.0",
+        "firstPass": 8,
+        "secondPass": 4
+      },
+      {
+        "package": "@paretools/lint",
+        "version": "0.8.0",
+        "firstPass": 9,
+        "secondPass": 7
+      }
+    ]
+  },
+  "definitions": {
+    "title": "tool has `title` (top-level or annotations.title); rule tool/missing-title; what the pre-2026-10-01 harness reported as \"annotations\"",
+    "safetyHints": "tool has at least one of readOnlyHint, destructiveHint, idempotentHint, openWorldHint; rule tool/no-safety-hints; what the write-ups described"
+  },
+  "title": {
+    "serversWithTools": 165,
+    "all": 64,
+    "none": 101,
+    "partial": 0,
+    "bimodalPct": 100,
+    "partialPrevalenceUpper95Pct": 1.8,
+    "partialServers": [],
+    "tools": 2203,
+    "toolsMissing": 1311,
+    "toolsMissingPct": 59.5
+  },
+  "safetyHints": {
+    "serversWithTools": 165,
+    "all": 51,
+    "none": 112,
+    "partial": 2,
+    "bimodalPct": 98.8,
+    "partialPrevalenceUpper95Pct": 3.8,
+    "partialServers": [
+      {
+        "package": "@rajsir/mcp-server-terraform",
+        "version": "0.2.1",
+        "missing": 7,
+        "total": 11
+      },
+      {
+        "package": "linkwarden-mcp",
+        "version": "0.1.2",
+        "missing": 3,
+        "total": 28
+      }
+    ],
+    "tools": 2203,
+    "toolsMissing": 1279,
+    "toolsMissingPct": 58.1
+  },
+  "serverLevelCrossTab": {
+    "title=none hints=none": 92,
+    "title=all hints=all": 43,
+    "title=none hints=all": 8,
+    "title=all hints=none": 20,
+    "title=none hints=partial": 1,
+    "title=all hints=partial": 1
+  },
+  "readOnlyHint": {
+    "true": 602,
+    "false": 267,
+    "undefined": 1334,
+    "serversWithAnyTrue": 51
+  },
+  "firstPassMetricTest": {
+    "serversCompared": 166,
+    "firstPassMissEqualsNoTitle": 166,
+    "firstPassMissEqualsNoSafetyHint": 136,
+    "verdict": "the first-pass \"annotations\" column is title presence",
+    "disagreementsWithSafetyHintDefinition": [
+      {
+        "package": "mcp-roadmapsh",
+        "firstPassMiss": 16,
+        "noTitle": 16,
+        "noSafetyHint": 0,
+        "tools": 16
+      },
+      {
+        "package": "krs-poland-mcp-server",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 2,
+        "tools": 2
+      },
+      {
+        "package": "@rajsir/mcp-server-terraform",
+        "firstPassMiss": 11,
+        "noTitle": 11,
+        "noSafetyHint": 7,
+        "tools": 11
+      },
+      {
+        "package": "bookmarks-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 8,
+        "tools": 8
+      },
+      {
+        "package": "dependency-fitness-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 2,
+        "tools": 2
+      },
+      {
+        "package": "uicockpit-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 4,
+        "tools": 4
+      },
+      {
+        "package": "@yawlabs/vew-mcp",
+        "firstPassMiss": 16,
+        "noTitle": 16,
+        "noSafetyHint": 0,
+        "tools": 16
+      },
+      {
+        "package": "@tideorg/mcp",
+        "firstPassMiss": 20,
+        "noTitle": 20,
+        "noSafetyHint": 0,
+        "tools": 20
+      },
+      {
+        "package": "wiring-diagram-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 9,
+        "tools": 9
+      },
+      {
+        "package": "@aaronsb/slack-mcp",
+        "firstPassMiss": 9,
+        "noTitle": 9,
+        "noSafetyHint": 0,
+        "tools": 9
+      },
+      {
+        "package": "@e18e/mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 3,
+        "tools": 3
+      },
+      {
+        "package": "devloop-mcp",
+        "firstPassMiss": 46,
+        "noTitle": 46,
+        "noSafetyHint": 0,
+        "tools": 46
+      },
+      {
+        "package": "calcuris-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 7,
+        "tools": 7
+      },
+      {
+        "package": "apple-stocks-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 1,
+        "tools": 1
+      },
+      {
+        "package": "letmediff",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 2,
+        "tools": 2
+      },
+      {
+        "package": "linkwarden-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 3,
+        "tools": 28
+      },
+      {
+        "package": "bank-statement-sheet-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 3,
+        "tools": 3
+      },
+      {
+        "package": "@arcade1v1/mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 6,
+        "tools": 6
+      },
+      {
+        "package": "foodblock-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 17,
+        "tools": 17
+      },
+      {
+        "package": "statcan-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 5,
+        "tools": 5
+      },
+      {
+        "package": "@fractalai/agent-passport-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 11,
+        "tools": 11
+      },
+      {
+        "package": "@buzzr/mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 11,
+        "tools": 11
+      },
+      {
+        "package": "@mindstone/mcp-server-humaans",
+        "firstPassMiss": 16,
+        "noTitle": 16,
+        "noSafetyHint": 0,
+        "tools": 16
+      },
+      {
+        "package": "@chrischall/flightaware-mcp",
+        "firstPassMiss": 33,
+        "noTitle": 33,
+        "noSafetyHint": 0,
+        "tools": 33
+      },
+      {
+        "package": "@gera-services/mcp-gera-jobs",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 5,
+        "tools": 5
+      },
+      {
+        "package": "@hapticpaper/mcp-server",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 8,
+        "tools": 8
+      },
+      {
+        "package": "indian-food-nutrition-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 7,
+        "tools": 7
+      },
+      {
+        "package": "dingdawg-finance-agent",
+        "firstPassMiss": 5,
+        "noTitle": 5,
+        "noSafetyHint": 0,
+        "tools": 5
+      },
+      {
+        "package": "humansurvey-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 10,
+        "tools": 10
+      },
+      {
+        "package": "37soul-mcp",
+        "firstPassMiss": 0,
+        "noTitle": 0,
+        "noSafetyHint": 9,
+        "tools": 9
+      }
+    ]
+  }
+}
