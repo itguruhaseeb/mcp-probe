@@ -84,7 +84,7 @@ counts, and the per-server files are held.
 
 ## How the run went, including what went wrong
 
-The probe ran in four chunks on a 2-vCPU, 8 GB host. Three things happened
+The probe ran in four chunks on a 2-vCPU, 8 GB host. Four things happened
 that a reader of the numbers should know about.
 
 **A sampled server forked itself 659 times.** `tribunal` 1.3.2 failed the
@@ -122,6 +122,18 @@ no August server (zero `launch-failed`) shows that signature. Five other
 October servers with 112 to 315 tools, each well over 64 KiB of output, came
 through intact because the truncation is a race between the exit and the
 reader's drain, which is also why it was not caught sooner.
+
+**A server wrote credentials into the working directory.** The probe runs
+each server with the repository root as its working directory and supplies
+no credentials. After the August recount, that directory contained a `.env`
+and a `.mcp.json` written by `ainative-memory-mcp` 1.0.1 during its
+handshake: it had auto-provisioned a cloud project on the author's behalf
+and stored a temporary API key for it, with a config block instructing an
+MCP host to launch it with that key. Two other servers created directories
+(`.agent-memory/`, `.wayy-ops/`). None of this was committed; the files were
+removed and are noted here because a "no credentials supplied" probe can
+still end up holding credentials a server minted for itself, and because
+anyone re-running the probe should do so in a disposable directory.
 
 Two more instrument fixes came out of the catalog pass: the linter threw on
 `annotations: null` (now treated as absent), and the aggregator's one-sided
