@@ -1,6 +1,8 @@
 # Declared credentials against observed startup, 2026-10-01
 
-Two results. One kills a planned study. One opens a better one.
+Two results. One kills a planned study. One opens a better one. The October
+draw itself, the August recount and the annotation correction are in
+`sample/` and `august-recount/`; this file is about registry declarations.
 
 ## 1. The dead half of the registry is invisible to an agent
 
@@ -59,21 +61,48 @@ would have broken the headline split. They are not: they declare required
 credentials at 26.0%, indistinguishable from the 27.3% of servers that started
 fine. They are genuinely broken.
 
-## Limitation, which is not small
+## Limitation of section 2, and the same-snapshot replication that closes it
 
-The probe outcomes are from 2026-08-22 and the registry declarations were read on
-2026-10-01. A server's declaration could have changed in between. Nothing here is
-settled until a same-snapshot replication runs, which the daily census now makes
-possible for any future draw.
+The section 2 comparison matched August probe outcomes to registry declarations
+read on 2026-10-01, forty days later. A declaration could have changed in
+between. The replication below removes that gap: the October draw
+(`sample/`) was made from a frame harvested at `2026-10-01T12:26:07Z`, the
+declarations were swept two seconds later (`declarations-sweep.mjs`, held for
+the deposit and pinned in `DEPOSIT-MANIFEST.md`), and the probe ran the same
+day. All 400 drawn packages match.
+
+| probe outcome, October draw | n | declares a REQUIRED env var |
+|---|---|---|
+| started fine | 196 | 27.0% |
+| failed to start | 162 | **17.9%** |
+| died demanding a credential | 41 | 80.5% |
+
+(`declared-vs-observed-2026-10-01-same-snapshot.json`.) The direction is the
+opposite of the one a "required credentials cause failures" story needs:
+servers that never start declare a required variable *less* often than servers
+that start (17.9% against 27.0%, z = -2.05, p = 0.04). That is one test at
+nominal alpha on one draw and should not be read as an effect; pooled across
+the two draws the gap is 21.8% against 27.2% (z = -1.64, p = 0.10). What both
+draws support, now without the timing caveat, is the negative result: a
+declared required environment variable does not predict that a server fails to
+start. The 80.5% rate in the credential-labelled group is the external
+validation of that label, and is circular for the same reason as in August.
 
 ## Reproduce
 
 ```bash
+# August outcomes against a live sweep (the section 2 numbers; the registry has moved since)
 node declared-vs-observed.mjs \
      --tsv ../2026-08/sample/study-2026-08-22.tsv \
      --out declared-vs-observed-$(date +%F).json
+
+# October outcomes against the same-hour declarations (needs declarations-2026-10-01.json from the deposit)
+node declared-vs-observed.mjs \
+     --tsv sample/study-2026-10-01.tsv --probe-date 2026-10-01 \
+     --declarations declarations-2026-10-01.json \
+     --out declared-vs-observed-2026-10-01-same-snapshot.json
 ```
 
-Reads the registry only. Executes no server code. The sweep is about 1,300 pages
-at 150ms and takes a few minutes. Expect a different match count on a later run,
-because the registry moves.
+The live sweep reads the registry only, executes no server code, is about 1,300
+pages at 150ms and takes a few minutes. Expect a different match count on a
+later run, because the registry moves.

@@ -11,8 +11,14 @@
 // Output: declared-vs-observed-<date>.json
 //
 // Usage: node declared-vs-observed.mjs --tsv <path> --out <path>
+//        node declared-vs-observed.mjs --tsv <path> --declarations <declarations.json> --out <path>
 //
-// The sweep is ~1,300 pages at 150ms and takes a few minutes. It reads the
+// With --declarations, the saved output of declarations-sweep.mjs is used
+// instead of a live sweep. That is the same-snapshot mode: pass the sweep taken
+// in the same hour as the frame the draw was made from, and the "different
+// times" limitation below does not apply.
+//
+// The live sweep is ~1,300 pages at 150ms and takes a few minutes. It reads the
 // registry only; it executes no server code.
 
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -87,8 +93,23 @@ async function main() {
   const wanted = new Set(rows.map((r) => r.pkg));
   console.error(`[dvo] ${rows.length} drawn rows, ${wanted.size} distinct packages`);
 
-  const { map, pages } = await sweepDeclarations(wanted);
-  console.error(`[dvo] swept ${pages} pages, matched ${map.size} of ${wanted.size}`);
+  const declPath = arg('declarations', null);
+  let map, pages, snapshot = null;
+  if (declPath) {
+    const d = JSON.parse(readFileSync(declPath, 'utf8'));
+    const src = d.packages || d.map || d;
+    snapshot = d.snapshotDate || d.snapshot || d.sweptAt || null;
+    map = new Map();
+    for (const r of rows) {
+      const e = src[r.pkg];
+      if (e && !map.has(r.pkg)) map.set(r.pkg, { declared: e.declared, required: e.required });
+    }
+    pages = d.registryPagesSwept ?? d.pages ?? null;
+    console.error(`[dvo] saved declarations ${declPath} (snapshot ${snapshot}), matched ${map.size} of ${wanted.size}`);
+  } else {
+    ({ map, pages } = await sweepDeclarations(wanted));
+    console.error(`[dvo] swept ${pages} pages, matched ${map.size} of ${wanted.size}`);
+  }
 
   const matched = rows.filter((r) => map.has(r.pkg));
   const req = (r) => map.get(r.pkg).required > 0;
@@ -112,12 +133,14 @@ async function main() {
 
   const result = {
     question: 'Does a declared REQUIRED environment variable predict that a server fails to start?',
-    probeSnapshot: '2026-08-22',
-    registryReadAt: new Date().toISOString(),
-    limitation:
-      'The probe outcomes and the registry declarations were taken at different times. ' +
-      'A declaration may have changed in between. A same-snapshot replication is required ' +
-      'before any of this is stated as settled.',
+    probeSnapshot: arg('probe-date', '2026-08-22'),
+    registryReadAt: snapshot || new Date().toISOString(),
+    declarationsSource: declPath || 'live sweep',
+    limitation: declPath
+      ? 'Same-snapshot mode: declarations were swept in the same hour as the frame the draw was made from (see declarationsSource); the probe ran the same day.'
+      : 'The probe outcomes and the registry declarations were taken at different times. ' +
+        'A declaration may have changed in between. A same-snapshot replication is required ' +
+        'before any of this is stated as settled.',
     drawn: rows.length,
     matchedToRegistry: matched.length,
     registryPagesSwept: pages,
