@@ -17,49 +17,73 @@ fix, and the rule is one line: **sweep, commit the same hour, or do not count it
 Every point below reports `sweepComplete: true`, so none is a truncated lower
 bound.
 
-| | 2026-07-14 | 2026-08-22 | 2026-09-18 |
+| | 2026-07-14 | 2026-08-22 | 2026-09-18 | 2026-09-29 |
+|---|---|---|---|---|
+| unique servers | 16,548 | 24,135 | 33,346 | **37,408** |
+| active | 16,377 | 23,881 | 32,994 | 36,961 |
+| deprecated | 171 | 254 | 352 | 447 |
+| remote-only | 42.6% | 49.7% | 56.9% | 56.8% |
+| package-only | 50.4% | 43.6% | 37.0% | 37.1% |
+| npm/stdio launchable | 5,804 (35.1%) | 7,414 (30.7%) | 8,697 (26.1%) | 10,066 (26.9%) |
+| of those, active: the drawable frame | 5,671 | 7,258 | 8,511 | 9,859 |
+| registry pages swept | 512 | 790 | 1,080 | 1,254 |
+
+Four anchor points shown. `series.tsv` in this directory is the full machine-readable
+series and is the file to count from; this table is a reading aid and nothing should
+be quoted from it that `series.tsv` does not support.
+
+## CORRECTION, 2026-10-01: the acceleration claim was wrong
+
+The 18 September version of this file said the composition shift was accelerating:
+remote-only moving +0.18 pp/day and then +0.27 pp/day, with the note that anyone
+reading the percentage-point column as a constant rate would extrapolate wrong.
+
+Eleven more days of data say the warning was right and the claim it was attached
+to was not. From 18 to 29 September:
+
+| | 18 Sep | 29 Sep | change |
 |---|---|---|---|
-| unique servers | 16,548 | 24,135 | **33,346** |
-| active | 16,377 | 23,881 | 32,994 |
-| deprecated | 171 | 254 | 352 |
-| remote-only | 42.6% | 49.7% | **56.9%** |
-| package-only | 50.4% | 43.6% | **37.0%** |
-| both | 5.1% | 5.1% | 4.8% |
-| npm/stdio launchable | 5,804 (35.1%) | 7,414 (30.7%) | **8,697 (26.1%)** |
-| of those, active: the drawable frame | 5,671 | 7,258 | **8,511** |
-| on the current schema revision | 88.3% | 89.3% | 91.2% |
-| registry pages swept | 512 | 790 | 1,080 |
-| GitHub `topic:mcp-server` repos | 20,629 | not reachable | 29,221 |
+| unique servers | 33,346 | 37,408 | +4,062, or 369/day |
+| remote-only | 56.9% | 56.8% | **-0.1 pp** |
+| npm/stdio share | 26.1% | 26.9% | **+0.8 pp** |
 
-## What three points support, and what they do not
+The population kept growing at the same pace, 341/day before and 369/day after.
+The composition shift stopped. Remote-only moved -0.009 pp/day over the window and
+dipped to 56.3% on 25 September before recovering. The locally probeable share,
+which the earlier text said was tightening faster than the first two points
+suggested, went the other way and **rose** 0.8 points.
 
-Between the first two the paper said a crossover had happened and claimed no
-trend, because two points cannot separate a trend from a pair of readings. A third
-point changes what can be said, but not by as much as it looks.
+Three points were enough to see a direction and not enough to see a rate. Writing
+"accelerating" from two intervals was an over-read of exactly the kind this file
+warns against, and it is corrected here rather than quietly edited away.
 
-**Direction is now consistent across two independent intervals.** Remote-only rose
-+7.1pp then +7.2pp; package-only fell -6.8pp then -6.6pp; the `npm`/`stdio` share
-fell -4.4pp then -4.6pp. Three points in the same direction with near-identical
-step sizes is a stronger statement than one crossover.
+What survives: remote-only overtook package-only between July and August, and that
+crossover held through September. That is a change between measured endpoints, and
+it is all the series supports.
 
-**The rate is not constant, and the equal step sizes hide that.** The two
-intervals are 39 days and 27 days. Equal movement over a shorter window means the
-composition is shifting *faster*, not steadily: remote-only moved 0.18 pp/day and
-then 0.27 pp/day. Population growth accelerated in step, from 195 to 341 servers a
-day. Anyone reading the pp column as a constant monthly rate will extrapolate
-wrong.
+## The consequence for a stdio instrument, restated honestly
 
-**Three points still do not fit a model.** No curve is claimed here. What is
-claimed is three measured endpoints, their direction, and the fact that the
-per-day rate rose between them.
+The locally probeable slice fell from 35.1% to 26.1% of the population between
+July and 18 September, then recovered to 26.9% by 29 September. In absolute terms
+it has grown throughout, 5,804 to 10,066.
 
-## The consequence that keeps getting worse
+So the earlier framing, that a stdio-only instrument covers less of this ecosystem
+every month, is true of the July-to-September span and is not true of the most
+recent eleven days. The limit on a stdio-only sampling frame is real and it is not
+monotone. State it as a range between measured endpoints, never as a rate.
 
-The locally probeable slice, `npm`-published `stdio` servers, has now fallen from
-35.1% to 26.1% of the population in 66 days, while growing from 5,804 to 8,697 in
-absolute terms. A stdio-only instrument covers a smaller share of this ecosystem
-every month. That is a limit on any stdio-based sampling frame, this repository's
-included, and it is tightening faster than the first two points suggested.
+## Data quality: this series has holes
+
+The daily sweep has been running since 19 September and has not landed every day.
+Missing: 19, 20, 21, 22, 23, 24, 26 and 30 September. The 30 September run is the
+instructive one: the scheduler recorded it as succeeded, it finished in 2m 27s,
+which is shorter than the sweep's own minimum pacing of roughly 3m 8s at 1,254
+pages, and no row was committed. A run that reports success and commits nothing is
+the 2026-08-19 failure wearing a different hat.
+
+Gaps are left as gaps. A missing day cannot be backfilled, because the registry
+state that day is gone. Anything computed from this series must use the dates that
+are present rather than assuming a daily grid.
 
 ## What is kept with each point, and where
 
