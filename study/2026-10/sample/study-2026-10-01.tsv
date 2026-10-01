@@ -1,0 +1,411 @@
+# MCP registry probability sample, behavioral tier, probed 2026-10-01
+# seed=20261001 n=400 frameCount=9956 frameSnapshot=2026-10-01T12:26:07.857Z
+# frameSha256=77864abc4812476abfeb666e45fbefa1f8a6fe78d8caf1d97c36794e6cda813d
+# draw:      node ../../2026-08/sample/draw-sample.mjs --frame <candidates-registry.json> --seed 20261001 --n 400
+# probe:     node ../../2026-08/sample/probe-sample.mjs --sample sample.json --probe-root <mcp-probe> --out results/
+# aggregate: node ../../2026-08/sample/aggregate-sample.mjs --in results/ --sample sample.json
+# table:     node make-outcome-table.mjs --sample sample.json --in results/
+# st: I=included X=excluded | rsn: hs=handshake-failed cred=needs-credentials na=package-unavailable lf=launch-failed to=timeout
+# ann: A=every tool has a title  N=none has  P=partial  -=no tools | miss=tools lacking a TITLE (not safety hints; see august-recount/README.md)
+# Row order is the draw order, which is part of the sample.
+pkg	ver	st	rsn	tools	ann	miss
+homecastr-mcp-server	1.14.0	X	hs	0	-	0
+clickcast-mcp	0.4.4	X	hs	0	-	0
+@mambalabsdev/mcp-publication-cadence-tracker	1.1.1	I		1	A	0
+domain-radar	1.2.0	I		4	A	0
+3dprint-oracle	0.1.0	X	hs	0	-	0
+lyrenth-mcp	0.1.6	I		3	A	0
+@pdfbroker/mcp-server	1.2.0	X	cred	0	-	0
+@codespar/mcp-nuvem-fiscal	0.3.1	I		24	N	24
+google-ai-search-mcp	1.1.1	X	hs	0	-	0
+hogswap-mcp	0.4.0	I		12	N	12
+loki-mode	9.50.1	X	hs	0	-	0
+@openenthrium/oe-mcp	1.6.6	X	hs	0	-	0
+@faqai/mcp-server	0.5.1	X	cred	0	-	0
+pagewatch-mcp	0.1.0	I		5	N	5
+leximo-ai-call-assistant-mcp-server	1.0.1	X	cred	0	-	0
+@davidweb3-ctrl/mcp-git-enhanced	1.0.1	I		5	N	5
+@tensorfeed/mcp-server	2.0.1	I		24	N	24
+emailmd	0.11.0	X	hs	0	-	0
+@darkhorseone/mcp-server-uk-parliament-bills	1.0.2	I		21	A	0
+@n24q02m/better-godot-mcp	1.24.4	I		17	A	0
+dynamic-telegram-bot-api-mcp	10.3.3	X	hs	0	-	0
+@trustmodel/mcp-server	0.2.0	I		6	N	6
+spoken-mcp	0.3.0	I		8	A	0
+opengame-browser-game-mcp	0.1.3	I		4	A	0
+@ask-llm/codex-mcp	0.9.0	I		4	A	0
+@pulsemcp/image-diff-mcp-server	0.1.3	X	hs	0	-	0
+gridwork-aiact	1.0.0	I		4	N	4
+x64dbg-mcp-server	2.3.0	I		23	N	23
+codeinspectus	3.2.0	I		7	A	0
+readyorai	0.1.2	X	hs	0	-	0
+kie-mcp	4.0.1	X	cred	0	-	0
+gilbert-mcp	1.2.0	X	cred	0	-	0
+@kuailian/mcp-server	0.1.5	X	hs	0	-	0
+postmd-mcp-server	2.6.0	I		20	A	0
+america-law-graph	1.0.1	X	hs	0	-	0
+@focusgts/aep-mcp-server	0.11.1	X	cred	0	-	0
+events-mcp	0.1.1	I		3	N	3
+codeberg-mcp	1.0.1	X	hs	0	-	0
+xendit-mcp	0.3.0	I		6	A	0
+harmony-mcp	0.1.5	I		2	N	2
+semantic-scholar-mcp	1.0.0	X	hs	0	-	0
+@hoya25/nctr-mcp-server	1.0.1	X	hs	0	-	0
+@yawlabs/vew-mcp	0.4.3	I		16	N	16
+@lulzasaur9192/agent-infra-mcp	1.0.0	I		18	N	18
+veridion-nexus-mcp	1.0.9	X	cred	0	-	0
+archetypal-ai	1.0.5	I		5	N	5
+@chrischall/pickuppatrol-mcp	1.1.2	I		14	N	14
+osv-mcp	1.0.0	X	hs	0	-	0
+seekstone	0.20.1	X	hs	0	-	0
+@ai-optimizer/core	0.1.0	I		11	A	0
+mcp-db-connect	0.1.21	X	hs	0	-	0
+vedurstofa-mcp	1.0.0	I		6	N	6
+@jobdatalake/mcp-server	1.0.14	I		5	A	0
+@emile-wine/mcp-server	0.2.5	X	hs	0	-	0
+@d20dao/mcp	0.1.0	I		3	A	0
+mcp-aider-executor	1.1.0	X	hs	0	-	0
+websupport-mcp	0.1.1	X	cred	0	-	0
+iconoteka-mcp	0.2.2	I		3	A	0
+returncheck-mcp	0.1.1	I		1	N	1
+@gildara/mcp-server	0.8.0	I		12	N	12
+@bounceprotect/mcp	1.0.3	X	hs	0	-	0
+@bitsbound/mcp-server	1.0.6	X	cred	0	-	0
+@evocrawl/evocrawl-mcp	4.0.1	X	hs	0	-	0
+memorix	1.9.7	X	hs	0	-	0
+pagebolt-mcp	1.8.1	I		18	N	18
+@un-markdown/mcp-server	1.0.3	X	hs	0	-	0
+obsidian-hybrid-search	0.16.0	X	hs	0	-	0
+@qinisolabs/bizdays	0.2.0	I		6	A	0
+@stackfiesta/mcp	0.1.2	X	hs	0	-	0
+@mectro/raro-cua	0.1.0	X	hs	0	-	0
+@edgecasehuman/droidsight	1.0.0	X	hs	0	-	0
+@svgrid/mcp	3.0.1	X	hs	0	-	0
+@callmcp/server	0.1.2	X	hs	0	-	0
+site-shot-mcp	1.2.0	I		2	A	0
+autonomustrench-mcp-server	1.0.5	I		6	N	6
+jsonshim-mcp	1.0.2	I		2	N	2
+neo-vision	0.2.2	I		5	N	5
+code-sentinel-mcp	0.2.6	I		7	A	0
+license-verify-mcp	0.1.3	X	hs	0	-	0
+@marcelo-ochoa/server-mikrotik	1.0.6	I		4	N	4
+@houtini/seo-crawler-mcp	2.0.1	X	hs	0	-	0
+@esimfly/mcp	0.1.3	X	cred	0	-	0
+telegram-slack-mcp	0.5.1	X	hs	0	-	0
+mcp-telemetry-server	0.1.3	I		3	N	3
+@inite/diagnostic	1.1.0	I		2	N	2
+betterprompt-mcp	0.2.1	I		7	A	0
+burn-mcp-server	2.1.1	I		26	N	26
+@sendsoon/ai	0.1.2	I		3	A	0
+@trigguard/mcp	1.3.1	I		10	A	0
+@dumbspacecookie/openeye	0.1.1	X	hs	0	-	0
+f-droid-mcp	1.0.1	X	hs	0	-	0
+@mindstone/mcp-server-openai-image	0.3.2	I		2	A	0
+onepassword-mcp-server	0.5.4	X	cred	0	-	0
+vin-decoder-mcp	1.0.0	X	hs	0	-	0
+@mrfentmen/guardian-mcp	1.0.0	X	hs	0	-	0
+@mrfentmen/uuid-mcp	1.0.0	X	hs	0	-	0
+tracetify-mcp	0.5.1	I		16	A	0
+@ellul-estate/attestroom-com-attestroom-tools-mcp	1.0.0	I		7	A	0
+@alxpark/propresenter-mcp	1.0.1	I		177	N	177
+@verusidx/address-mcp	0.1.7	I		6	N	6
+@codespar/mcp-pluggy	0.1.2	X	cred	0	-	0
+@sand0vvv/hyperevm-mcp	1.4.0	I		9	A	0
+@deeppane/mcp-server	0.1.3	I		4	A	0
+@voidly/pay-mcp	0.1.3	I		41	N	41
+@signdocs-brasil/mcp-server	0.11.0	X	hs	0	-	0
+@munhq/cloud-tools	0.2.0	I		7	N	7
+@agentutility/mcp-prooflayer	0.2.4	X	hs	0	-	0
+@takehub/mcp	1.1.2	I		26	N	26
+docbot-mcp	1.0.4	I		4	A	0
+openemis-mcp-pro	1.1.0	I		12	N	12
+@jikida/mcp	0.3.6	X	hs	0	-	0
+@vruum/mcp	0.6.0	I		31	A	0
+@dingdawg/agent-spend-policy-mcp	0.1.1	I		1	A	0
+windy-word-mcp	1.3.0	I		115	N	115
+devcdp	5.0.1	I		74	N	74
+ssl-labs-mcp	1.0.0	X	hs	0	-	0
+mcp-socialapi	1.2.0	I		75	A	0
+newton-browser	0.4.1	X	hs	0	-	0
+clelp-mcp-server	1.1.8	I		3	N	3
+marriage-astro-mcp	1.0.2	I		22	N	22
+@mrfentmen/brainrot-mcp	1.0.1	X	hs	0	-	0
+mygene-mcp	1.0.0	X	hs	0	-	0
+transfa-mcp	1.0.1	I		4	N	4
+@bolyra/shield	0.1.0	X	hs	0	-	0
+better-mcp-notion	0.3.2	X	hs	0	-	0
+figma-context-mcp-air	2.0.2	X	hs	0	-	0
+@ponzu_app/mcp	1.0.3	X	hs	0	-	0
+crossfin-mcp	1.18.0	X	hs	0	-	0
+mcp-failure-lab	0.11.0	X	hs	0	-	0
+@snopek-games/godai	0.5.0	X	hs	0	-	0
+@striderlabs/mcp-walmart	0.1.1	I		12	N	12
+soldefi-mcp	0.5.2	X	hs	0	-	0
+@thenextgennexus/github-analytics-mcp-server	1.0.1	I		4	A	0
+@scriptivox/mcp-server	1.2.1	I		39	N	39
+orangerail	0.1.4	X	hs	0	-	0
+mcp-bbc-goodfood	1.1.0	I		4	A	0
+stapi-mcp	1.0.0	X	hs	0	-	0
+literal-mcp	1.0.0	X	hs	0	-	0
+@planit-tech/primamcp	0.2.1	X	cred	0	-	0
+calllint-mcp	0.2.0	I		6	N	6
+@clihub/cli	0.1.0-beta.0	X	hs	0	-	0
+changebook	0.10.2	I		11	A	0
+wrapguard-mcp	0.1.1	I		7	A	0
+tokenmaxxen-mcp	0.3.0	I		9	N	9
+@circulara/plugin	0.1.2	X	hs	0	-	0
+@atk1-eng/mcp-weather-server	1.0.1	X	hs	0	-	0
+vulk-mcp-server	1.1.0	I		19	A	0
+good-eggs-mcp-server	0.1.11	X	hs	0	-	0
+@sketchxflow/mcp	0.26.0	I		34	A	0
+qseow-mcp	0.5.2	X	hs	0	-	0
+@snapdeploy/mcp	0.1.0	X	cred	0	-	0
+gcc-intelligence-mcp	0.1.3	I		12	N	12
+loreweave	0.38.0	X	cred	0	-	0
+jsx-notation	0.1.6	I		4	A	0
+@ailang/parse	0.13.1	X	hs	0	-	0
+@starhawk/mcp-weather-server	1.0.2	X	hs	0	-	0
+@readystack/security-headers-csp-lint	0.1.3	X	hs	0	-	0
+@infino-ai/mcp-server	0.16.0	X	hs	0	-	0
+hermes-action-bridge	0.6.3	X	hs	0	-	0
+oak-longevity-mcp-server	0.1.0	I		9	A	0
+@vantagate/mcp-server	1.0.2	X	cred	0	-	0
+@gera-services/mcp-geracompliance	0.1.1	X	hs	0	-	0
+@shingou-io/mcp-stdio	0.4.2	I		4	A	0
+mcp-google-gsc	1.0.1	X	hs	0	-	0
+@agentutility/mcp-matchpoint	0.1.4	X	hs	0	-	0
+@sgpdirectory/mcp	1.3.2	I		4	N	4
+@mambalabsdev/mcp-event-presence-index	1.0.0	I		1	A	0
+@atlasent/mcp-server	2.16.0	I		44	A	0
+mcp-react-toolkit	1.0.1	X	hs	0	-	0
+@conorbronsdon/op3-mcp	0.2.0	I		6	N	6
+@dikolab/kbdb	1.0.3	X	hs	0	-	0
+@keyline-icons/mcp	1.5.0	I		4	N	4
+mulewatch	0.1.2	I		9	A	0
+@mindstone/mcp-server-slack	0.3.0	I		39	N	39
+eco-router-mcp	0.1.1	I		3	A	0
+vue-harvest-mcp	0.0.3	X	hs	0	-	0
+@cyanheads/grantsgov-mcp-server	0.1.1	X	hs	0	-	0
+myvariant-mcp	1.0.0	X	hs	0	-	0
+@xultrax-web/agent-memory-mcp	0.15.0	X	hs	0	-	0
+proxyllm-mcp	1.0.2	I		9	A	0
+@matrajs/mcp	1.1.6	I		3	A	0
+@voidly/mcp-server	2.9.1	I		89	N	89
+@diecoscai/hevy-mcp	0.5.0	X	cred	0	-	0
+@helm-protocol/ttt-mcp	0.3.4	I		10	A	0
+@dxpert/mcp	0.1.1	X	hs	0	-	0
+caelario-mcp	0.1.5	I		21	N	21
+@unclick/meal-mcp	0.1.0	I		7	N	7
+@exactpdf/mcp	0.2.3	I		34	N	34
+keyframe-mcp	0.3.0	X	hs	0	-	0
+@mikusnuz/umami-mcp	1.2.1	I		66	N	66
+frc-mcp	1.1.0	I		5	N	5
+@autron/core	0.3.1	X	hs	0	-	0
+blubrry-mcp	1.0.0	X	hs	0	-	0
+@infoinlet/mcp-workflow	0.1.1	I		6	N	6
+@hasdata/zillow-mcp	1.0.8	X	cred	0	-	0
+@spines/mcp-server	1.0.2	X	cred	0	-	0
+@gatewards/mcp-server	0.2.0-beta.2	X	hs	0	-	0
+@gridscoot/mcp	0.2.3	I		6	N	6
+@mindstone/mcp-server-elevenlabs	0.5.2	I		32	N	32
+password-forge-mcp	1.0.3	I		3	N	3
+@codespar/mcp-konduto	0.2.0-alpha.3	I		18	N	18
+canli-validation-mcp	0.10.1	I		15	A	0
+metroidvania-studio	1.3.2	X	hs	0	-	0
+brainstorm-mcp	1.8.0	I		7	N	7
+@signforge/mcp-server	1.2.2	X	cred	0	-	0
+seedfast	2.6.4	X	hs	0	-	0
+godavaii-mcp-server	1.0.2	X	cred	0	-	0
+@mrfentmen/dexscreener-mcp	1.0.1	X	hs	0	-	0
+saudi-vat-pro-mcp	1.0.1	X	cred	0	-	0
+crypto-quant-signal-mcp	1.31.0	X	hs	0	-	0
+skilldb	0.8.3	X	cred	0	-	0
+sparda-mcp	0.71.4	X	hs	0	-	0
+@storylenses/mcp-server	0.1.3	I		5	N	5
+generation-ship-mcp	0.1.0	I		3	N	3
+@thryx/contract-scanner-mcp-server	1.0.2	I		4	N	4
+@readystack/hardcoded-credential-audit	0.1.1	X	hs	0	-	0
+slang-workflows	0.1.2	X	hs	0	-	0
+@grantor/mcp	0.2.0	X	hs	0	-	0
+codewiki-mcp	1.1.1	I		3	N	3
+docspell-mcp	1.0.0	X	hs	0	-	0
+logisheets-mcp	0.6.0	I		32	N	32
+bind-alias-plus-mcp	1.0.2	I		6	N	6
+youtube-shorts-agent	0.1.6	X	hs	0	-	0
+browser-gateway	0.4.25	X	hs	0	-	0
+lastsearch	1.1.0	X	cred	0	-	0
+make-audit-mcp	0.1.0	I		3	A	0
+@dnsdoctor/mcp	1.9.0	I		20	N	20
+@mrfentmen/weather-mcp	1.0.0	X	hs	0	-	0
+@mindstone/mcp-server-google-workspace	0.4.2	X	hs	0	-	0
+noglow-mcp	0.2.1	I		1	A	0
+@proventools/mcp	0.1.0-beta.3	I		12	N	12
+@agoes/zoxide-doctor-mcp	0.1.2	I		1	N	1
+memorylens-mcp	2.1.2	X	hs	0	-	0
+cache-overflow-mcp	0.5.5	X	hs	0	-	0
+zillow-mcp	1.1.4	I		20	A	0
+@abhishekmcp/sql	0.1.0	I		9	A	0
+skillssafe-mcp	1.0.0	X	hs	0	-	0
+@arcxs-protocol/mcp-server	1.0.3	I		8	N	8
+@readystack/bem-class-extractor-html	0.1.2	X	hs	0	-	0
+incident-timeline-mcp	1.0.0	X	hs	0	-	0
+@twitterapis/mcp	0.19.0	I		112	A	0
+markdown-to-whatsapp	1.0.3	X	hs	0	-	0
+@abyssbugg/sourcery	0.2.4	I		12	N	12
+dk-regnskab-mcp	0.3.1	I		5	A	0
+@codai/axiom-mcp	2.4.0	X	hs	0	-	0
+bugcatcher-mcp	1.0.0	X	cred	0	-	0
+@hermitsh/shrimp-mcp	1.0.7	I		19	A	0
+hackmd-mcp	1.5.7	X	cred	0	-	0
+eccc-mcp	1.0.0	X	hs	0	-	0
+@runapi.ai/runway-mcp	0.2.0	I		5	N	5
+@mindstone/mcp-server-runway	0.4.1	I		23	N	23
+mcp-marmiton	2.1.0	I		3	A	0
+@1ly/mcp-server	0.1.7	X	hs	0	-	0
+rolex-mcp	1.0.0	X	hs	0	-	0
+@timergy/mcp	0.1.4	I		22	N	22
+soul-mcp-server	1.0.0	I		3	N	3
+aidc-mcp-server	0.2.4	I		3	A	0
+@maxweb4u/mcp-memorybank	0.3.2	X	hs	0	-	0
+prediction-market-mcp	1.0.1	X	cred	0	-	0
+@baozi.bet/mcp-server	4.0.10	X	hs	0	-	0
+@proofslip/mcp-server	0.2.3	I		4	N	4
+@mindstone/mcp-server-humaans	0.3.1	I		16	N	16
+pmll-memory-mcp	0.1.1	I		15	N	15
+@theyahia/pochta-russia-mcp	1.0.1	I		6	N	6
+tribunal	1.3.2	X	hs	0	-	0
+estevao-mcp	0.3.0	X	cred	0	-	0
+memeboat-mcp	0.3.0	I		3	A	0
+@realtimex/charts-mcp	2.0.6	X	hs	0	-	0
+chirak-mcp	1.1.2	I		15	N	15
+@dudko.dev/baton-mcp	0.1.3	X	hs	0	-	0
+@shck-dev/notion-mcp	0.5.2	I		13	N	13
+propstack-mcp-server	1.1.0	I		52	N	52
+markdown-forge-mcp	1.0.3	I		4	N	4
+@mambalabsdev/mcp-company-identity-resolver	1.0.1	I		1	A	0
+@rakshasar/xsignal	0.2.1	X	hs	0	-	0
+tollbooth-x402	0.6.0	X	hs	0	-	0
+@sketchxflow/dev-mcp	0.4.0	I		9	A	0
+@betterdb/mcp	0.1.3	I		60	N	60
+prometiam-risk-mcp	0.4.10	I		35	N	35
+@marboba/mcp	0.2.2	X	cred	0	-	0
+@jsonfabrica/mcp-server	0.3.0	I		18	A	0
+@infoinlet/mcp-email	0.1.1	X	hs	0	-	0
+entur-mcp	1.0.0	X	hs	0	-	0
+@clawallex/mcp-server	1.0.9	X	cred	0	-	0
+@upstash/context7-mcp	4.1.1	X	hs	0	-	0
+project-lore-mcp	0.1.1	X	hs	0	-	0
+@abhishekmcp/github	0.2.0	I		16	A	0
+@astermind/astermind-mcp	0.1.0	I		10	A	0
+@ask-llm/mcp	1.1.0	I		6	A	0
+secretcarousel	2.20.0	X	hs	0	-	0
+@readystack/ai-model-license-lint	1.0.2	X	hs	0	-	0
+@codespar/mcp-paypal	0.1.2	I		19	N	19
+tapsite	4.0.1	X	hs	0	-	0
+ace-context-mcp	0.1.1	X	hs	0	-	0
+aiterm-mcp	0.45.1	I		17	N	17
+@switchboard-mcp/cli	0.2.2	X	cred	0	-	0
+@true-and-useful/janee	0.8.5	X	hs	0	-	0
+brilliant-directories-mcp	6.58.610	X	cred	0	-	0
+headless-tracker	1.0.17	I		15	P	13
+eleata-einvoice-mcp	0.1.1	I		3	N	3
+@agenticsrclab/tradeos-public-intel-mcp-server	0.1.3	X	hs	0	-	0
+@sreelal727/mcpwatch	0.4.1	X	hs	0	-	0
+pop-pay	0.5.7	X	hs	0	-	0
+appium-mcp	1.94.0	X	hs	0	-	0
+@licentium/compass-mcp	1.0.1	I		2	N	2
+salesforce-marketing-mcp	1.0.1	X	hs	0	-	0
+@divyesh2000/codemaster	1.1.0	X	cred	0	-	0
+@guardbee/mcp-slopsquat-scanner	0.1.1	I		4	N	4
+@vocaless/mcp	0.1.3	X	cred	0	-	0
+@nvidia-elements/cli	2.2.8	X	hs	0	-	0
+registry-mcp	0.4.2	X	hs	0	-	0
+@three-ws/autopilot-mcp	0.2.1	I		11	A	0
+ai-incident-law	0.4.3	I		8	N	8
+@rdrco/mcp-ordali-memory	1.0.1	X	hs	0	-	0
+shipshots-mcp	0.11.0	X	hs	0	-	0
+@clawfetch/mcp	0.3.2	X	hs	0	-	0
+@kiraautonoma/agent-memory-mcp	0.1.3	X	hs	0	-	0
+wormhole-x402	0.8.0	X	hs	0	-	0
+@mentu/metamcp	1.0.0	I		3	N	3
+wellness-cycle-coach	0.3.5	I		17	A	0
+agentforge-fetch-extract-mcp	0.1.0	X	hs	0	-	0
+@tim0_12432/hotkeyless-ahk-mcp-server	1.0.8	I		4	N	4
+argentina-mcp	0.1.1	I		3	N	3
+suprasuta-markdown-mcp	0.1.4	I		4	A	0
+dingdawg-legal-agent	2.0.7	I		4	N	4
+genderize-mcp	1.0.0	X	hs	0	-	0
+c64bridge	1.0.2	X	hs	0	-	0
+@golproductions/envie	0.8.9	X	hs	0	-	0
+@codespar/mcp-brasil-api	0.2.2	I		24	N	24
+ghostfox	0.8.0	X	hs	0	-	0
+@ekwo-ai/mcp	0.9.0	I		55	A	0
+tenjin-cli	0.1.0-alpha.15	X	na	0	-	0
+dingdawg-planning-agent	2.0.6	I		6	N	6
+@fixpixel/filewash-api	0.1.0	X	hs	0	-	0
+locksmith-mcp	0.1.1	I		2	A	0
+proctor-mcp	1.0.0	X	hs	0	-	0
+@rog0x/mcp-database-tools	1.0.1	X	hs	0	-	0
+eurostat-mcp	1.0.1	X	hs	0	-	0
+shapewords-mcp	0.2.2	I		3	A	0
+jwt-forge-mcp	1.0.1	I		2	N	2
+@sylphx/lookout	0.3.3	I		7	N	7
+@ipvolt/proxy-toolkit-mcp	0.1.0	I		4	A	0
+aigroup-mdtoword-mcp	4.0.2	X	hs	0	-	0
+@mambalabsdev/mcp-company-discovery-list-builder	1.0.1	I		1	A	0
+recon-crypto-mcp	0.3.1	X	hs	0	-	0
+urdb-mcp	1.0.2	X	hs	0	-	0
+platformtaxhub-mcp	1.3.0	I		9	A	0
+@readystack/wp-plugin-review-gate	1.0.2	X	hs	0	-	0
+@agentwares/agentguard	0.1.3	X	hs	0	-	0
+@rephrasy/mcp	0.1.0	X	cred	0	-	0
+mcp-data-pipeline-connector	1.0.0	X	hs	0	-	0
+enrico-mcp	1.0.1	X	hs	0	-	0
+@arcadia-finance/mcp-server	0.5.1	I		35	A	0
+mcp-server-xtrust	1.0.2	I		3	N	3
+mcp-server-zuuna	0.3.0	X	cred	0	-	0
+@tensor-cad/mcp	0.1.21	I		19	A	0
+neuron-mcp-server	1.0.1	I		315	A	0
+x402-crypto-mcp	1.3.7	I		24	N	24
+@vibesharingapp/mcp-server	0.17.0	X	cred	0	-	0
+@thedhruv07/github-repo-mcp	0.1.0	I		4	A	0
+slivingdoc	1.0.1	X	hs	0	-	0
+wikipedia-pageviews-mcp	1.0.0	X	hs	0	-	0
+sketchdex	0.1.2	I		19	N	19
+kairos-astrology	1.1.0	X	hs	0	-	0
+nasa-tle-mcp	1.0.0	X	hs	0	-	0
+@readystack/hmrc-fraud-prevention-header-lint	0.1.2	X	hs	0	-	0
+predictit-mcp	1.0.0	X	hs	0	-	0
+alphafold-mcp	1.0.0	X	hs	0	-	0
+mcp-anything	0.2.0	I		5	A	0
+@madtaco/mcp	1.1.0	I		13	N	13
+nodedex	0.1.15	X	hs	0	-	0
+@antonytm/mcp-sitecore-server	1.3.2	I		123	P	117
+@documentero/mcp	0.1.2	X	cred	0	-	0
+librivox-mcp	1.0.0	X	hs	0	-	0
+@yault/aesp	0.2.0	I		7	N	7
+@mambalabsdev/mcp-funding-investor-record	1.0.0	I		1	A	0
+@credda/mcp-server	0.1.3	I		17	A	0
+drain-mcp	0.1.3	X	cred	0	-	0
+@readystack/mcp-2026-migration-lint	0.1.5	X	hs	0	-	0
+@bolthub/mcp	0.7.2	I		22	N	22
+@mrfentmen/discord-mcp	1.0.0	X	hs	0	-	0
+@heyoden/mcp	1.0.3	X	cred	0	-	0
+@p-l-ta/calendar-mcp	1.0.0	I		7	A	0
+0nmcp	4.5.1	I		1083	P	1079
+ossfind	0.1.12	X	hs	0	-	0
+@truepathpdf/mcp-server	0.3.0	I		9	A	0
+packforai-mcp	0.1.1	I		1	A	0
+themealdb-mcp	1.0.0	X	hs	0	-	0
+whisper-mcp	0.1.1	I		3	N	3
+@scope-bid/scope-aec-mcp	0.1.1	I		4	A	0
+@iconsroom/mcp	0.1.1	I		4	N	4
+mcp-registry-mcp	0.1.1	X	hs	0	-	0
+@better-execute/bedc-mcp	1.0.2	I		1	A	0
+@forestrie/mcp-resolve	0.2.0	I		7	A	0
+@mgcrea/mcp-apple-messages	1.24.1	X	hs	0	-	0
+@braynexservices/nigeria-mcp-trade-intel	0.3.6	I		2	A	0
+dida365-mcp-server	0.2.2	X	cred	0	-	0
+env-forge-mcp	1.0.1	I		3	N	3
+@nuzo/memory-mcp	1.2.0	I		19	N	19
+finance-mcp-server	1.0.1	I		15	N	15
