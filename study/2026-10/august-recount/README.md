@@ -68,9 +68,9 @@ safety-hint definition.
 
 | file | what it is |
 |---|---|
-| `catalog/rowNNN-<pkg>.json` (deposit) | per-server second pass, pinned version: full tool objects, probe lint issues, first- and second-pass tool counts; 184 files, 4.1 MB, in the Zenodo data deposit, pinned here by `SHA256SUMS` |
+| `catalog/rowNNN-<pkg>.json` (deposit) | per-server second pass, pinned version: full tool objects, probe lint issues, first- and second-pass tool counts; 195 files, 4.1 MB, in the Zenodo data deposit, pinned through `../DEPOSIT-MANIFEST.md` |
 | `recount-2026-10-01.json` | both metrics over the recountable set, the row-by-row test, the cross-tabulation, the dropped servers |
-| `logs/recount-chunk1.log` | the run |
+| `recount-chunk1.log` (deposit) | the run log, held for the deposit and pinned in `../DEPOSIT-MANIFEST.md` |
 
 ## Reproduce
 

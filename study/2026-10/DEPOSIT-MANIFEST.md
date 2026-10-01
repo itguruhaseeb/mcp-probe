@@ -12,6 +12,8 @@ copies can be checked against this commit. Hashes are SHA-256.
 | `august-recount/SHA256SUMS` | one line per file in `august-recount/catalog/` (195) | `447b78052aae7ae2dd67f3bf438b880c93cda6dfafb051c6a87323299e9661bd` |
 | `candidates-registry-2026-10-01.json` | the frame the draw was made from, 9,956 entries, snapshot `2026-10-01T12:26:07.857Z` | `77864abc4812476abfeb666e45fbefa1f8a6fe78d8caf1d97c36794e6cda813d` |
 | `declarations-2026-10-01.json` | registry-declared environmentVariables for every npm/stdio package, 10,025 packages, snapshot `2026-10-01T12:26:09.858Z` | `8644f92e444a330f3015b4e3d799cfe01d0b20656479d2a390aeeb6481318ea0` |
+| `october-run-logs.tar.gz` | the four probe chunk logs and the catalog-pass log of the October draw (`sample/logs/` keeps the two small files: the reaper log and the first-pass `0nmcp` result) | `040e8df7a0bd4be10e071907dc234fb9888cd0c71c0b03af7d996b9c2edc6b97` |
+| `august-recount-chunk1.log` | the August recount run log | `db2e330bd0a473b3a76e1b4befb5f7fdbd9d6964a214c76c49cce12e59b98c36` |
 
 To verify a deposit: check the `SHA256SUMS` files against this table, then run
 `sha256sum -c SHA256SUMS` inside each directory.

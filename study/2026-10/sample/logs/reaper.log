@@ -1,0 +1,18 @@
+2026-10-01T12:50:28Z kill 18583 ppid=1 cmd=sh -c tribunal 
+2026-10-01T12:52:49Z kill 2177 ppid=1 cmd=sh -c registry-mcp 
+2026-10-01T13:04:08Z kill 8140 ppid=1 cmd=sh -c agentforge-fetch-extract-mcp 
+2026-10-01T13:07:26Z kill 2681 ppid=1 cmd=sh -c node ./script/install 
+2026-10-01T13:07:26Z kill 2682 ppid=1 cmd=node ./script/install 
+2026-10-01T13:18:25Z kill 13132 ppid=1 cmd=sh -c x64dbg-mcp-server 
+2026-10-01T13:19:16Z kill 19306 ppid=1 cmd=sh -c mcp-telemetry-server 
+2026-10-01T13:21:03Z kill 836 ppid=1 cmd=sh -c ttt-mcp 
+2026-10-01T13:28:27Z kill 27806 ppid=1 cmd=sh -c x64dbg-mcp-server 
+2026-10-01T13:28:48Z kill 31161 ppid=1 cmd=sh -c mcp-telemetry-server 
+2026-10-01T13:29:38Z kill 5899 ppid=1 cmd=sh -c ttt-mcp 
+2026-10-01T13:33:05Z kill 31943 ppid=1 cmd=sh -c node postinstall.js 
+2026-10-01T13:33:05Z kill 31944 ppid=1 cmd=node postinstall.js 
+2026-10-01T13:33:22Z kill 1922 ppid=1 cmd=sh -c node install.js 
+2026-10-01T13:33:22Z kill 1923 ppid=1 cmd=node install.js 
+2026-10-01T13:35:15Z kill 18480 ppid=1 cmd=sh -c arcade1v1-mcp 
+2026-10-01T13:36:26Z kill 27397 ppid=1 cmd=sh -c syke 
+2026-10-01T13:38:16Z kill 10392 ppid=1 cmd=sh -c tasktime-agent-bridge 

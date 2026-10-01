@@ -1,0 +1,23 @@
+{
+  "id": "io.github.0nork-0nMCP",
+  "package": "0nmcp",
+  "version": "4.5.1",
+  "status": "excluded",
+  "excludeReason": "launch-failed",
+  "wallMs": 8579,
+  "exitCode": 0,
+  "serverName": null,
+  "serverVersion": null,
+  "negotiatedProtocol": null,
+  "healthy": false,
+  "toolCount": 0,
+  "toolsDescribed": 0,
+  "toolsWithFails": 0,
+  "toolsWithWarns": 0,
+  "annotations": {
+    "state": "no-tools",
+    "missing": 0,
+    "total": 0
+  },
+  "stderrTail": ""
+}
