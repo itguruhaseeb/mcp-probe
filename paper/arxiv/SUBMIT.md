@@ -3,8 +3,43 @@
 This folder holds the arXiv-ready preprint. It is distinct from `../paper.md`,
 which is the JOSS-style *software* paper for the tool itself.
 
-**Nothing here has been submitted. Publication requires Haseeb's explicit
-approval, per channel.**
+**Version 1 is live as arXiv:2609.10962. Version 2, the correction below, has
+NOT been submitted. Replacing the arXiv version requires Haseeb's explicit
+approval, as every public step does.**
+
+## Version 2 (prepared 2026-10-01): correction of the annotation figures
+
+`main.tex` in this folder is now the v2 source. What changed, and only this:
+
+- The "annotation" figures in v1 (58.8% random, 41.5% curated, 72/122/0
+  servers, "194 of 194 all-or-nothing", 1.53% bound) were produced by a harness
+  that counted tools missing a `title`, not tools missing the safety hints
+  the text described. Established by re-probing the August servers at pinned
+  versions (`study/2026-10/august-recount/`). Section 5.2 is rewritten: the
+  numbers are kept under their correct label (titles), the safety-hint
+  figures are reported on the 166 recountable servers (58.1% of tools,
+  51/112/2), and the October 2026 draw is added as a replication
+  (`study/2026-10/sample/`).
+- Abstract, contribution bullet, Figure 1 label and caption, a new threats
+  paragraph on the instrument error and three further probe defects, and the
+  data-availability section. Nothing else moved; inclusion, failure taxonomy,
+  schema and redundancy results are unchanged.
+- Build check 2026-10-01: two `pdflatex` passes, 11 pages, no errors, no
+  undefined references. (The local check ran without `lmodern` and
+  `microtype`, which are absent from the sandbox TeX tree; both are in the arXiv
+  tree and stay in the preamble.)
+
+For the replacement form:
+
+- **Comments:** "v2: corrects the annotation figures of v1, which measured tool
+  titles rather than safety hints (Section 5.2); adds a re-probe at pinned
+  versions and a second seeded draw (October 2026). 11 pages. Seeded,
+  re-runnable pipeline and per-server outcomes:
+  https://github.com/itguruhaseeb/mcp-probe ; archived at
+  doi:10.5281/zenodo.21347997"
+- Everything else on the form is unchanged from v1.
+- The MSR 2027 draft derived from this file must be regenerated from the v2
+  source before submission; its Section 5.2 carried the same error.
 
 ## What to upload
 

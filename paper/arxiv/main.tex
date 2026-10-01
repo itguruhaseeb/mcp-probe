@@ -23,7 +23,7 @@ and What Tool-Use Benchmarks Contain Instead}
   \small Independent researcher\\
   \small ORCID: \href{https://orcid.org/0009-0000-4038-1272}{0009-0000-4038-1272}}
 
-\date{August 2026}
+\date{August 2026; v2 October 2026}
 
 \begin{document}
 \maketitle
@@ -39,9 +39,13 @@ seed and probe each one over the wire. Only 48.8\% complete an
 with the same instrument, and the dominant failure is not missing credentials
 (13.3\%) but servers that never start at all (37.5\%). Among the 195 that do run,
 hard conformance is total: zero fatal JSON~Schema violations across 2{,}766
-advertised tools. Optional safety annotations are the real variance, and the
-tool-level omission rate on a random draw is 58.8\% against 41.5\% on the curated
-frame, so curation flatters this figure too. We then compare the tool
+advertised tools. The optional per-tool metadata is where the variance lives:
+58.8\% of tools on the random draw carry no \texttt{title}, against 41.5\% on the
+curated frame, and on the servers that could be re-probed at their drawn versions
+58.1\% of tools carry none of the four safety hints, with partial servers present
+at both levels. (Version~1 of this paper reported the 58.8\% and 41.5\% figures as
+safety-annotation rates; they are title rates, an instrument error corrected in
+this version and documented in Section~\ref{sec:annotations}.) We then compare the tool
 \emph{descriptions} these servers advertise against two tool-use benchmark
 corpora using one method held constant. Real MCP tools show 2.8\% near-duplication
 at cosine 0.70, and \emph{all} of it lies within single servers: cross-author
@@ -99,8 +103,10 @@ scored rather than the machinery scoring them.
     credential-gated rate.
   \item \textbf{What the servers that do run look like}
     (Section~\ref{sec:behavior}): zero fatal schema violations across 2{,}766
-    tools, and a safety-annotation omission rate that is 17.3 points worse on a
-    random draw than on a curated one.
+    tools; a tool-title omission rate 17.3 points worse on a random draw than on
+    a curated one; and, from a re-probe at pinned versions, 58.1\% of tools
+    carrying no safety hint, with the server-level split close to but not
+    perfectly bimodal.
   \item \textbf{Benchmark corpora against real deployed tools}
     (Section~\ref{sec:redundancy}): one similarity method held constant across
     three corpora, with the within-unit and cross-unit decomposition that
@@ -281,7 +287,7 @@ Excluded: package unavailable       & 2   & 0.5\%  \\
   width=0.78\linewidth, height=4.6cm, font=\small,
   ybar, bar width=20pt, enlarge x limits=0.55,
   symbolic x coords={inclusion,omission}, xtick=data,
-  xticklabels={servers that start,tools missing annotations},
+  xticklabels={servers that start,tools missing a \texttt{title}},
   ymin=0, ymax=82, ytick={0,20,40,60}, ylabel={percent},
   grid=major, grid style={black!10}, tick align=outside,
   nodes near coords, nodes near coords style={font=\scriptsize},
@@ -297,8 +303,10 @@ Excluded: package unavailable       & 2   & 0.5\%  \\
 \end{axis}
 \end{tikzpicture}
 \caption{Curation flatters both headline numbers, and in opposite directions. The same
-instrument reports a higher start rate and a lower annotation-omission rate on a
-hand-curated frame than on a probability sample of the same population.}
+instrument reports a higher start rate and a lower title-omission rate on a
+hand-curated frame than on a probability sample of the same population. (v2: the
+right-hand pair was labelled as safety-annotation omission in v1; the numbers are
+title omission, see Section~\ref{sec:annotations}.)}
 \label{fig:curation}
 \end{figure}
 
@@ -340,25 +348,65 @@ rather than selected sample, which makes it a structural property rather than a
 small-sample artifact. The intuition that MCP tool schemas are frequently
 malformed is not supported.
 
-\subsection{Safety annotations}
-Optional \texttt{annotations} (\texttt{readOnlyHint}, \texttt{destructiveHint},
-\texttt{idempotentHint}, \texttt{openWorldHint}) tell an agent whether a tool is
-safe to call \emph{before} calling it. Of the 194 included servers advertising at
-least one tool, 72 annotate every tool and 122 annotate none. \textbf{1{,}626 of
-2{,}766 tools (58.8\%) carry no annotations.}
+\subsection{Tool titles, safety annotations, and a correction}
+\label{sec:annotations}
+\paragraph{What version~1 measured.}
+Version~1 of this paper reported that 1{,}626 of 2{,}766 tools (58.8\%) ``carry no
+annotations'', defined as the safety hints \texttt{readOnlyHint},
+\texttt{destructiveHint}, \texttt{idempotentHint} and \texttt{openWorldHint}, with
+72 servers annotating every tool, 122 none, and no partial server observed. That
+definition was not what the harness counted. The probe emits one lint message per
+missing property; the harness classified a tool as missing annotations when any of
+its messages contained the word ``annotation'', and the only message that does is
+the one for a missing \texttt{title} (\emph{tool has no ``title'' annotation}). The
+safety-hint message does not contain the word. Every annotation figure in
+version~1 is therefore a \textbf{title} figure, including the curated-frame 41.5\%,
+which was produced by \texttt{mcp-probe}~0.1.0 before the safety-hint rule existed.
+We established this by re-probing the 195 included servers at the versions they
+were drawn at (\texttt{npx -y <pkg>@<version>}) on 2026-10-01, keeping the full
+tool objects, and comparing the harness's per-server count with both definitions:
+it equals the no-title count on 166 of the 166 servers whose tool list was
+unchanged, and the no-safety-hint count on 136. The harness now counts by lint rule
+id and reports both quantities under their own names.
 
-The curated frame gave 41.5\%. Curation therefore flatters this figure by 17.3
-points, for the same reason it flatters inclusion: reference servers annotate, and
-curated frames are full of reference servers. The lower number should not be cited
-as an ecosystem rate.
+\paragraph{Titles.}
+The numbers stand under their correct label. Of the 194 included servers with at
+least one tool, 72 give every tool a \texttt{title} and 122 give none;
+\textbf{1{,}626 of 2{,}766 tools (58.8\%) have no title}, against 41.5\% on the
+curated frame. Curation flatters this figure by 17.3 points for the same reason it
+flatters inclusion: reference servers set titles, and curated frames are full of
+reference servers. Titles are a 2025-06-18 revision addition and are purely
+human-facing; their absence says nothing about whether an agent can judge a tool's
+side effects.
 
-The split is close to bimodal at the server level: 194 of 194 servers in this
-sample are all-or-nothing, with no partial server observed. We deliberately do not
-state this as an absolute. A single sample observing none of a rare category
-supports an upper bound, not a denial: given 0 of 194, the one-sided 95\% upper
-bound on the prevalence of partial annotation is 1.53\%. An earlier unreleased run
-of this study reported four partial servers at $n=214$; the present run does not
-reproduce that and we report the disagreement without explaining it.
+\paragraph{Safety hints.}
+The quantity version~1 described can be computed only on the servers that could
+be re-probed: 184 of the 195 pinned versions still installed and completed the
+handshake, and 166 of those advertised exactly the tool count recorded in August
+(a server's tool list can depend on its environment, so the other 18 are not the
+same observation). On that recountable set, 165 servers with 2{,}203 tools,
+\textbf{1{,}279 tools (58.1\%) carry none of the four safety hints}; 51 servers
+hint on every tool, 112 on none, and 2 are partial. The tool-level rate happens to
+land close to the title rate on the same servers (59.5\%), because most servers
+that omit titles also omit hints and vice versa: 135 of 165 sit on the diagonal
+of the title-by-hint cross-tabulation. The server-level claim does not survive:
+``all-or-nothing, no partial server observed'' was a statement about titles. Two of
+165 servers hint on some tools and not others, and the one-sided 95\% upper bound
+on partial prevalence is 3.8\%, not 1.53\%.
+
+\paragraph{Replication on a second draw.}
+A second seeded draw of 400 servers from the 2026-10-01 frame (9{,}956 entries,
+seed \texttt{20261001}) was probed the same day with the full tool objects kept
+from the start. 196 servers were included (49.0\%, against 48.8\% in August,
+$z=0.07$); the 14 packages drawn in both months produced identical outcomes. Of
+4{,}258 advertised tools, 2{,}707 (63.6\%) carry no safety hint and 2{,}984
+(70.1\%) no title; at the server level 71 hint on every tool, 120 on none, and 5
+are partial (upper bound 5.3\%). One server, \texttt{0nmcp}, advertises 1{,}083
+tools and none of them hints; without it the October safety-hint omission rate is
+51.1\%. The curated-frame comparison has not been re-measured under the safety-hint
+definition, so the 17.3-point gap is a title gap until it is. The re-probe, the
+October draw, the row-by-row test and the scripts that compute both definitions
+are released with the artifacts (Section~\ref{sec:data}).
 
 \subsection{Protocol versions}
 Four versions were negotiated across 195 servers: \texttt{2025-06-18} on 192,
@@ -561,6 +609,23 @@ as declared. Two snapshots support a difference, not a trend. A GitHub topic cou
 reported in an earlier version of this work as ecosystem context was unavailable
 on the second sweep and is not used in any claim.
 
+\paragraph{An instrument error, found after version~1.}
+The annotation metric in version~1 was miscounted by the harness, not by the
+probe (Section~\ref{sec:annotations}). It was caught only when the full tool
+objects were captured for the first time, forty days after the draw, and only
+because the recount could be checked row by row against the released table. Two
+lessons are recorded here so they are not relearned. First, a harness that derives
+a count from the text of a message rather than from a stable identifier will
+silently measure something else when the message set changes; the probe now emits
+rule ids and the harness counts by them. Second, releasing a per-server table was
+what made the error detectable at all; a summary alone would have hidden it.
+Three further instrument defects surfaced in the October run and are fixed in the
+repository: \texttt{--json} output was truncated at 64~KiB when read through a
+pipe (one October server with 1{,}083 tools was misclassified by it; no August
+server shows the signature), the linter threw on \texttt{annotations: null}, and
+the one-sided upper bound in the aggregator used the $k=0$ formula for every $k$
+(the August bound, $k=0$, is unchanged).
+
 \paragraph{Timing.}
 Wall-clock times were collected but include first-run \texttt{npx} install cost
 and were measured under concurrency with a kill timeout. They are not a latency
@@ -580,7 +645,12 @@ always resolves to the latest version~\cite{mcpprobe_dataset}.
 Every figure in this paper regenerates from a committed script plus the published
 seed \texttt{20260819} and the frame hash recorded in the draw manifest. The
 per-server outcome of all 400 draws is released, so the aggregates can be
-independently recounted rather than trusted.
+independently recounted rather than trusted. The version~2 correction adds, under
+\texttt{study/2026-10/}, the re-probe of the August servers at pinned versions
+with its row-by-row test, the October draw (seed \texttt{20261001}) with its
+outcome table, and the scripts that compute title and safety-hint coverage from a
+captured catalog; the per-server catalogs are deposited with the dataset and
+pinned by hash in the repository.
 
 \section*{Acknowledgements}
 We thank the maintainers of the Model Context Protocol specification and its
