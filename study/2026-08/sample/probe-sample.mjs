@@ -98,16 +98,31 @@ function classify(run) {
 }
 
 // Annotation coverage, the finding that was previously overclaimed as absolute.
+//
+// CORRECTION 2026-10-01. Until this date the function below counted a tool as
+// "missing annotations" when any lint issue's JSON contained the word
+// "annotation". The only probe message that contains that word is the one for
+// a missing tool TITLE ('tool has no "title" annotation'); the safety-hint
+// message does not. So every "annotation" figure produced by this harness
+// before 2026-10-01, including the August 2026 draw and the paper written
+// from it, measured TITLE presence, not readOnlyHint/destructiveHint/
+// idempotentHint/openWorldHint. The function now reports both, by rule id,
+// under names that say which is which. `annotations` keeps the old shape and
+// the old (title) meaning so earlier result files stay comparable; the new
+// `safetyHints` field is the one the paper's prose describes. See
+// study/2026-10/august-recount/README.md.
 // Recorded per server as all / none / partial so bimodality is MEASURED rather
 // than asserted, and so a partial server can never be rounded away.
-function annotationState(tools) {
+function coverage(tools, ruleId) {
   if (!tools.length) return { state: 'no-tools', missing: 0, total: 0 };
-  const missing = tools.filter((t) =>
-    (t.issues || []).some((i) => JSON.stringify(i).toLowerCase().includes('annotation'))
-  ).length;
+  const missing = tools.filter((t) => (t.issues || []).some((i) => i.id === ruleId)).length;
   const state = missing === 0 ? 'all' : missing === tools.length ? 'none' : 'partial';
   return { state, missing, total: tools.length };
 }
+// Title presence. This is what the pre-2026-10-01 code measured.
+function annotationState(tools) { return coverage(tools, 'tool/missing-title'); }
+// Safety hints. This is what the write-ups meant.
+function safetyHintState(tools) { return coverage(tools, 'tool/no-safety-hints'); }
 
 function record(server, run) {
   const [status, reason] = classify(run);
@@ -129,7 +144,10 @@ function record(server, run) {
     toolsDescribed: tools.filter((t) => t.description && String(t.description).trim()).length,
     toolsWithFails: tools.filter((t) => t.fails > 0).length,
     toolsWithWarns: tools.filter((t) => t.warns > 0).length,
+    // `annotations` = title coverage (historical name, see the correction above).
     annotations: annotationState(tools),
+    // `safetyHints` = readOnlyHint/destructiveHint/idempotentHint/openWorldHint coverage.
+    safetyHints: safetyHintState(tools),
     // name + full description: the unit the redundancy study deduplicates on.
     toolCatalog: status === 'included'
       ? tools.map((t) => ({ name: t.name, description: t.description ?? null }))
@@ -165,7 +183,7 @@ async function worker() {
     n += 1;
     console.error(
       `[${done.size + n}/${all.length}] ${rec.status.padEnd(8)} ${(rec.excludeReason || '').padEnd(19)} ` +
-      `${s.package.slice(0, 44).padEnd(44)} tools=${rec.toolCount} ann=${rec.annotations.state}`
+      `${s.package.slice(0, 44).padEnd(44)} tools=${rec.toolCount} title=${rec.annotations.state} hints=${rec.safetyHints.state}`
     );
     if (n % 20 === 0) pruneNpx();
   }

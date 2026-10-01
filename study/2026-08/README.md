@@ -1,5 +1,23 @@
 # August 2026 study artifacts
 
+> **Correction (2026-10-01).** Every "annotation" figure produced from this
+> directory measures whether a tool carries a **`title`**, not whether it
+> carries the safety hints (`readOnlyHint`, `destructiveHint`,
+> `idempotentHint`, `openWorldHint`) that the paper, this README's sources
+> and the Zenodo record describe. The harness matched the word "annotation"
+> in lint messages, and the only message containing it is the missing-title
+> one. Affected: the 58.8% tool-level rate, the 41.5% curated comparison
+> (measured with mcp-probe 0.1.0, which had no safety-hint rule at all) and
+> the 17.3-point gap, the 72 / 122 / 0 all-none-partial split, the "194 of
+> 194 all-or-nothing" statement, and the 1.53% upper bound. The `ann` and
+> `miss` columns of `sample/study-2026-08-22.tsv` and `RQ2_annotations` in
+> `sample/summary-2026-08-22.json` are title coverage. The re-probe at pinned
+> versions that established this, and the corrected figures (58.1% of tools
+> lack a safety hint on the 166 recountable servers; 51 / 112 / 2 at the
+> server level), are in [`../2026-10/august-recount/`](../2026-10/august-recount/README.md).
+> The inclusion rate, the failure taxonomy, the schema-conformance result and
+> the redundancy measurements are not affected.
+
 Everything the paper in `paper/arxiv/` counts from, plus the scripts that produced
 it. Most numbers in the paper are a count over a file here, made by a script here,
 and "Reproducing" below shows how to redo each one. Three are not, and they are
