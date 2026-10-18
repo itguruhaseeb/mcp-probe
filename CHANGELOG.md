@@ -27,6 +27,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   issues, and annotations, so anything that needed the schema or the title had
   to re-run the handshake. Added for the October 2026 study, which audits
   annotations tool by tool. Additive; existing fields are unchanged.
+- The `--json` report carries `failureReason`, a machine-readable cause for a
+  run-level failure: `timeout`, `spawn`, `transport`, `protocol` or `unknown`,
+  and `null` when the run did not fail at that level. Until now a consumer had
+  to regex the English prose in `errors[]` to tell a hung server apart from a
+  crashed one. It also carries `timeoutMs`, the limit the run was measured
+  against, so a timeout can be read rather than guessed at. Only the first
+  run-level failure sets `failureReason`; a later one is a consequence of it.
+- `examples/unresponsive-server.js`, a server that accepts a connection and then
+  never replies. It makes the timeout path reproducible by hand and testable in
+  CI, which it was not before. Closes #5.
 
 ### Fixed
 - `--json` and `--sarif` output was silently truncated at 64 KiB when stdout
@@ -40,6 +50,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   code 0; see `study/2026-10/sample/README.md` for what that did and did not
   change in the published numbers. `examples/large-catalog-server.js` and a
   test in `test/cli.test.js` pin the fix.
+- The per-request timeout default was the literal `10000` in both `parseArgs`
+  and the `McpClient` constructor, where the two could drift apart, and a third
+  time in the help text. It is now `DEFAULT_TIMEOUT_MS` in `src/client.js`, and
+  the help text interpolates it.
 
 ## [0.1.2] - 2026-08-22
 

@@ -10,6 +10,7 @@ import { runDiagnostics, renderHuman } from '../src/report.js';
 import { toSarif, resolveArtifact } from '../src/sarif.js';
 import { color } from '../src/color.js';
 import { VERSION } from '../src/version.js';
+import { DEFAULT_TIMEOUT_MS } from '../src/client.js';
 
 const HELP = `mcp-probe  lint and health-check any MCP server over stdio
 
@@ -30,7 +31,7 @@ Options
   --sarif-artifact <path>
                     file the SARIF findings are attributed to (default: the
                     server entry script, when it is inside the working dir)
-  --timeout <ms>    per-request timeout in milliseconds (default 10000)
+  --timeout <ms>    per-request timeout in milliseconds (default ${DEFAULT_TIMEOUT_MS})
   -h, --help        show this help
   -v, --version     show version
 
@@ -44,7 +45,7 @@ function parseArgs(argv) {
     json: false,
     sarif: false,
     sarifArtifact: null,
-    timeout: 10000,
+    timeout: DEFAULT_TIMEOUT_MS,
     command: null,
     args: [],
   };
