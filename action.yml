@@ -1,0 +1,118 @@
+name: 'mcp-probe'
+description: 'Lint and health-check an MCP server over stdio, and surface the findings as GitHub code scanning annotations.'
+author: 'Haseeb Mohammed Afsar'
+
+branding:
+  icon: 'activity'
+  color: 'purple'
+
+inputs:
+  server:
+    description: >-
+      The command that launches the MCP server, for example
+      "node ./dist/server.js" or "python -m my_server". Everything in this
+      string is passed to the probe after the "--" separator.
+    required: true
+  sarif:
+    description: >-
+      Emit SARIF 2.1.0. When false the probe emits JSON instead and nothing is
+      uploaded, since code scanning only ingests SARIF. The probe refuses to
+      write both formats to one stdout, so this is a choice rather than a pair.
+    required: false
+    default: 'true'
+  upload-sarif:
+    description: >-
+      Upload the SARIF log to GitHub code scanning. Requires the job to grant
+      "security-events: write". Set to false to keep the log as a step output
+      and upload it yourself.
+    required: false
+    default: 'true'
+  artifact:
+    description: >-
+      File the SARIF findings are attributed to. SARIF is file-shaped and this
+      probe inspects a live process, so when the server is a global binary, a
+      container, or is launched through a wrapper, there is nothing on disk to
+      detect and the log falls back to a synthetic URI that anchors to no line
+      of code. Set this to a path in the checkout to anchor the alerts.
+    required: false
+    default: ''
+  timeout:
+    description: 'Per-request timeout in milliseconds.'
+    required: false
+    default: '10000'
+  call:
+    description: >-
+      Attempt a safe round-trip on tools that declare no required parameters.
+      Off by default: it issues real tools/call requests against the server.
+    required: false
+    default: 'false'
+  fail-on-violation:
+    description: >-
+      Fail the step when the probe reports a hard failure (a failed handshake
+      or an invalid tool schema). Set to false to report without gating. A
+      usage error in the inputs fails the step either way.
+    required: false
+    default: 'true'
+  working-directory:
+    description: 'Directory to run the probe from. Defaults to the workspace root.'
+    required: false
+    default: '.'
+  output-file:
+    description: 'Where to write the report. Defaults to mcp-probe.sarif or mcp-probe.json in the working directory.'
+    required: false
+    default: ''
+
+outputs:
+  exit-code:
+    description: 'The probe exit code. 0 healthy, 1 hard failure, 2 usage error.'
+    value: ${{ steps.probe.outputs.exit-code }}
+  healthy:
+    description: 'true when the probe found no hard failure, false otherwise.'
+    value: ${{ steps.probe.outputs.healthy }}
+  report-file:
+    description: 'Path to the SARIF or JSON report the probe wrote.'
+    value: ${{ steps.probe.outputs.report-file }}
+
+runs:
+  using: 'composite'
+  steps:
+    # The probe never fails this step. The exit code is captured and acted on
+    # at the end, after the upload has had its chance to run. Failing here
+    # instead would end the job before the annotations that explain the
+    # failure are uploaded, which is the single most common way a conformance
+    # gate ends up useless.
+    #
+    # The body is script/probe-step.sh rather than inline shell so that
+    # test/action.test.js can run it. See the header of that script.
+    - id: probe
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        MCP_PROBE_SERVER: ${{ inputs.server }}
+        MCP_PROBE_SARIF: ${{ inputs.sarif }}
+        MCP_PROBE_ARTIFACT: ${{ inputs.artifact }}
+        MCP_PROBE_TIMEOUT: ${{ inputs.timeout }}
+        MCP_PROBE_CALL: ${{ inputs.call }}
+        MCP_PROBE_OUTPUT: ${{ inputs.output-file }}
+        MCP_PROBE_BIN: ${{ github.action_path }}/bin/mcp-probe.js
+      run: bash "$GITHUB_ACTION_PATH/script/probe-step.sh"
+
+    - name: Upload SARIF to code scanning
+      if: ${{ inputs.sarif == 'true' && inputs.upload-sarif == 'true' }}
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ inputs.working-directory }}/${{ steps.probe.outputs.report-file }}
+        category: mcp-probe
+
+    # Only now, with the annotations uploaded, is it safe to fail.
+    - name: Gate on the result
+      if: ${{ inputs.fail-on-violation == 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        code="${{ steps.probe.outputs.exit-code }}"
+        if [ "$code" -ne 0 ]; then
+          echo "::error::mcp-probe reported a hard failure. See the code scanning alerts or ${{ steps.probe.outputs.report-file }}."
+          exit "$code"
+        fi
+        echo "mcp-probe reported no hard failures."

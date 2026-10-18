@@ -288,6 +288,70 @@ them at the right file yourself.
 
 Exit codes are unchanged under `--sarif`.
 
+## GitHub Action
+
+The workflow above is the long form. The same gate, with the SARIF upload and
+the failure ordering already handled, is three lines:
+
+```yaml
+permissions:
+  security-events: write
+
+steps:
+  - uses: actions/checkout@v4
+  - uses: itguruhaseeb/mcp-probe@master
+    with:
+      server: node ./dist/server.js
+```
+
+The action runs the probe from its own checkout, so it needs no install step
+and pulls nothing from npm at run time. Node 18 or newer, which every current
+GitHub-hosted runner has.
+
+| Input | Default | What it does |
+| --- | --- | --- |
+| `server` | required | the command that launches the server, passed after `--` |
+| `sarif` | `true` | emit SARIF; `false` emits JSON instead |
+| `upload-sarif` | `true` | upload to code scanning, needs `security-events: write` |
+| `artifact` | none | file the findings are attributed to, as `--sarif-artifact` |
+| `timeout` | `10000` | per-request timeout in milliseconds |
+| `call` | `false` | attempt safe round-trips |
+| `fail-on-violation` | `true` | fail the step on a hard failure |
+| `working-directory` | `.` | directory to run the probe from |
+| `output-file` | auto | where to write the report |
+
+| Output | What it is |
+| --- | --- |
+| `exit-code` | `0` healthy, `1` hard failure, `2` usage error |
+| `healthy` | `true` or `false` |
+| `report-file` | path to the SARIF or JSON report |
+
+Two details are deliberate, and both are the reason to use the action rather
+than hand-rolling the steps:
+
+- **The probe never fails its own step.** The exit code is captured, the SARIF
+  is uploaded, and only then does the action fail. Fail at the probe and the
+  job ends before `upload-sarif` runs, which throws away the annotations that
+  explain why it failed.
+- **A bad input is not a bad server.** A usage error (exit `2`), a report path
+  in a directory that does not exist, or a probe that wrote nothing are
+  reported as problems with the configuration, not as an unhealthy server.
+
+To report without gating, set `fail-on-violation: false` and read
+`steps.<id>.outputs.healthy` yourself.
+
+`sarif` and `json` are a choice rather than a pair, because the probe refuses
+to write both formats to one stdout. Two formats means two runs against a live
+server, which is a decision for the caller rather than a default.
+
+The step body lives in `script/probe-step.sh` rather than inline in
+`action.yml`, so the suite can run it. `test/action.test.js` drives it against
+the bundled example servers on Node 18, 20 and 22 in ordinary CI, covering the
+healthy path, a hung server, JSON mode, a missing server input, a bad flag
+value, a nested output path, and a command that does not exist. Shell living
+inside a YAML string is otherwise tested only when somebody pushes a workflow
+and watches it, which is how action bugs reach users.
+
 ## Roadmap
 
 - Deeper JSON Schema validation (nested `$ref`, `oneOf` / `anyOf`, format checks).
@@ -296,7 +360,6 @@ Exit codes are unchanged under `--sarif`.
 - A `--fixture` mode that generates valid sample arguments from a schema so tools
   with required parameters can be round-tripped safely.
 - Resource read and prompt get smoke tests under `--call`.
-- A GitHub Action wrapper for one-line CI integration.
 
 ## Development
 
