@@ -37,6 +37,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `examples/unresponsive-server.js`, a server that accepts a connection and then
   never replies. It makes the timeout path reproducible by hand and testable in
   CI, which it was not before. Closes #5.
+- A composite GitHub Action at `action.yml`, so adding a conformance gate is
+  three lines rather than a hand-written sequence of steps. It runs the probe
+  from its own checkout and pulls nothing from npm at run time. The probe step
+  never fails on its own: the exit code is captured, the SARIF is uploaded,
+  and the action fails afterwards, because failing first ends the job before
+  `upload-sarif` runs and throws away the annotations that explain the
+  failure. A usage error, an unwritable report path, or an empty report are
+  reported as configuration problems rather than as an unhealthy server. The
+  step body lives in `script/probe-step.sh` rather than inline in the YAML, so
+  that `test/action.test.js` can drive it in ordinary CI on all three Node
+  versions; shell inside a composite action is otherwise only tested by
+  pushing a workflow and watching it.
 
 ### Fixed
 - `--json` and `--sarif` output was silently truncated at 64 KiB when stdout
