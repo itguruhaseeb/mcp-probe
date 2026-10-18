@@ -1,0 +1,204 @@
+name: 'mcp-probe'
+description: 'Lint and health-check an MCP server over stdio, and surface the findings as GitHub code scanning annotations.'
+author: 'Haseeb Mohammed Afsar'
+
+branding:
+  icon: 'activity'
+  color: 'purple'
+
+inputs:
+  server:
+    description: >-
+      The command that launches the MCP server, for example
+      "node ./dist/server.js" or "python -m my_server". Everything in this
+      string is passed to the probe after the "--" separator.
+    required: true
+  sarif:
+    description: >-
+      Emit SARIF 2.1.0. When false the probe emits JSON instead and nothing is
+      uploaded, since code scanning only ingests SARIF. The probe refuses to
+      write both formats to one stdout, so this is a choice rather than a pair.
+    required: false
+    default: 'true'
+  upload-sarif:
+    description: >-
+      Upload the SARIF log to GitHub code scanning. Requires the job to grant
+      "security-events: write". Set to false to keep the log as a step output
+      and upload it yourself.
+    required: false
+    default: 'true'
+  artifact:
+    description: >-
+      File the SARIF findings are attributed to. SARIF is file-shaped and this
+      probe inspects a live process, so when the server is a global binary, a
+      container, or is launched through a wrapper, there is nothing on disk to
+      detect and the log falls back to a synthetic URI that anchors to no line
+      of code. Set this to a path in the checkout to anchor the alerts.
+    required: false
+    default: ''
+  timeout:
+    description: 'Per-request timeout in milliseconds.'
+    required: false
+    default: '10000'
+  call:
+    description: >-
+      Attempt a safe round-trip on tools that declare no required parameters.
+      Off by default: it issues real tools/call requests against the server.
+    required: false
+    default: 'false'
+  fail-on-violation:
+    description: >-
+      Fail the step when the probe reports a hard failure (a failed handshake
+      or an invalid tool schema). Set to false to report without gating. A
+      usage error in the inputs fails the step either way.
+    required: false
+    default: 'true'
+  working-directory:
+    description: 'Directory to run the probe from. Defaults to the workspace root.'
+    required: false
+    default: '.'
+  output-file:
+    description: 'Where to write the report. Defaults to mcp-probe.sarif or mcp-probe.json in the working directory.'
+    required: false
+    default: ''
+
+outputs:
+  exit-code:
+    description: 'The probe exit code. 0 healthy, 1 hard failure, 2 usage error.'
+    value: ${{ steps.probe.outputs.exit-code }}
+  healthy:
+    description: 'true when the probe found no hard failure, false otherwise.'
+    value: ${{ steps.probe.outputs.healthy }}
+  report-file:
+    description: 'Path to the SARIF or JSON report the probe wrote.'
+    value: ${{ steps.probe.outputs.report-file }}
+
+runs:
+  using: 'composite'
+  steps:
+    # The probe never fails this step. The exit code is captured and acted on
+    # at the end, after the upload has had its chance to run. Failing here
+    # instead would end the job before the annotations that explain the
+    # failure are uploaded, which is the single most common way a conformance
+    # gate ends up useless.
+    - id: probe
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        MCP_PROBE_SERVER: ${{ inputs.server }}
+        MCP_PROBE_SARIF: ${{ inputs.sarif }}
+        MCP_PROBE_ARTIFACT: ${{ inputs.artifact }}
+        MCP_PROBE_TIMEOUT: ${{ inputs.timeout }}
+        MCP_PROBE_CALL: ${{ inputs.call }}
+        MCP_PROBE_OUTPUT: ${{ inputs.output-file }}
+      run: |
+        set -uo pipefail
+
+        if [ -z "${MCP_PROBE_SERVER// /}" ]; then
+          echo "::error::the 'server' input is required and cannot be empty"
+          exit 2
+        fi
+
+        flags=(--timeout "$MCP_PROBE_TIMEOUT")
+        if [ "$MCP_PROBE_CALL" = "true" ]; then
+          flags+=(--call)
+        fi
+
+        if [ "$MCP_PROBE_SARIF" = "true" ]; then
+          flags+=(--sarif)
+          default_out="mcp-probe.sarif"
+          if [ -n "$MCP_PROBE_ARTIFACT" ]; then
+            flags+=(--sarif-artifact "$MCP_PROBE_ARTIFACT")
+          fi
+        else
+          flags+=(--json)
+          default_out="mcp-probe.json"
+          if [ -n "$MCP_PROBE_ARTIFACT" ]; then
+            echo "::warning::the 'artifact' input only applies to SARIF output and was ignored"
+          fi
+        fi
+
+        out="${MCP_PROBE_OUTPUT:-$default_out}"
+
+        # Without this, an output-file in a directory that does not exist yet
+        # makes the redirect fail before the probe ever runs, and the captured
+        # exit code is then the shell's 1, reported as an unhealthy server.
+        # A wrong path must not be indistinguishable from a bad server.
+        if ! mkdir -p "$(dirname "$out")"; then
+          echo "::error::cannot create the directory for the report at $out"
+          exit 2
+        fi
+
+        # The server command is one string written by the workflow author, so
+        # it is split on whitespace the way a shell would. A path containing a
+        # space has to be handled by the author, for instance with a wrapper
+        # script. Deliberately not eval: this expands, it does not interpret.
+        read -r -a server_argv <<< "$MCP_PROBE_SERVER"
+
+        echo "running: mcp-probe ${flags[*]} -- ${server_argv[*]}"
+
+        set +e
+        node "$GITHUB_ACTION_PATH/bin/mcp-probe.js" "${flags[@]}" -- "${server_argv[@]}" > "$out"
+        code=$?
+        set -e
+
+        # A usage error means the inputs are wrong, not that the server is.
+        # It is checked first because the probe writes usage errors to stderr,
+        # so the report is legitimately empty here and the emptiness check
+        # below would otherwise blame the runner for a bad input. There is
+        # nothing to upload and nothing to gate on, so stop now.
+        if [ "$code" -eq 2 ]; then
+          echo "::error::mcp-probe was invoked incorrectly (exit 2). Check the action inputs."
+          exit 2
+        fi
+
+        # Past that point the probe writes a report on every path it exits
+        # through, so a missing one means the run never got that far: node
+        # absent, the action checkout incomplete, the disk full. Reporting
+        # that as an unhealthy server would point the author at the wrong
+        # thing entirely.
+        if [ ! -s "$out" ]; then
+          echo "::error::mcp-probe wrote no report to $out (exit $code). This is a problem with the runner or the action, not with the server."
+          exit 2
+        fi
+
+        if [ "$code" -eq 0 ]; then
+          healthy=true
+        else
+          healthy=false
+        fi
+
+        {
+          echo "exit-code=$code"
+          echo "healthy=$healthy"
+          echo "report-file=$out"
+        } >> "$GITHUB_OUTPUT"
+
+        {
+          echo "### mcp-probe"
+          echo
+          echo "- target: \`${server_argv[*]}\`"
+          echo "- result: $([ "$code" -eq 0 ] && echo 'healthy' || echo 'unhealthy')"
+          echo "- exit code: \`$code\`"
+          echo "- report: \`$out\`"
+        } >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Upload SARIF to code scanning
+      if: ${{ inputs.sarif == 'true' && inputs.upload-sarif == 'true' }}
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ inputs.working-directory }}/${{ steps.probe.outputs.report-file }}
+        category: mcp-probe
+
+    # Only now, with the annotations uploaded, is it safe to fail.
+    - name: Gate on the result
+      if: ${{ inputs.fail-on-violation == 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        code="${{ steps.probe.outputs.exit-code }}"
+        if [ "$code" -ne 0 ]; then
+          echo "::error::mcp-probe reported a hard failure. See the code scanning alerts or ${{ steps.probe.outputs.report-file }}."
+          exit "$code"
+        fi
+        echo "mcp-probe reported no hard failures."
