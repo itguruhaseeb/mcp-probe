@@ -81,6 +81,9 @@ runs:
     # instead would end the job before the annotations that explain the
     # failure are uploaded, which is the single most common way a conformance
     # gate ends up useless.
+    #
+    # The body is script/probe-step.sh rather than inline shell so that
+    # test/action.test.js can run it. See the header of that script.
     - id: probe
       shell: bash
       working-directory: ${{ inputs.working-directory }}
@@ -91,97 +94,8 @@ runs:
         MCP_PROBE_TIMEOUT: ${{ inputs.timeout }}
         MCP_PROBE_CALL: ${{ inputs.call }}
         MCP_PROBE_OUTPUT: ${{ inputs.output-file }}
-      run: |
-        set -uo pipefail
-
-        if [ -z "${MCP_PROBE_SERVER// /}" ]; then
-          echo "::error::the 'server' input is required and cannot be empty"
-          exit 2
-        fi
-
-        flags=(--timeout "$MCP_PROBE_TIMEOUT")
-        if [ "$MCP_PROBE_CALL" = "true" ]; then
-          flags+=(--call)
-        fi
-
-        if [ "$MCP_PROBE_SARIF" = "true" ]; then
-          flags+=(--sarif)
-          default_out="mcp-probe.sarif"
-          if [ -n "$MCP_PROBE_ARTIFACT" ]; then
-            flags+=(--sarif-artifact "$MCP_PROBE_ARTIFACT")
-          fi
-        else
-          flags+=(--json)
-          default_out="mcp-probe.json"
-          if [ -n "$MCP_PROBE_ARTIFACT" ]; then
-            echo "::warning::the 'artifact' input only applies to SARIF output and was ignored"
-          fi
-        fi
-
-        out="${MCP_PROBE_OUTPUT:-$default_out}"
-
-        # Without this, an output-file in a directory that does not exist yet
-        # makes the redirect fail before the probe ever runs, and the captured
-        # exit code is then the shell's 1, reported as an unhealthy server.
-        # A wrong path must not be indistinguishable from a bad server.
-        if ! mkdir -p "$(dirname "$out")"; then
-          echo "::error::cannot create the directory for the report at $out"
-          exit 2
-        fi
-
-        # The server command is one string written by the workflow author, so
-        # it is split on whitespace the way a shell would. A path containing a
-        # space has to be handled by the author, for instance with a wrapper
-        # script. Deliberately not eval: this expands, it does not interpret.
-        read -r -a server_argv <<< "$MCP_PROBE_SERVER"
-
-        echo "running: mcp-probe ${flags[*]} -- ${server_argv[*]}"
-
-        set +e
-        node "$GITHUB_ACTION_PATH/bin/mcp-probe.js" "${flags[@]}" -- "${server_argv[@]}" > "$out"
-        code=$?
-        set -e
-
-        # A usage error means the inputs are wrong, not that the server is.
-        # It is checked first because the probe writes usage errors to stderr,
-        # so the report is legitimately empty here and the emptiness check
-        # below would otherwise blame the runner for a bad input. There is
-        # nothing to upload and nothing to gate on, so stop now.
-        if [ "$code" -eq 2 ]; then
-          echo "::error::mcp-probe was invoked incorrectly (exit 2). Check the action inputs."
-          exit 2
-        fi
-
-        # Past that point the probe writes a report on every path it exits
-        # through, so a missing one means the run never got that far: node
-        # absent, the action checkout incomplete, the disk full. Reporting
-        # that as an unhealthy server would point the author at the wrong
-        # thing entirely.
-        if [ ! -s "$out" ]; then
-          echo "::error::mcp-probe wrote no report to $out (exit $code). This is a problem with the runner or the action, not with the server."
-          exit 2
-        fi
-
-        if [ "$code" -eq 0 ]; then
-          healthy=true
-        else
-          healthy=false
-        fi
-
-        {
-          echo "exit-code=$code"
-          echo "healthy=$healthy"
-          echo "report-file=$out"
-        } >> "$GITHUB_OUTPUT"
-
-        {
-          echo "### mcp-probe"
-          echo
-          echo "- target: \`${server_argv[*]}\`"
-          echo "- result: $([ "$code" -eq 0 ] && echo 'healthy' || echo 'unhealthy')"
-          echo "- exit code: \`$code\`"
-          echo "- report: \`$out\`"
-        } >> "$GITHUB_STEP_SUMMARY"
+        MCP_PROBE_BIN: ${{ github.action_path }}/bin/mcp-probe.js
+      run: bash "$GITHUB_ACTION_PATH/script/probe-step.sh"
 
     - name: Upload SARIF to code scanning
       if: ${{ inputs.sarif == 'true' && inputs.upload-sarif == 'true' }}
