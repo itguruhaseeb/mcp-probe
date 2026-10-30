@@ -53,6 +53,11 @@ function levelFor(severity) {
  *      directly rather than through an interpreter
  *   4. a synthetic `mcp-probe://` URI naming the command
  *
+ * A remote target (`url`) skips straight to the synthetic URI unless the caller
+ * overrides it. There is no file to guess at: the server is not in the
+ * checkout, and attributing its findings to something that happens to be is
+ * worse than admitting we have no file.
+ *
  * Two constraints drive that order, and both come from what GitHub can do with
  * the result. Arguments are tried before the command because `node server.js`
  * is a probe of `server.js`, not of the node binary. And a candidate is only
@@ -64,9 +69,19 @@ function levelFor(severity) {
  * a log still uploads and still validates, the alerts just will not attach to
  * a line of code.
  */
-export function resolveArtifact({ command, args = [], override, cwd = process.cwd() } = {}) {
+export function resolveArtifact({
+  command,
+  args = [],
+  url = null,
+  override,
+  cwd = process.cwd(),
+} = {}) {
   if (override) {
     return { uri: toPosix(override), synthetic: false };
+  }
+
+  if (url) {
+    return { uri: `mcp-probe://${encodeURI(url)}`, synthetic: true };
   }
 
   for (const candidate of [...args, command]) {
@@ -144,12 +159,19 @@ export function toSarif(result, { artifactUri } = {}) {
   const rules = driverRules();
   const ruleIndex = new Map(rules.map((r, i) => [r.id, i]));
 
+  // An HTTP run's target is a URL, so splitting it on spaces would hand a URL
+  // to the file resolver. The transport says which it is.
+  const remote = result?.transport === 'http';
   const uri =
     artifactUri ||
-    resolveArtifact({
-      command: (result?.target || '').split(' ')[0],
-      args: (result?.target || '').split(' ').slice(1),
-    }).uri;
+    resolveArtifact(
+      remote
+        ? { url: result?.target || '' }
+        : {
+            command: (result?.target || '').split(' ')[0],
+            args: (result?.target || '').split(' ').slice(1),
+          }
+    ).uri;
 
   const results = [];
   for (const tool of result?.tools || []) {
@@ -213,6 +235,7 @@ export function toSarif(result, { artifactUri } = {}) {
         results,
         properties: {
           target: result?.target,
+          transport: result?.transport ?? 'stdio',
           clientProtocolVersion: result?.clientProtocolVersion,
           negotiatedProtocolVersion: result?.negotiatedProtocolVersion ?? null,
         },
