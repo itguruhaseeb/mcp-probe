@@ -5,17 +5,20 @@
 //   npx mcp-probe -- <command...>
 //   npx mcp-probe -- node ./my-server.js
 //   npx mcp-probe --call --json -- python server.py
+//   npx mcp-probe --url https://example.com/mcp
 
 import { runDiagnostics, renderHuman } from '../src/report.js';
 import { toSarif, resolveArtifact } from '../src/sarif.js';
 import { color } from '../src/color.js';
 import { VERSION } from '../src/version.js';
 import { DEFAULT_TIMEOUT_MS } from '../src/client.js';
+import { parseEndpoint } from '../src/http-client.js';
 
-const HELP = `mcp-probe  lint and health-check any MCP server over stdio
+const HELP = `mcp-probe  lint and health-check any MCP server, over stdio or streamable HTTP
 
 Usage
   mcp-probe [options] -- <command...>
+  mcp-probe [options] --url <endpoint>
 
 Examples
   mcp-probe -- node ./server.js
@@ -23,8 +26,12 @@ Examples
   mcp-probe --call -- node examples/echo-server.js
   mcp-probe --json -- node examples/echo-server.js
   mcp-probe --sarif -- node examples/echo-server.js > mcp-probe.sarif
+  mcp-probe --url https://example.com/mcp
+  mcp-probe --json --url http://127.0.0.1:3000/mcp
 
 Options
+  --url <endpoint>  probe a remote server over streamable HTTP instead of
+                    launching a local one over stdio
   --call            attempt a safe round-trip on tools with no required params
   --json            emit machine-readable JSON instead of the human report
   --sarif           emit SARIF 2.1.0 for GitHub code scanning
@@ -36,8 +43,8 @@ Options
   -v, --version     show version
 
 Everything after "--" is the command used to launch the target MCP server.
-Exit code is non-zero when a hard failure is found (bad handshake, invalid
-tool schema).`;
+Give either a command or --url, not both. Exit code is non-zero when a hard
+failure is found (bad handshake, invalid tool schema).`;
 
 function parseArgs(argv) {
   const opts = {
@@ -48,6 +55,7 @@ function parseArgs(argv) {
     timeout: DEFAULT_TIMEOUT_MS,
     command: null,
     args: [],
+    url: null,
   };
   let i = 0;
   for (; i < argv.length; i++) {
@@ -63,6 +71,12 @@ function parseArgs(argv) {
       opts.json = true;
     } else if (a === '--sarif') {
       opts.sarif = true;
+    } else if (a === '--url') {
+      const val = argv[++i];
+      if (!val) {
+        throw new UsageError('--url expects an endpoint');
+      }
+      opts.url = val;
     } else if (a === '--sarif-artifact') {
       const val = argv[++i];
       if (!val) {
@@ -91,6 +105,22 @@ function parseArgs(argv) {
   if (opts.sarifArtifact && !opts.sarif) {
     throw new UsageError('--sarif-artifact has no effect without --sarif');
   }
+  // One target per run. Probing a local command and a remote endpoint are
+  // different runs with different reports, and silently preferring one of
+  // them would make the other look like it had been probed.
+  if (opts.url && opts.command) {
+    throw new UsageError('--url and a "--" command are two targets; pick one');
+  }
+  if (opts.url && !opts.help && !opts.showVersion) {
+    // Fail on an unusable endpoint before launching anything, so a typo is a
+    // usage error rather than a connection failure reported as an unhealthy
+    // server.
+    try {
+      parseEndpoint(opts.url);
+    } catch (err) {
+      throw new UsageError(`--url: ${err.message}`);
+    }
+  }
 
   return opts;
 }
@@ -115,8 +145,8 @@ async function main() {
     process.stdout.write(VERSION + '\n');
     return;
   }
-  if (!opts.command) {
-    process.stderr.write(color.red('error: no server command given\n\n'));
+  if (!opts.command && !opts.url) {
+    process.stderr.write(color.red('error: no server command or --url given\n\n'));
     process.stderr.write(HELP + '\n');
     process.exit(2);
   }
@@ -124,6 +154,7 @@ async function main() {
   const result = await runDiagnostics({
     command: opts.command,
     args: opts.args,
+    url: opts.url,
     timeout: opts.timeout,
     call: opts.call,
   });
@@ -132,6 +163,7 @@ async function main() {
     const artifact = resolveArtifact({
       command: opts.command,
       args: opts.args,
+      url: opts.url,
       override: opts.sarifArtifact,
     });
     if (artifact.synthetic) {
@@ -140,7 +172,11 @@ async function main() {
       // SARIF on stdout stays clean.
       process.stderr.write(
         color.yellow(
-          `warning: no server file found in the working directory, attributing findings to ${artifact.uri}\n` +
+          `warning: ${
+            opts.url
+              ? 'a remote target has no file in the checkout'
+              : 'no server file found in the working directory'
+          }, attributing findings to ${artifact.uri}\n` +
             '         pass --sarif-artifact <path> to anchor them to a file in the repo\n'
         )
       );
