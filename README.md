@@ -6,10 +6,11 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2609.10962-b31b1b.svg)](https://arxiv.org/abs/2609.10962)
 
 Lint and health-check any [Model Context Protocol](https://modelcontextprotocol.io)
-(MCP) server, over stdio, in one command.
+(MCP) server, local or remote, in one command.
 
 ```
 npx @hafsar/mcp-probe -- node ./my-server.js
+npx @hafsar/mcp-probe --url https://example.com/mcp
 ```
 
 ## Why this exists
@@ -22,9 +23,11 @@ server, run the handshake, and get a straight answer: does it initialize, are it
 tools well-formed, and how fast does it respond. Think of it as `eslint` plus a
 smoke test for MCP servers.
 
-It talks the MCP wire protocol directly (newline-delimited JSON-RPC 2.0 over the
-child process's stdin/stdout) rather than depending on the full MCP SDK, which
-keeps the install light and the behavior transparent.
+It talks the MCP wire protocol directly rather than depending on the full MCP
+SDK, which keeps the install light and the behavior transparent. Both transports
+the specification defines are supported: newline-delimited JSON-RPC 2.0 over a
+child process's stdin and stdout, and streamable HTTP against a remote endpoint
+(`--url`).
 
 ## Install and run
 
@@ -38,8 +41,16 @@ npx @hafsar/mcp-probe --call -- node ./server.js
 npx @hafsar/mcp-probe --json -- npx -y @modelcontextprotocol/server-filesystem /tmp
 ```
 
-Everything after `--` is treated as the server launch command. Requires Node 18
-or newer.
+Everything after `--` is treated as the server launch command. For a server that
+is already running somewhere, give it the endpoint instead:
+
+```bash
+npx @hafsar/mcp-probe --url http://127.0.0.1:3000/mcp
+npx @hafsar/mcp-probe --json --url https://example.com/mcp
+```
+
+A command and `--url` are two different targets, so asking for both is a usage
+error rather than a silent choice between them. Requires Node 18 or newer.
 
 ## Example output
 
@@ -133,6 +144,7 @@ For every tool, it lints the `inputSchema` as a JSON Schema:
 
 | Flag             | Description                                                        |
 | ---------------- | ------------------------------------------------------------------ |
+| `--url <endpoint>` | probe a remote server over streamable HTTP instead of stdio       |
 | `--call`         | attempt a safe round-trip on tools with no required parameters     |
 | `--json`         | emit machine-readable JSON instead of the human report             |
 | `--sarif`        | emit SARIF 2.1.0 instead of the human report                       |
@@ -199,6 +211,74 @@ then never replies:
 
 ```bash
 node bin/mcp-probe.js --json --timeout 500 -- node examples/unresponsive-server.js
+```
+
+### Streamable HTTP (`--url`)
+
+Point `--url` at an MCP endpoint and the probe runs exactly as it does over
+stdio: same handshake, same linter, same exit codes, same `--json` and `--sarif`
+output. Nothing is launched locally.
+
+```bash
+npx @hafsar/mcp-probe --url https://example.com/mcp
+```
+
+What the client does, because each of these is a way a remote probe goes wrong:
+
+- It offers both reply shapes the specification allows,
+  `Accept: application/json, text/event-stream`, and handles whichever the
+  server picks. A server may answer one request with a JSON document and the
+  next with an event stream.
+- It stops reading an event stream as soon as its own response arrives. A
+  conformant server may keep the stream open afterwards, so waiting for the body
+  to end would hang on a healthy server.
+- It echoes a session id from `Mcp-Session-Id` on every later request, and sends
+  `MCP-Protocol-Version` once the handshake has negotiated one. A stateful
+  server that does not get the session back answers the handshake and then
+  refuses everything after it.
+- It sends `DELETE` at the end to release a session the server issued, rather
+  than leaving one open per probe.
+- It treats `202 Accepted` as the correct answer to a notification, and as a
+  failure in answer to a request.
+
+An HTTP run adds two fields to the `--json` report:
+
+```json
+{
+  "transport": "http",
+  "http": { "session": "issued", "responseModes": ["sse", "accepted"] }
+}
+```
+
+`transport` is `"stdio"` or `"http"`. `http` is `null` over stdio. `session` is
+`"issued"` or `"none"`, never the session id itself: a report is written to a
+file and uploaded to CI, and a session handle does not belong in one.
+`responseModes` lists the shapes the server actually used, in first-seen order,
+out of `json`, `sse` and `accepted`.
+
+Failures map onto the same `failureReason` values as stdio. An HTTP error status,
+a refused connection, a content type that is neither JSON nor an event stream,
+and a stream that closes without answering are all `transport`. A JSON-RPC error
+is `protocol`. A server that accepts the connection and says nothing is
+`timeout`.
+
+Over HTTP there is no file to attribute SARIF findings to, so `--sarif` uses a
+synthetic `mcp-probe://<endpoint>` artifact URI and says so on stderr. Pass
+`--sarif-artifact <path>` to anchor the findings to something real in the
+checkout, such as the config file that declares the server.
+
+Not supported yet: server-initiated streams (`GET` on the endpoint), and any
+form of authentication, so an endpoint behind a token or OAuth will answer the
+handshake with an HTTP error. Both are on the roadmap.
+
+To see it by hand, `examples/http-echo-server.js` is a streamable HTTP server
+with the same tools as the stdio example:
+
+```bash
+node examples/http-echo-server.js --port 3000          # event-stream replies
+node examples/http-echo-server.js --mode json          # single JSON replies
+node examples/http-echo-server.js --stateless          # issue no session id
+node bin/mcp-probe.js --url http://127.0.0.1:3000/mcp
 ```
 
 ### Rule ids
@@ -281,10 +361,10 @@ SARIF results are shaped around files, and `mcp-probe` inspects a live process.
 Findings are attributed to the server's entry script when it can be identified
 inside the working directory (`node ./server.js` attributes to `server.js`, not
 to the node binary). When no such file exists, for instance when the server is a
-global binary or runs in a container, the log falls back to a synthetic
-`mcp-probe://` URI and says so on stderr: it uploads and validates, but the
-alerts will not anchor to a line of code. Use `--sarif-artifact <path>` to point
-them at the right file yourself.
+global binary, runs in a container, or is remote behind `--url`, the log falls
+back to a synthetic `mcp-probe://` URI and says so on stderr: it uploads and
+validates, but the alerts will not anchor to a line of code. Use
+`--sarif-artifact <path>` to point them at the right file yourself.
 
 Exit codes are unchanged under `--sarif`.
 
@@ -355,8 +435,8 @@ and watches it, which is how action bugs reach users.
 ## Roadmap
 
 - Deeper JSON Schema validation (nested `$ref`, `oneOf` / `anyOf`, format checks).
-- Optional transport backends (HTTP and SSE) alongside stdio, likely by adopting
-  the official MCP SDK transports.
+- Server-initiated streams over HTTP (`GET` on the endpoint), and authentication
+  for endpoints that require it.
 - A `--fixture` mode that generates valid sample arguments from a schema so tools
   with required parameters can be round-tripped safely.
 - Resource read and prompt get smoke tests under `--call`.
@@ -366,6 +446,8 @@ and watches it, which is how action bugs reach users.
 ```bash
 node --test                                  # run the linter test suite
 node bin/mcp-probe.js -- node examples/echo-server.js
+node examples/http-echo-server.js &          # a local streamable HTTP server
+node bin/mcp-probe.js --url http://127.0.0.1:3000/mcp
 ```
 
 ## The paper
@@ -467,8 +549,8 @@ sampling section says 7,258 for that reason.
 
 The consequence for this tool is worth stating plainly: the npm/stdio slice it
 can probe **grew in absolute terms while shrinking as a share**, from 35.1% to
-30.7% of the population. A stdio-only instrument covers less of this ecosystem
-every month, and any stdio-only sampling frame is a narrowing view of it.
+30.7% of the population. `--url` closes part of that gap: the remote-only half of
+the population is now reachable by the same instrument, one endpoint at a time.
 
 The August aggregate is at
 [`study/2026-08/census/census-2026-08-22.json`](./study/2026-08/census/census-2026-08-22.json),
