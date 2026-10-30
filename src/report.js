@@ -8,6 +8,7 @@ import {
   DEFAULT_TIMEOUT_MS,
   failureReasonOf,
 } from './client.js';
+import { McpHttpClient } from './http-client.js';
 import { lintTool, safeCallArgs, FAIL, WARN } from './linter.js';
 import { color, glyph } from './color.js';
 import { VERSION } from './version.js';
@@ -27,17 +28,32 @@ async function timed(fn) {
  * Run the full diagnostic. Returns a structured result object regardless of
  * output format, so both the human renderer and --json consume the same data.
  *
+ * Exactly one of `url` and `command` identifies the server: a URL is probed
+ * over the streamable HTTP transport, a command is launched and probed over
+ * stdio. Everything after the transport is identical, which is the point of
+ * keeping both clients behind the same small interface.
+ *
  * @param {object} opts
- * @param {string} opts.command
- * @param {string[]} opts.args
+ * @param {string} [opts.command]  executable to launch, for the stdio transport
+ * @param {string[]} [opts.args]   arguments for that executable
+ * @param {string} [opts.url]      endpoint, for the streamable HTTP transport
  * @param {number} opts.timeout
  * @param {boolean} opts.call   attempt safe round-trips
  */
-export async function runDiagnostics({ command, args, timeout = DEFAULT_TIMEOUT_MS, call }) {
+export async function runDiagnostics({
+  command,
+  args = [],
+  url = null,
+  timeout = DEFAULT_TIMEOUT_MS,
+  call,
+}) {
   const result = {
     tool: 'mcp-probe',
     version: VERSION,
-    target: [command, ...args].join(' '),
+    target: url || [command, ...args].join(' '),
+    // Which transport the target was probed over. Added when streamable HTTP
+    // support landed; before that every run was stdio.
+    transport: url ? 'http' : 'stdio',
     clientProtocolVersion: PROTOCOL_VERSION,
     ok: true,
     // The limit a "timeout" failureReason was measured against. Without it a
@@ -48,6 +64,11 @@ export async function runDiagnostics({ command, args, timeout = DEFAULT_TIMEOUT_
     failureReason: null,
     server: null,
     capabilities: null,
+    // Transport-level observations for an HTTP target, null over stdio. A
+    // remote server's session behaviour and response shape are part of what a
+    // conformance run is being asked about, so they are reported rather than
+    // left in the client.
+    http: null,
     timings: {},
     tools: [],
     resources: null,
@@ -57,7 +78,9 @@ export async function runDiagnostics({ command, args, timeout = DEFAULT_TIMEOUT_
     errors: [],
   };
 
-  const client = new McpClient(command, args, { timeout });
+  const client = url
+    ? new McpHttpClient(url, { timeout })
+    : new McpClient(command, args, { timeout });
   client.start();
 
   try {
@@ -186,15 +209,31 @@ export async function runDiagnostics({ command, args, timeout = DEFAULT_TIMEOUT_
       }
     }
 
-    // Surface any non-JSON stdout noise as a protocol warning.
+    // Surface any unparseable framing as a protocol warning. The two
+    // transports break in the same way for different reasons: a stray line on
+    // stdout, or an SSE data frame that is not JSON.
     if (client.nonJsonLines.length > 0) {
+      const n = client.nonJsonLines.length;
       result.warnings.push(
-        `server wrote ${client.nonJsonLines.length} non-JSON line(s) to stdout (breaks stdio framing)`
+        url
+          ? `server sent ${n} event-stream frame(s) that are not JSON (breaks SSE framing)`
+          : `server wrote ${n} non-JSON line(s) to stdout (breaks stdio framing)`
       );
     }
 
     return result;
   } finally {
+    if (url) {
+      result.http = {
+        // Whether the server issued a session id, not the id itself. A report
+        // is written to a file and uploaded to CI, and a session handle does
+        // not belong in one. "none" is legal: a stateless server issues none.
+        session: client.sessionId ? 'issued' : 'none',
+        // "json", "sse" and "accepted", in the order the server first used
+        // them. A server may mix them across requests.
+        responseModes: client.responseModes,
+      };
+    }
     await client.close();
   }
 }
@@ -226,6 +265,10 @@ export function renderHuman(r, out = process.stdout) {
   p(`  ${glyph.info()} server: ${color.cyan(s.name || 'unknown')} ${color.dim(s.version ? 'v' + s.version : '')}`.trimEnd());
   if (r.negotiatedProtocolVersion) {
     p(`  ${glyph.info()} protocol: ${r.negotiatedProtocolVersion}`);
+  }
+  if (r.transport === 'http' && r.http) {
+    const modes = r.http.responseModes.length ? r.http.responseModes.join(', ') : 'none';
+    p(`  ${glyph.info()} transport: http (${modes}, session ${r.http.session})`);
   }
   const capNames = Object.keys(r.capabilities || {});
   p(`  ${glyph.info()} capabilities: ${capNames.length ? capNames.join(', ') : color.dim('none declared')}`);
