@@ -7,6 +7,26 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `--url <endpoint>` probes a remote server over the streamable HTTP transport,
+  so a server that is already running can be checked without launching anything
+  locally. The handshake, the linter, the exit codes and both machine formats
+  are unchanged; only the transport differs. Both reply shapes the
+  specification allows are handled, a single `application/json` document and a
+  `text/event-stream`, because a server picks per request. A session id from
+  `Mcp-Session-Id` is echoed on every later request, `MCP-Protocol-Version` is
+  sent once the handshake has negotiated one, `202 Accepted` is treated as the
+  correct answer to a notification, and the session is released with a `DELETE`
+  at the end. Reading an event stream stops at the client's own response rather
+  than at the end of the body, since a conformant server may keep the stream
+  open. Closes #2.
+- The `--json` report carries `transport` (`"stdio"` or `"http"`) and, for an
+  HTTP run, an `http` object with `session` (`"issued"` or `"none"`, never the
+  session id itself) and `responseModes`, the reply shapes the server actually
+  used. Over stdio `http` is `null`. Additive; existing fields are unchanged.
+- `examples/http-echo-server.js`, a streamable HTTP server with the same tools
+  as the stdio example, so the `--url` path is reproducible by hand and testable
+  in CI. `--mode json` and `--mode sse` select the reply shape and `--stateless`
+  turns off session ids, which is how the client is exercised against all three.
 - Every linter finding now carries a stable `id` (for example
   `schema/required-not-in-properties`) alongside its message, in the `--json`
   output and in the underlying report data. The registry lives in `RULES` in

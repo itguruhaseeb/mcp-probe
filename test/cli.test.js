@@ -26,11 +26,13 @@ test('exits 1 when the target server fails the handshake', () => {
   assert.match(result.stdout, /handshake failed/);
 });
 
-test('exits 2 when invoked without a server command', () => {
+test('exits 2 when invoked without a target', () => {
   const result = runCli([]);
 
   assert.equal(result.status, 2);
-  assert.match(result.stderr, /no server command given/);
+  // There are two ways to name a target since the HTTP transport landed, so
+  // the error names both rather than only the stdio one.
+  assert.match(result.stderr, /no server command or --url given/);
 });
 
 test('--json output survives a pipe when the catalog exceeds the 64 KiB pipe buffer', () => {
