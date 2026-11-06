@@ -388,9 +388,29 @@ The action runs the probe from its own checkout, so it needs no install step
 and pulls nothing from npm at run time. Node 18 or newer, which every current
 GitHub-hosted runner has.
 
+To gate on a server that is already deployed, give `url` instead of `server`.
+Nothing starts on the runner, so this is usually the easier gate to add to a
+hosted server, and it is the one that runs after a deploy rather than before:
+
+```yaml
+- uses: itguruhaseeb/mcp-probe@master
+  with:
+    url: https://staging.example.com/mcp
+    artifact: mcp.json
+```
+
+Exactly one of `server` and `url` is required. Setting both fails the step as a
+configuration error naming the conflict, rather than quietly probing one of
+them and reporting a verdict on the other. `artifact` matters more on the `url`
+path: a remote target has no file in the checkout, so without it every alert
+anchors to the synthetic `mcp-probe://<endpoint>` URI and lands on no line of
+code. The file that declares the endpoint is usually the right answer, and the
+step prints a notice when it is left unset.
+
 | Input | Default | What it does |
 | --- | --- | --- |
-| `server` | required | the command that launches the server, passed after `--` |
+| `server` | one of | the command that launches the server, passed after `--` |
+| `url` | one of | endpoint of a running server, passed as `--url`, instead of `server` |
 | `sarif` | `true` | emit SARIF; `false` emits JSON instead |
 | `upload-sarif` | `true` | upload to code scanning, needs `security-events: write` |
 | `artifact` | none | file the findings are attributed to, as `--sarif-artifact` |
@@ -427,10 +447,12 @@ server, which is a decision for the caller rather than a default.
 The step body lives in `script/probe-step.sh` rather than inline in
 `action.yml`, so the suite can run it. `test/action.test.js` drives it against
 the bundled example servers on Node 18, 20 and 22 in ordinary CI, covering the
-healthy path, a hung server, JSON mode, a missing server input, a bad flag
-value, a nested output path, and a command that does not exist. Shell living
-inside a YAML string is otherwise tested only when somebody pushes a workflow
-and watches it, which is how action bugs reach users.
+healthy path, a hung server, JSON mode, a missing target, both targets at once,
+a bad flag value, a nested output path, a command that does not exist, and the
+`url` path against `examples/http-echo-server.js` including an unreachable
+endpoint and both artifact outcomes. Shell living inside a YAML string is
+otherwise tested only when somebody pushes a workflow and watches it, which is
+how action bugs reach users.
 
 ## Roadmap
 
