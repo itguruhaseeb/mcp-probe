@@ -1,0 +1,56 @@
+{
+  "tool": "mcp-probe harvest",
+  "source": "https://registry.modelcontextprotocol.io/v0/servers",
+  "snapshotDate": "2026-11-08T20:06:08.658Z",
+  "registryPagesSwept": 2301,
+  "versionRowsFetched": 230035,
+  "sweepComplete": true,
+  "uniqueServers": 59664,
+  "activeServers": 58721,
+  "githubTopicMcpServerRepos": 41645,
+  "lifecycle": {
+    "active": 58721,
+    "deprecated": 943
+  },
+  "deploymentModel": {
+    "counts": {
+      "remote": 35271,
+      "package": 19149,
+      "both": 4568,
+      "none": 676
+    },
+    "pct": {
+      "remoteOnly": 59.1,
+      "packageOnly": 32.1,
+      "both": 7.7,
+      "none": 1.1
+    }
+  },
+  "packageEcosystems": {
+    "npm": 16062,
+    "pypi": 5259,
+    "oci": 1690,
+    "mcpb": 1657,
+    "nuget": 175,
+    "cargo": 122
+  },
+  "packageTransports": {
+    "stdio": 23423,
+    "streamable-http": 606,
+    "sse": 34
+  },
+  "remoteTransports": {
+    "streamable-http": 39100,
+    "sse": 1107
+  },
+  "schemaVersionDrift": {
+    "2025-12-11": 56317,
+    "2025-09-29": 1855,
+    "2025-10-17": 714,
+    "2025-07-09": 621,
+    "2025-09-16": 155,
+    "unknown": 2
+  },
+  "launchableNpmStdio": 15949,
+  "launchableNpmStdioPct": 26.7
+}
