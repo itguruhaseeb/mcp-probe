@@ -7,6 +7,23 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- `--header 'Name: value'`, `--bearer <token>` and `--bearer-env <VAR>`
+  authenticate a `--url` run, so a hosted server that requires a credential can
+  be probed at all. `--header` is repeatable. `--bearer-env` reads the token
+  from the environment, because a token written on a command line ends up in a
+  job log and a shell history. No header value is ever written to the report,
+  to the SARIF, to a warning or to an error message, including the quoted body
+  of a failed response: a server that reflects the `Authorization` header into
+  its 401 body does not get it reproduced, and a test pins that. The `--json`
+  report gains `http.auth`, which is `"supplied"` or `"none"` and never the
+  credential, the same way `http.session` reports `"issued"` rather than the
+  session id. The credential is sent on the session `DELETE` as well, so a
+  server that requires auth does not end the run with the session still open.
+  A header the transport owns (`content-type`, `accept`, `mcp-session-id`,
+  `mcp-protocol-version`) cannot be set this way, and asking is a usage error
+  rather than a silent loss. The full OAuth 2.1 flow stays out of scope: a
+  conformance probe in CI wants a token it was handed, not a browser redirect.
+  Closes #25.
 - The GitHub Action takes a `url` input, so a repository can gate on a deployed
   endpoint instead of starting its server on a runner. Exactly one of `server`
   and `url` is required; both at once fails as a configuration error naming the
