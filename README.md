@@ -145,6 +145,9 @@ For every tool, it lints the `inputSchema` as a JSON Schema:
 | Flag             | Description                                                        |
 | ---------------- | ------------------------------------------------------------------ |
 | `--url <endpoint>` | probe a remote server over streamable HTTP instead of stdio       |
+| `--header <'Name: value'>` | extra request header for `--url`, repeatable              |
+| `--bearer <token>` | shorthand for `--header 'Authorization: Bearer <token>'`         |
+| `--bearer-env <VAR>` | same, with the token read from an environment variable         |
 | `--call`         | attempt a safe round-trip on tools with no required parameters     |
 | `--json`         | emit machine-readable JSON instead of the human report             |
 | `--sarif`        | emit SARIF 2.1.0 instead of the human report                       |
@@ -246,13 +249,18 @@ An HTTP run adds two fields to the `--json` report:
 ```json
 {
   "transport": "http",
-  "http": { "session": "issued", "responseModes": ["sse", "accepted"] }
+  "http": {
+    "session": "issued",
+    "auth": "supplied",
+    "responseModes": ["sse", "accepted"]
+  }
 }
 ```
 
 `transport` is `"stdio"` or `"http"`. `http` is `null` over stdio. `session` is
 `"issued"` or `"none"`, never the session id itself: a report is written to a
-file and uploaded to CI, and a session handle does not belong in one.
+file and uploaded to CI, and a session handle does not belong in one. `auth` is
+`"supplied"` or `"none"` for the same reason, and never the credential.
 `responseModes` lists the shapes the server actually used, in first-seen order,
 out of `json`, `sse` and `accepted`.
 
@@ -267,9 +275,9 @@ synthetic `mcp-probe://<endpoint>` artifact URI and says so on stderr. Pass
 `--sarif-artifact <path>` to anchor the findings to something real in the
 checkout, such as the config file that declares the server.
 
-Not supported yet: server-initiated streams (`GET` on the endpoint), and any
-form of authentication, so an endpoint behind a token or OAuth will answer the
-handshake with an HTTP error. Both are on the roadmap.
+Not supported yet: server-initiated streams (`GET` on the endpoint), and the
+interactive OAuth 2.1 flow. A token the caller already holds is supported, as
+below.
 
 To see it by hand, `examples/http-echo-server.js` is a streamable HTTP server
 with the same tools as the stdio example:
@@ -280,6 +288,41 @@ node examples/http-echo-server.js --mode json          # single JSON replies
 node examples/http-echo-server.js --stateless          # issue no session id
 node bin/mcp-probe.js --url http://127.0.0.1:3000/mcp
 ```
+
+### Authenticating to a hosted endpoint
+
+Most hosted MCP servers want a credential. Without one the handshake comes back
+as `HTTP 401 Unauthorized`, which is honest and useless.
+
+```bash
+# the token stays out of the command line, the job log and the shell history
+export MCP_TOKEN=...
+npx @hafsar/mcp-probe --url https://example.com/mcp --bearer-env MCP_TOKEN
+
+# anything else the endpoint wants, repeatable
+npx @hafsar/mcp-probe --url https://example.com/mcp \
+  --header 'Authorization: Token abc' --header 'X-Tenant: acme'
+```
+
+`--bearer <token>` takes the token directly, which is convenient locally and a
+bad idea in CI for the reason above.
+
+**No header value ever leaves the probe.** It is not in the report, not in the
+SARIF, not in a warning, and not in the quoted body of a failed response: a
+server that reflects the `Authorization` header into its own 401 page gets it
+replaced with `[redacted]`. What the report does carry is `http.auth`, which is
+`"supplied"` or `"none"`, so two reports of the same endpoint can be told apart.
+
+The credential goes on the session `DELETE` as well, so a server that requires
+auth does not end the run with the session still open on its side.
+
+Headers the transport owns (`content-type`, `accept`, `mcp-session-id`,
+`mcp-protocol-version`) cannot be set this way. Setting them would produce a
+broken request rather than an authenticated one, so asking is a usage error.
+
+The full OAuth 2.1 flow the specification describes for interactive clients is
+deliberately out of scope. A conformance probe in CI wants a token it was
+handed, not a browser redirect.
 
 ### Rule ids
 
@@ -457,8 +500,9 @@ how action bugs reach users.
 ## Roadmap
 
 - Deeper JSON Schema validation (nested `$ref`, `oneOf` / `anyOf`, format checks).
-- Server-initiated streams over HTTP (`GET` on the endpoint), and authentication
-  for endpoints that require it.
+- Server-initiated streams over HTTP (`GET` on the endpoint), and the
+  interactive OAuth 2.1 flow for endpoints that require it. A token the caller
+  already holds is supported today, through `--bearer` and `--header`.
 - A `--fixture` mode that generates valid sample arguments from a schema so tools
   with required parameters can be round-tripped safely.
 - Resource read and prompt get smoke tests under `--call`.
