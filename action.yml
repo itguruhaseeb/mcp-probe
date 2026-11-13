@@ -1,5 +1,5 @@
 name: 'mcp-probe'
-description: 'Lint and health-check an MCP server over stdio, and surface the findings as GitHub code scanning annotations.'
+description: 'Lint and health-check an MCP server, launched locally over stdio or already running over streamable HTTP, and surface the findings as GitHub code scanning annotations.'
 author: 'Haseeb Mohammed Afsar'
 
 branding:
@@ -11,8 +11,21 @@ inputs:
     description: >-
       The command that launches the MCP server, for example
       "node ./dist/server.js" or "python -m my_server". Everything in this
-      string is passed to the probe after the "--" separator.
-    required: true
+      string is passed to the probe after the "--" separator. Exactly one of
+      "server" and "url" is required; setting both is a configuration error
+      rather than a silent preference for one of them.
+    required: false
+    default: ''
+  url:
+    description: >-
+      The endpoint of an MCP server that is already running and serving
+      streamable HTTP, for example "https://staging.example.com/mcp". Use this
+      instead of "server" to gate on a deployed endpoint, which needs no server
+      process on the runner. Exactly one of "server" and "url" is required.
+      Set "artifact" alongside it: a remote target has no file in the checkout,
+      so the alerts would otherwise anchor to nothing.
+    required: false
+    default: ''
   sarif:
     description: >-
       Emit SARIF 2.1.0. When false the probe emits JSON instead and nothing is
@@ -89,6 +102,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       env:
         MCP_PROBE_SERVER: ${{ inputs.server }}
+        MCP_PROBE_URL: ${{ inputs.url }}
         MCP_PROBE_SARIF: ${{ inputs.sarif }}
         MCP_PROBE_ARTIFACT: ${{ inputs.artifact }}
         MCP_PROBE_TIMEOUT: ${{ inputs.timeout }}

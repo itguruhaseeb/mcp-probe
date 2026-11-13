@@ -7,6 +7,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- The GitHub Action takes a `url` input, so a repository can gate on a deployed
+  endpoint instead of starting its server on a runner. Exactly one of `server`
+  and `url` is required; both at once fails as a configuration error naming the
+  conflict rather than silently preferring one target. `artifact` matters more
+  on this path, because a remote target has no file in the checkout to anchor
+  the code scanning alerts to, and the step prints a notice saying so when it
+  is unset. `test/action.test.js` covers the new path against
+  `examples/http-echo-server.js`, including an unreachable endpoint, where the
+  step still writes its SARIF before reporting the failure. Closes #26.
 - `--url <endpoint>` probes a remote server over the streamable HTTP transport,
   so a server that is already running can be checked without launching anything
   locally. The handshake, the linter, the exit codes and both machine formats

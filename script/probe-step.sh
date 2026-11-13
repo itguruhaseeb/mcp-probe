@@ -11,7 +11,9 @@
 # Inputs arrive as environment variables so that nothing from the caller's
 # workflow is interpolated into this file as text:
 #
-#   MCP_PROBE_SERVER    required, the command that launches the server
+#   MCP_PROBE_SERVER    the command that launches the server, for a local target
+#   MCP_PROBE_URL       the endpoint of an already running server, for a remote
+#                       target. Exactly one of SERVER and URL is required.
 #   MCP_PROBE_SARIF     "true" for SARIF, anything else for JSON
 #   MCP_PROBE_ARTIFACT  optional, --sarif-artifact path
 #   MCP_PROBE_TIMEOUT   per-request timeout in ms
@@ -27,6 +29,7 @@
 set -uo pipefail
 
 : "${MCP_PROBE_SERVER:=}"
+: "${MCP_PROBE_URL:=}"
 : "${MCP_PROBE_SARIF:=true}"
 : "${MCP_PROBE_ARTIFACT:=}"
 : "${MCP_PROBE_TIMEOUT:=10000}"
@@ -38,8 +41,22 @@ set -uo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 : "${MCP_PROBE_BIN:=$here/../bin/mcp-probe.js}"
 
-if [ -z "${MCP_PROBE_SERVER// /}" ]; then
-  echo "::error::the 'server' input is required and cannot be empty"
+# Exactly one target. A local command and a remote endpoint are different runs
+# with different reports, so neither silently wins: both set, or neither set,
+# is a problem with the workflow rather than with the server, and the CLI would
+# otherwise be left to discover it after the step had already claimed to probe
+# something. Emptiness is tested with the spaces stripped because an unset
+# action input and one set to a blank string arrive here identically.
+server_set="${MCP_PROBE_SERVER// /}"
+url_set="${MCP_PROBE_URL// /}"
+
+if [ -n "$server_set" ] && [ -n "$url_set" ]; then
+  echo "::error::the 'server' and 'url' inputs are two different targets; set exactly one of them, not both"
+  exit 2
+fi
+
+if [ -z "$server_set" ] && [ -z "$url_set" ]; then
+  echo "::error::one of the 'server' or 'url' inputs is required; set exactly one of them"
   exit 2
 fi
 
@@ -53,6 +70,12 @@ if [ "$MCP_PROBE_SARIF" = "true" ]; then
   default_out="mcp-probe.sarif"
   if [ -n "$MCP_PROBE_ARTIFACT" ]; then
     flags+=(--sarif-artifact "$MCP_PROBE_ARTIFACT")
+  elif [ -n "$url_set" ]; then
+    # A remote target has no file in the checkout, so every alert anchors to a
+    # synthetic mcp-probe:// URI and lands on no line of code. The probe says
+    # so on its own stderr, which is buried in the job log, so say it here as
+    # well where a maintainer reading the step will see it.
+    echo "::notice::a remote target has no file in the checkout, so the code scanning alerts will not anchor to one. Set the 'artifact' input to a path in the checkout, usually the config file that declares this endpoint."
   fi
 else
   flags+=(--json)
@@ -73,16 +96,26 @@ if ! mkdir -p "$(dirname "$out")"; then
   exit 2
 fi
 
-# The server command is one string written by the workflow author, so it is
-# split on whitespace the way a shell would. A path containing a space has to
-# be handled by the author, for instance with a wrapper script. Deliberately
-# not eval: this expands, it does not interpret.
-read -r -a server_argv <<< "$MCP_PROBE_SERVER"
+if [ -n "$url_set" ]; then
+  # The endpoint is passed through untouched. A malformed one is rejected by
+  # the probe at parse time, which lands below as exit 2 and is reported as a
+  # bad input, so a typo is never reported as an unhealthy server.
+  target_argv=(--url "$MCP_PROBE_URL")
+  target_label="$MCP_PROBE_URL"
+else
+  # The server command is one string written by the workflow author, so it is
+  # split on whitespace the way a shell would. A path containing a space has to
+  # be handled by the author, for instance with a wrapper script. Deliberately
+  # not eval: this expands, it does not interpret.
+  read -r -a server_argv <<< "$MCP_PROBE_SERVER"
+  target_argv=(-- "${server_argv[@]}")
+  target_label="${server_argv[*]}"
+fi
 
-echo "running: mcp-probe ${flags[*]} -- ${server_argv[*]}"
+echo "running: mcp-probe ${flags[*]} ${target_argv[*]}"
 
 set +e
-node "$MCP_PROBE_BIN" "${flags[@]}" -- "${server_argv[@]}" > "$out"
+node "$MCP_PROBE_BIN" "${flags[@]}" "${target_argv[@]}" > "$out"
 code=$?
 set -e
 
@@ -119,7 +152,7 @@ fi
 {
   echo "### mcp-probe"
   echo
-  echo "- target: \`${server_argv[*]}\`"
+  echo "- target: \`$target_label\`"
   echo "- result: $([ "$code" -eq 0 ] && echo 'healthy' || echo 'unhealthy')"
   echo "- exit code: \`$code\`"
   echo "- report: \`$out\`"
