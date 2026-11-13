@@ -12,7 +12,7 @@ import { toSarif, resolveArtifact } from '../src/sarif.js';
 import { color } from '../src/color.js';
 import { VERSION } from '../src/version.js';
 import { DEFAULT_TIMEOUT_MS } from '../src/client.js';
-import { parseEndpoint } from '../src/http-client.js';
+import { parseEndpoint, TRANSPORT_OWNED_HEADERS } from '../src/http-client.js';
 
 const HELP = `mcp-probe  lint and health-check any MCP server, over stdio or streamable HTTP
 
@@ -28,10 +28,17 @@ Examples
   mcp-probe --sarif -- node examples/echo-server.js > mcp-probe.sarif
   mcp-probe --url https://example.com/mcp
   mcp-probe --json --url http://127.0.0.1:3000/mcp
+  mcp-probe --url https://example.com/mcp --bearer-env MCP_TOKEN
 
 Options
   --url <endpoint>  probe a remote server over streamable HTTP instead of
                     launching a local one over stdio
+  --header <'Name: value'>
+                    extra request header for --url, repeatable
+  --bearer <token>  shorthand for --header 'Authorization: Bearer <token>'
+  --bearer-env <VAR>
+                    same, with the token read from an environment variable, so
+                    it stays out of the job log and the shell history
   --call            attempt a safe round-trip on tools with no required params
   --json            emit machine-readable JSON instead of the human report
   --sarif           emit SARIF 2.1.0 for GitHub code scanning
@@ -44,7 +51,10 @@ Options
 
 Everything after "--" is the command used to launch the target MCP server.
 Give either a command or --url, not both. Exit code is non-zero when a hard
-failure is found (bad handshake, invalid tool schema).`;
+failure is found (bad handshake, invalid tool schema).
+
+No header value is ever written to the report, to the SARIF, or to an error
+message, including the quoted body of a failed response.`;
 
 function parseArgs(argv) {
   const opts = {
@@ -56,7 +66,11 @@ function parseArgs(argv) {
     command: null,
     args: [],
     url: null,
+    headers: [],
   };
+  // Which flag asked for the Authorization header, for the conflict messages
+  // below. Holds the flag name, never the token.
+  let bearerFlag = null;
   let i = 0;
   for (; i < argv.length; i++) {
     const a = argv[i];
@@ -77,6 +91,41 @@ function parseArgs(argv) {
         throw new UsageError('--url expects an endpoint');
       }
       opts.url = val;
+    } else if (a === '--header') {
+      const val = argv[++i];
+      if (!val) {
+        throw new UsageError("--header expects 'Name: value'");
+      }
+      addHeader(opts, parseHeader(val));
+    } else if (a === '--bearer') {
+      const val = argv[++i];
+      if (!val) {
+        throw new UsageError('--bearer expects a token');
+      }
+      if (bearerFlag) {
+        throw new UsageError(`${bearerFlag} and --bearer both set the Authorization header; pick one`);
+      }
+      bearerFlag = '--bearer';
+      addHeader(opts, { name: 'authorization', value: `Bearer ${val}` });
+    } else if (a === '--bearer-env') {
+      const name = argv[++i];
+      if (!name) {
+        throw new UsageError('--bearer-env expects the name of an environment variable');
+      }
+      if (bearerFlag) {
+        throw new UsageError(
+          `${bearerFlag} and --bearer-env both set the Authorization header; pick one`
+        );
+      }
+      bearerFlag = '--bearer-env';
+      const token = process.env[name];
+      // The message names the variable, never its contents, and an empty
+      // variable is as wrong as a missing one: it would send "Bearer " and the
+      // server would answer 401 as though the token were rejected.
+      if (!token) {
+        throw new UsageError(`--bearer-env: the environment variable "${name}" is empty or not set`);
+      }
+      addHeader(opts, { name: 'authorization', value: `Bearer ${token}` });
     } else if (a === '--sarif-artifact') {
       const val = argv[++i];
       if (!val) {
@@ -105,6 +154,12 @@ function parseArgs(argv) {
   if (opts.sarifArtifact && !opts.sarif) {
     throw new UsageError('--sarif-artifact has no effect without --sarif');
   }
+  // Credentials belong to the HTTP transport. Over stdio they would be
+  // silently discarded, which on an authenticated run is the kind of silence
+  // that gets read as "the server does not need a token after all".
+  if (opts.headers.length > 0 && !opts.url && !opts.help && !opts.showVersion) {
+    throw new UsageError('--header, --bearer and --bearer-env apply to --url, not to a "--" command');
+  }
   // One target per run. Probing a local command and a remote endpoint are
   // different runs with different reports, and silently preferring one of
   // them would make the other look like it had been probed.
@@ -126,6 +181,50 @@ function parseArgs(argv) {
 }
 
 class UsageError extends Error {}
+
+/**
+ * Parse one `--header 'Name: value'` argument.
+ *
+ * The name is lowercased because HTTP header names are case-insensitive and
+ * the duplicate check below has to agree with the client, which lowercases
+ * too. The value keeps its own case and its internal spaces; only the single
+ * space conventionally written after the colon is dropped.
+ */
+function parseHeader(arg) {
+  const sep = arg.indexOf(':');
+  if (sep === -1) {
+    throw new UsageError(`--header expects 'Name: value', got "${arg}"`);
+  }
+  const name = arg.slice(0, sep).trim().toLowerCase();
+  const value = arg.slice(sep + 1).replace(/^ /, '');
+  if (!name) {
+    throw new UsageError(`--header got an empty header name in "${arg}"`);
+  }
+  // A name with whitespace in it is a missing quote, nearly always: the shell
+  // split "Authorization: Bearer x" and only the first word arrived.
+  if (/\s/.test(name)) {
+    throw new UsageError(
+      `--header got "${name}" as a header name; quote the whole argument, as --header 'Name: value'`
+    );
+  }
+  if (!value) {
+    throw new UsageError(`--header got an empty value for "${name}"`);
+  }
+  // Named rather than silently dropped. The transport sets these itself, and a
+  // workflow author who writes one should be told it will not be used rather
+  // than left to infer it from a report that looks normal.
+  if (TRANSPORT_OWNED_HEADERS.has(name)) {
+    throw new UsageError(`--header cannot set "${name}"; mcp-probe sets that header itself`);
+  }
+  return { name, value };
+}
+
+function addHeader(opts, header) {
+  if (opts.headers.some((h) => h.name === header.name)) {
+    throw new UsageError(`--header "${header.name}" was given more than once`);
+  }
+  opts.headers.push(header);
+}
 
 async function main() {
   let opts;
@@ -155,6 +254,7 @@ async function main() {
     command: opts.command,
     args: opts.args,
     url: opts.url,
+    headers: opts.headers,
     timeout: opts.timeout,
     call: opts.call,
   });

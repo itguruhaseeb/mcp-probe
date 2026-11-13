@@ -40,6 +40,23 @@ import { VERSION } from './version.js';
 // answer with either, so a client that asks for only one is not conformant.
 export const HTTP_ACCEPT = 'application/json, text/event-stream';
 
+// Headers this transport owns. A caller-supplied header of the same name loses,
+// because overriding one of these produces a broken request rather than an
+// authenticated one: a different accept makes a conformant server refuse, and a
+// hand-written session or protocol version contradicts what the server itself
+// issued. The CLI rejects these at parse time as well, so a workflow author is
+// told rather than silently ignored; this set is the backstop for any other
+// caller.
+export const TRANSPORT_OWNED_HEADERS = new Set([
+  'content-type',
+  'accept',
+  'mcp-session-id',
+  'mcp-protocol-version',
+]);
+
+// What a redacted credential reads as wherever a response body is quoted back.
+export const REDACTED = '[redacted]';
+
 // How much of an error response body is quoted back in a message. An HTML error
 // page from a proxy in front of the server is useful in the first line or two
 // and useless after that.
@@ -67,11 +84,30 @@ export class McpHttpClient {
    * @param {string} endpoint  the server's MCP endpoint, http or https
    * @param {object} opts
    * @param {number} opts.timeout  per-request timeout in ms
+   * @param {Array<{name: string, value: string}>} [opts.headers]
+   *   extra request headers, for a server that requires a credential. Names
+   *   are matched case-insensitively and a transport-owned name is dropped.
    */
-  constructor(endpoint, { timeout = DEFAULT_TIMEOUT_MS } = {}) {
+  constructor(endpoint, { timeout = DEFAULT_TIMEOUT_MS, headers = [] } = {}) {
     this.url = parseEndpoint(endpoint);
     this.timeout = timeout;
     this.transport = 'http';
+
+    // Caller headers, lowercased and with transport-owned names removed.
+    this._extraHeaders = {};
+    // The values of those headers, longest first, so that a credential which
+    // contains a shorter one is masked whole rather than in pieces. Never
+    // read for anything but redaction, never reported.
+    this._secrets = [];
+    for (const { name, value } of headers) {
+      const key = String(name).trim().toLowerCase();
+      if (!key || TRANSPORT_OWNED_HEADERS.has(key)) continue;
+      this._extraHeaders[key] = String(value);
+      if (String(value).length > 0) this._secrets.push(String(value));
+    }
+    this._secrets.sort((a, b) => b.length - a.length);
+    // Whether this run was given a credential to send, never which one.
+    this.authenticated = Object.keys(this._extraHeaders).length > 0;
 
     this._nextId = 1;
     this._closed = false;
@@ -99,11 +135,31 @@ export class McpHttpClient {
     return [...this._nonJsonFrames];
   }
 
+  /**
+   * Replace every supplied credential with a placeholder. Used on any text
+   * that came back from the server and is about to be quoted into a message or
+   * a report. A server that echoes the Authorization header into its error
+   * body must not get it reproduced in a file CI uploads.
+   */
+  redact(text) {
+    if (typeof text !== 'string' || this._secrets.length === 0) return text;
+    let out = text;
+    for (const secret of this._secrets) {
+      out = out.split(secret).join(REDACTED);
+    }
+    return out;
+  }
+
   _headers(extra = {}) {
     const headers = {
+      'user-agent': `mcp-probe/${VERSION}`,
+      // Caller headers sit after user-agent, so a caller may still name itself,
+      // and before the transport-owned ones, so those win. That ordering is a
+      // backstop rather than the enforcement: the constructor has already
+      // dropped every transport-owned name, which is what the test pins.
+      ...this._extraHeaders,
       'content-type': 'application/json',
       accept: HTTP_ACCEPT,
-      'user-agent': `mcp-probe/${VERSION}`,
       ...extra,
     };
     if (this.sessionId) headers['mcp-session-id'] = this.sessionId;
@@ -170,7 +226,11 @@ export class McpHttpClient {
           if (issued && !this.sessionId) this.sessionId = String(issued);
 
           if (status >= 400) {
-            readBounded(res, ERROR_BODY_LIMIT).then((text) => {
+            readBounded(res, ERROR_BODY_LIMIT).then((raw) => {
+              // Redacted before it is read by anything else. A 401 body is the
+              // single most likely place for a server to hand the credential
+              // straight back, which is exactly the path this branch is.
+              const text = this.redact(raw);
               finish(
                 reject,
                 new McpError(httpErrorMessage(status, res.statusMessage, text, this.sessionId), {
@@ -242,7 +302,8 @@ export class McpHttpClient {
             return;
           }
 
-          readBounded(res, ERROR_BODY_LIMIT).then((text) => {
+          readBounded(res, ERROR_BODY_LIMIT).then((raw) => {
+            const text = this.redact(raw);
             finish(
               reject,
               new McpError(
@@ -287,7 +348,7 @@ export class McpHttpClient {
       try {
         msg = JSON.parse(raw);
       } catch {
-        this._nonJsonFrames.push(raw);
+        this._nonJsonFrames.push(this.redact(raw));
         return false;
       }
       const messages = Array.isArray(msg) ? msg : [msg];
@@ -396,7 +457,13 @@ export class McpHttpClient {
     await new Promise((resolve) => {
       const req = agentModule.request(
         this.url,
-        { method: 'DELETE', headers: { 'mcp-session-id': this.sessionId } },
+        {
+          method: 'DELETE',
+          // The credential goes on this request too. A server that requires
+          // auth requires it here as well, and a DELETE that 401s leaves the
+          // session open on the server after the probe has gone.
+          headers: { ...this._extraHeaders, 'mcp-session-id': this.sessionId },
+        },
         (res) => {
           res.resume();
           res.on('end', resolve);
