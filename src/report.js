@@ -37,6 +37,9 @@ async function timed(fn) {
  * @param {string} [opts.command]  executable to launch, for the stdio transport
  * @param {string[]} [opts.args]   arguments for that executable
  * @param {string} [opts.url]      endpoint, for the streamable HTTP transport
+ * @param {Array<{name: string, value: string}>} [opts.headers]
+ *   extra request headers for an HTTP target, usually a credential. Values
+ *   never reach the result; only whether any were supplied does.
  * @param {number} opts.timeout
  * @param {boolean} opts.call   attempt safe round-trips
  */
@@ -44,6 +47,7 @@ export async function runDiagnostics({
   command,
   args = [],
   url = null,
+  headers = [],
   timeout = DEFAULT_TIMEOUT_MS,
   call,
 }) {
@@ -79,7 +83,7 @@ export async function runDiagnostics({
   };
 
   const client = url
-    ? new McpHttpClient(url, { timeout })
+    ? new McpHttpClient(url, { timeout, headers })
     : new McpClient(command, args, { timeout });
   client.start();
 
@@ -229,6 +233,10 @@ export async function runDiagnostics({
         // is written to a file and uploaded to CI, and a session handle does
         // not belong in one. "none" is legal: a stateless server issues none.
         session: client.sessionId ? 'issued' : 'none',
+        // Whether this run sent a credential, not what it was, for the same
+        // reason as the session above. A reader comparing two reports of the
+        // same endpoint needs to know which of them was authenticated.
+        auth: client.authenticated ? 'supplied' : 'none',
         // "json", "sse" and "accepted", in the order the server first used
         // them. A server may mix them across requests.
         responseModes: client.responseModes,
@@ -268,7 +276,8 @@ export function renderHuman(r, out = process.stdout) {
   }
   if (r.transport === 'http' && r.http) {
     const modes = r.http.responseModes.length ? r.http.responseModes.join(', ') : 'none';
-    p(`  ${glyph.info()} transport: http (${modes}, session ${r.http.session})`);
+    const auth = r.http.auth === 'supplied' ? ', auth supplied' : '';
+    p(`  ${glyph.info()} transport: http (${modes}, session ${r.http.session}${auth})`);
   }
   const capNames = Object.keys(r.capabilities || {});
   p(`  ${glyph.info()} capabilities: ${capNames.length ? capNames.join(', ') : color.dim('none declared')}`);
