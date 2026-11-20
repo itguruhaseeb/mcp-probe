@@ -26,6 +26,30 @@ inputs:
       so the alerts would otherwise anchor to nothing.
     required: false
     default: ''
+  token-env:
+    description: >-
+      Name of an environment variable holding a bearer token, passed through as
+      "--bearer-env". Set the variable itself in the step's "env:" block from a
+      secret. This is the input to reach a guarded endpoint with: a variable
+      name is not the credential, whereas an input value is rendered into the
+      workflow file and into this step's own inputs. Applies to "url"; with
+      "server" it is a configuration error rather than a silently dropped
+      credential. An unset or empty variable is an error too, since the
+      alternative is sending an empty token and reading the 401 as a rejection.
+    required: false
+    default: ''
+  headers:
+    description: >-
+      Extra request headers for a "url" target, one "Name: value" per line,
+      each passed through as one "--header". For a bearer token prefer
+      "token-env"; a value written here comes from the workflow file itself.
+      A duplicate name, a header the transport owns ("content-type", "accept",
+      "mcp-session-id", "mcp-protocol-version"), and an "Authorization" line
+      alongside "token-env" are each a configuration error rather than a
+      silent loss. No header value is printed by the step or written to the
+      report.
+    required: false
+    default: ''
   sarif:
     description: >-
       Emit SARIF 2.1.0. When false the probe emits JSON instead and nothing is
@@ -103,6 +127,8 @@ runs:
       env:
         MCP_PROBE_SERVER: ${{ inputs.server }}
         MCP_PROBE_URL: ${{ inputs.url }}
+        MCP_PROBE_TOKEN_ENV: ${{ inputs.token-env }}
+        MCP_PROBE_HEADERS: ${{ inputs.headers }}
         MCP_PROBE_SARIF: ${{ inputs.sarif }}
         MCP_PROBE_ARTIFACT: ${{ inputs.artifact }}
         MCP_PROBE_TIMEOUT: ${{ inputs.timeout }}

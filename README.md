@@ -286,6 +286,8 @@ with the same tools as the stdio example:
 node examples/http-echo-server.js --port 3000          # event-stream replies
 node examples/http-echo-server.js --mode json          # single JSON replies
 node examples/http-echo-server.js --stateless          # issue no session id
+node examples/http-echo-server.js --require-header 'Authorization: Bearer t'
+                                                       # HTTP 401 without it
 node bin/mcp-probe.js --url http://127.0.0.1:3000/mcp
 ```
 
@@ -450,10 +452,54 @@ anchors to the synthetic `mcp-probe://<endpoint>` URI and lands on no line of
 code. The file that declares the endpoint is usually the right answer, and the
 step prints a notice when it is left unset.
 
+Most deployed servers want a credential. Give `token-env` the NAME of an
+environment variable, and set that variable from a secret:
+
+```yaml
+- uses: itguruhaseeb/mcp-probe@master
+  with:
+    url: https://staging.example.com/mcp
+    token-env: MCP_TOKEN
+    artifact: mcp.json
+  env:
+    MCP_TOKEN: ${{ secrets.MCP_TOKEN }}
+```
+
+There is deliberately no `token` input. An input value is rendered into the
+workflow file and into the step's own inputs, while a variable name is not the
+credential. For anything that is not a bearer token, `headers` takes one
+`Name: value` per line and passes each through as one `--header`:
+
+```yaml
+- uses: itguruhaseeb/mcp-probe@master
+  with:
+    url: https://staging.example.com/mcp
+    headers: |
+      X-Api-Key: ${{ secrets.MCP_API_KEY }}
+      X-Tenant: acme
+    artifact: mcp.json
+```
+
+No header value is printed by the step or written to the report. The CLI keeps
+values out of the report, the SARIF and its own stderr, and the step masks them
+in the `running: mcp-probe ...` line it echoes, which is the one surface the CLI
+does not control. The step summary says `credential: supplied` or
+`credential: none`, never which one.
+
+A variable named by `token-env` that is unset or empty is a configuration error
+(exit `2`), not a probe that goes ahead unauthenticated: sending an empty token
+would come back as an `HTTP 401` indistinguishable from a rejected one. A
+server that refuses the probe for real is different, and stays an unhealthy
+server (exit `1`) with the `HTTP 401` in the uploaded log, because that is a
+conformance verdict rather than a broken workflow. Credentials apply to `url`;
+with `server` they are a usage error rather than a silently dropped credential.
+
 | Input | Default | What it does |
 | --- | --- | --- |
 | `server` | one of | the command that launches the server, passed after `--` |
 | `url` | one of | endpoint of a running server, passed as `--url`, instead of `server` |
+| `token-env` | none | name of a variable holding a bearer token, as `--bearer-env` |
+| `headers` | none | extra request headers, one `Name: value` per line, each as `--header` |
 | `sarif` | `true` | emit SARIF; `false` emits JSON instead |
 | `upload-sarif` | `true` | upload to code scanning, needs `security-events: write` |
 | `artifact` | none | file the findings are attributed to, as `--sarif-artifact` |
@@ -493,9 +539,11 @@ the bundled example servers on Node 18, 20 and 22 in ordinary CI, covering the
 healthy path, a hung server, JSON mode, a missing target, both targets at once,
 a bad flag value, a nested output path, a command that does not exist, and the
 `url` path against `examples/http-echo-server.js` including an unreachable
-endpoint and both artifact outcomes. Shell living inside a YAML string is
-otherwise tested only when somebody pushes a workflow and watches it, which is
-how action bugs reach users.
+endpoint, both artifact outcomes, and the credential paths against a guarded
+instance of that server, where the assertion is both that the probe gets in and
+that the token is in nothing the step wrote. Shell living inside a YAML string
+is otherwise tested only when somebody pushes a workflow and watches it, which
+is how action bugs reach users.
 
 ## Roadmap
 

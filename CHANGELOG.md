@@ -7,6 +7,28 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Added
+- The GitHub Action takes `token-env` and `headers`, so the `url` input reaches
+  a server that requires a credential rather than only an open one.
+  `token-env` is the name of an environment variable holding a bearer token,
+  passed through as `--bearer-env`; `headers` is one `Name: value` per line,
+  each passed through as one `--header`. There is deliberately no `token`
+  input: an input value is rendered into the workflow file and into the step's
+  own inputs, while a variable name is not the credential. No header value is
+  printed by the step or written to the report. The CLI already keeps values
+  out of the report, the SARIF and its own stderr, which left the step one
+  surface of its own, the `running: mcp-probe ...` line it echoes into the job
+  log, and that line is now printed from a masked copy of the arguments. The
+  step summary says `credential: supplied` or `credential: none`, never which
+  one. A variable named by `token-env` that is unset or empty is a
+  configuration error, not a probe that goes ahead unauthenticated, because an
+  empty token comes back as an `HTTP 401` indistinguishable from a rejected
+  one; a server that genuinely refuses the probe stays an unhealthy server with
+  the `HTTP 401` in the uploaded log, since that is a conformance verdict
+  rather than a broken workflow. Closes #29.
+- `examples/http-echo-server.js --require-header 'Name: value'`, repeatable,
+  answers with `HTTP 401` until every named header matches. The authenticated
+  paths are reproducible by hand with it, and `test/action.test.js` drives the
+  Action's credential inputs against it on Node 18, 20 and 22.
 - `--header 'Name: value'`, `--bearer <token>` and `--bearer-env <VAR>`
   authenticate a `--url` run, so a hosted server that requires a credential can
   be probed at all. `--header` is repeatable. `--bearer-env` reads the token

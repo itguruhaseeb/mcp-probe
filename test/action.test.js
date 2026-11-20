@@ -54,6 +54,11 @@ function runStep(inputs = {}) {
       MCP_PROBE_TIMEOUT: inputs.timeout ?? '10000',
       MCP_PROBE_CALL: inputs.call ?? 'false',
       MCP_PROBE_OUTPUT: inputs.outputFile ?? '',
+      MCP_PROBE_TOKEN_ENV: inputs.tokenEnv ?? '',
+      MCP_PROBE_HEADERS: inputs.headers ?? '',
+      // Whatever the caller's workflow would have put in the step's env block,
+      // which on the token-env path is where the token itself lives.
+      ...(inputs.env ?? {}),
     },
   });
 
@@ -313,6 +318,170 @@ test('a url target in JSON mode reports through the same outputs', { skip }, asy
   } finally {
     example.close();
   }
+});
+
+// ---------------------------------------------------------------------------
+// Credentials: token-env and headers, so the url input reaches a guarded server
+//
+// Half of these are about the credential arriving and half about it not coming
+// back out. The step adds one leak surface the CLI does not control, the
+// "running: mcp-probe ..." line it echoes into the job log, so that line is
+// asserted on directly rather than inferred from the report being clean.
+// ---------------------------------------------------------------------------
+
+const TOKEN = 'sk-action-abcdef0123456789';
+
+/** Everything the step wrote that a person or another job could read. */
+function everythingWritten(r) {
+  const report = join(r.dir, r.outputs['report-file'] || 'mcp-probe.sarif');
+  const body = existsSync(report) ? readFileSync(report, 'utf8') : '';
+  return [r.stdout, r.stderr, r.summary, body, JSON.stringify(r.outputs)].join('\n');
+}
+
+test('token-env gets the step through a server that requires a bearer token', { skip }, async () => {
+  const example = await startHttpExample(['--require-header', `Authorization: Bearer ${TOKEN}`]);
+  try {
+    const r = runStep({
+      url: example.url,
+      tokenEnv: 'MCP_TOKEN',
+      artifact: 'mcp.json',
+      env: { MCP_TOKEN: TOKEN },
+    });
+
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.equal(r.outputs['exit-code'], '0');
+    assert.equal(r.outputs.healthy, 'true');
+
+    const log = JSON.parse(readFileSync(join(r.dir, 'mcp-probe.sarif'), 'utf8'));
+    assert.equal(log.runs[0].invocations[0].executionSuccessful, true);
+
+    // The reason the feature exists: this run is only healthy because the
+    // credential arrived. Nothing it wrote may carry it.
+    assert.doesNotMatch(everythingWritten(r), new RegExp(TOKEN));
+    assert.match(r.summary, /credential: supplied/);
+    // The variable NAME is printed, and should be: an unset one is the most
+    // likely failure on this path.
+    assert.match(r.stdout, /--bearer-env MCP_TOKEN/);
+  } finally {
+    example.close();
+  }
+});
+
+test('the same guarded server without the credential is unhealthy, not a bad input', { skip }, async () => {
+  // A 401 is the server refusing this probe, which is a real conformance
+  // verdict and belongs in the uploaded log. Reporting it as a configuration
+  // error would hide it from code scanning entirely.
+  const example = await startHttpExample(['--require-header', `Authorization: Bearer ${TOKEN}`]);
+  try {
+    const r = runStep({ url: example.url, artifact: 'mcp.json' });
+
+    assert.equal(r.status, 0, 'the step itself must not fail on a refused probe');
+    assert.equal(r.outputs['exit-code'], '1');
+    assert.equal(r.outputs.healthy, 'false');
+    assert.match(r.summary, /credential: none/);
+
+    const log = JSON.parse(readFileSync(join(r.dir, 'mcp-probe.sarif'), 'utf8'));
+    assert.match(
+      log.runs[0].invocations[0].toolExecutionNotifications.map((n) => n.message.text).join('\n'),
+      /HTTP 401/,
+    );
+  } finally {
+    example.close();
+  }
+});
+
+test('token-env naming a variable that is not set is a configuration error', { skip }, async () => {
+  // The workflow said to authenticate and the secret did not arrive, which is
+  // a broken workflow. Probing on anyway would report a 401 as an unhealthy
+  // server and send the author looking at the wrong thing.
+  const example = await startHttpExample(['--require-header', `Authorization: Bearer ${TOKEN}`]);
+  try {
+    const r = runStep({ url: example.url, tokenEnv: 'MCP_TOKEN_NOT_SET', artifact: 'mcp.json' });
+
+    assert.equal(r.status, 2);
+    assert.match(r.stdout + r.stderr, /invoked incorrectly/);
+    assert.match(r.stderr, /MCP_TOKEN_NOT_SET.*empty or not set/);
+    assert.doesNotMatch(r.stdout + r.stderr, /problem with the runner/);
+    assert.equal(r.outputs.healthy, undefined);
+  } finally {
+    example.close();
+  }
+});
+
+test('headers accepts more than one line and each one reaches the server', { skip }, async () => {
+  const example = await startHttpExample([
+    '--require-header',
+    'X-Api-Key: key-one',
+    '--require-header',
+    'X-Tenant: acme',
+  ]);
+  try {
+    // Written the way a multi-line YAML string arrives, trailing newline and
+    // a blank line included.
+    const r = runStep({
+      url: example.url,
+      headers: 'X-Api-Key: key-one\nX-Tenant: acme\n\n',
+      artifact: 'mcp.json',
+    });
+
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.equal(r.outputs.healthy, 'true', 'both required headers should have arrived');
+    assert.match(r.summary, /credential: supplied/);
+  } finally {
+    example.close();
+  }
+});
+
+test('a header value is masked in the line the step echoes', { skip }, async () => {
+  // The headers path is the one that carries a literal value, so it is the one
+  // where the echoed command line could print a token into the job log.
+  const example = await startHttpExample(['--require-header', `X-Api-Key: ${TOKEN}`]);
+  try {
+    const r = runStep({ url: example.url, headers: `X-Api-Key: ${TOKEN}`, artifact: 'mcp.json' });
+
+    assert.equal(r.outputs.healthy, 'true', r.stdout + r.stderr);
+    assert.match(r.stdout, /running: mcp-probe/);
+    assert.match(r.stdout, /X-Api-Key: \[redacted\]/);
+    assert.doesNotMatch(everythingWritten(r), new RegExp(TOKEN));
+  } finally {
+    example.close();
+  }
+});
+
+test('token-env and an Authorization header together is a configuration error', { skip }, async () => {
+  const example = await startHttpExample(['--require-header', `Authorization: Bearer ${TOKEN}`]);
+  try {
+    const r = runStep({
+      url: example.url,
+      tokenEnv: 'MCP_TOKEN',
+      headers: 'Authorization: Bearer other',
+      artifact: 'mcp.json',
+      env: { MCP_TOKEN: TOKEN },
+    });
+
+    assert.equal(r.status, 2);
+    assert.match(r.stdout + r.stderr, /invoked incorrectly/);
+    assert.match(r.stderr, /authorization/i, 'the error should name the colliding header');
+    assert.equal(r.outputs.healthy, undefined);
+  } finally {
+    example.close();
+  }
+});
+
+test('a credential with a server target is a usage error, not a dropped credential', { skip }, () => {
+  // Over stdio there is nothing to authenticate to. Discarding the credential
+  // quietly is how a run ends up looking like the server never needed one.
+  const r = runStep({
+    server: `node ${echoServer}`,
+    tokenEnv: 'MCP_TOKEN',
+    env: { MCP_TOKEN: TOKEN },
+  });
+
+  assert.equal(r.status, 2);
+  assert.match(r.stdout + r.stderr, /invoked incorrectly/);
+  assert.match(r.stderr, /apply to --url/);
+  assert.equal(r.outputs.healthy, undefined);
+  assert.doesNotMatch(everythingWritten(r), new RegExp(TOKEN));
 });
 
 test('the action manifest runs the same script this suite tested', { skip }, () => {
