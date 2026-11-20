@@ -8,6 +8,15 @@
 //   node examples/http-echo-server.js --port 0         # any free port
 //   node examples/http-echo-server.js --mode json      # single JSON replies
 //   node examples/http-echo-server.js --stateless      # issue no session id
+//   node examples/http-echo-server.js --require-header 'Authorization: Bearer t'
+//                                                      # answer only with that
+//                                                      # header, else HTTP 401
+//
+// --require-header is repeatable, and every one of them must match before the
+// server answers anything. It is here so the authenticated paths are
+// reproducible by hand and testable in CI: a probe without the credential gets
+// the same HTTP 401 a real hosted server gives. The value is compared exactly,
+// and the name is matched case-insensitively, as HTTP requires.
 //
 // It prints one line on stdout once it is listening:
 //
@@ -54,7 +63,7 @@ const TOOLS = [
 ];
 
 function parseArgs(argv) {
-  const opts = { port: 3000, mode: 'sse', stateless: false };
+  const opts = { port: 3000, mode: 'sse', stateless: false, requireHeaders: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--port') {
@@ -69,6 +78,15 @@ function parseArgs(argv) {
       }
     } else if (a === '--stateless') {
       opts.stateless = true;
+    } else if (a === '--require-header') {
+      const val = argv[++i];
+      if (!val) fail("--require-header expects 'Name: value'");
+      const colon = val.indexOf(':');
+      if (colon <= 0) fail(`--require-header expects 'Name: value', got "${val}"`);
+      opts.requireHeaders.push({
+        name: val.slice(0, colon).trim().toLowerCase(),
+        value: val.slice(colon + 1).trim(),
+      });
     } else {
       fail(`unknown option "${a}"`);
     }
@@ -146,6 +164,23 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   if (url.pathname !== PATH) {
     sendJson(res, 404, { error: `no MCP endpoint at ${url.pathname}, try ${PATH}` });
+    return;
+  }
+
+  // Every required header is checked before anything else on the endpoint, on
+  // every method including DELETE. A real guarded server rejects the session
+  // release too, so a client that drops the credential there leaves the
+  // session open, and this example is the place that stays caught.
+  //
+  // The body never quotes the credential it was given. The point of this
+  // server is to model the reject, not to tempt a report into reproducing a
+  // token; the in-process server in test/auth.test.js covers the reflecting
+  // case, where the redaction itself is what is under test.
+  const missing = opts.requireHeaders.find((h) => req.headers[h.name] !== h.value);
+  if (missing) {
+    req.resume();
+    res.writeHead(401, { 'content-type': 'text/plain' });
+    res.end(`unauthorized: the ${missing.name} header is missing or not accepted\n`);
     return;
   }
 
