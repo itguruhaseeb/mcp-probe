@@ -19,12 +19,21 @@
 #   MCP_PROBE_TIMEOUT   per-request timeout in ms
 #   MCP_PROBE_CALL      "true" to attempt safe round-trips
 #   MCP_PROBE_OUTPUT    optional, where to write the report
+#   MCP_PROBE_TOKEN_ENV optional, the NAME of a variable holding a bearer
+#                       token, for a remote target. Never the token.
+#   MCP_PROBE_HEADERS   optional, one "Name: value" per line, for a remote
+#                       target. Each line becomes one --header.
 #   MCP_PROBE_BIN       the CLI to run, defaults to the one beside this script
 #
 # Writes exit-code, healthy and report-file to $GITHUB_OUTPUT, and a short
 # report to $GITHUB_STEP_SUMMARY. Exits 2 when the configuration is wrong,
 # and 0 otherwise, including when the server is unhealthy: the caller decides
 # what to do about an unhealthy server, after the SARIF has been uploaded.
+#
+# A credential must not reach the job log. The CLI keeps header values out of
+# the report, the SARIF and its own stderr, which leaves this script one
+# surface of its own: the "running: mcp-probe ..." line below. It is printed
+# from a masked copy of the arguments, never from the arguments themselves.
 
 set -uo pipefail
 
@@ -35,6 +44,8 @@ set -uo pipefail
 : "${MCP_PROBE_TIMEOUT:=10000}"
 : "${MCP_PROBE_CALL:=false}"
 : "${MCP_PROBE_OUTPUT:=}"
+: "${MCP_PROBE_TOKEN_ENV:=}"
+: "${MCP_PROBE_HEADERS:=}"
 : "${GITHUB_OUTPUT:=/dev/null}"
 : "${GITHUB_STEP_SUMMARY:=/dev/null}"
 
@@ -85,6 +96,55 @@ else
   fi
 fi
 
+# Everything assembled above is safe to print. From here on, flags carries the
+# real arguments and shown carries a copy with every header VALUE masked, so
+# the echoed command line cannot be the thing that leaks a token.
+shown=("${flags[@]}")
+
+# One --header per non-blank line. Blank lines are skipped because a multi-line
+# YAML string normally ends with one, and a trailing carriage return is dropped
+# because a workflow edited on Windows carries it into the value, where the CLI
+# would otherwise reject the header or send the CR to the server.
+#
+# Nothing here validates a line. The CLI already rejects a missing colon, an
+# empty name or value, a duplicate name, a transport-owned name, and an
+# Authorization line that collides with a bearer flag, and it does it in one
+# place for every caller. A second copy of those rules in shell would be a
+# second copy to drift.
+credential=none
+if [ -n "${MCP_PROBE_HEADERS//[$' \t\r\n']/}" ]; then
+  while IFS= read -r line; do
+    line="${line%$'\r'}"
+    if [ -z "${line//[$' \t']/}" ]; then
+      continue
+    fi
+    flags+=(--header "$line")
+    name="${line%%:*}"
+    if [ "$name" = "$line" ]; then
+      # No colon at all, so there is no value to hide and the CLI is about to
+      # reject it. Shown as given, so the error and this line agree.
+      shown+=(--header "$line")
+    else
+      shown+=(--header "$name: [redacted]")
+    fi
+    credential=supplied
+  done <<< "$MCP_PROBE_HEADERS"
+fi
+
+token_env="${MCP_PROBE_TOKEN_ENV// /}"
+if [ -n "$token_env" ]; then
+  # The variable NAME is passed through, never its contents: the CLI reads the
+  # environment itself. A name is not a secret, and printing it is worth more
+  # than hiding it, since an unset or misspelled variable is the likeliest
+  # thing to go wrong on this path and the CLI names it in the error too.
+  flags+=(--bearer-env "$token_env")
+  shown+=(--bearer-env "$token_env")
+  credential=supplied
+fi
+
+# Credentials with a local command are a usage error, and the CLI says so in
+# the one message that explains why. Not re-checked here on purpose.
+
 out="${MCP_PROBE_OUTPUT:-$default_out}"
 
 # Without this, an output path in a directory that does not exist yet makes
@@ -112,7 +172,7 @@ else
   target_label="${server_argv[*]}"
 fi
 
-echo "running: mcp-probe ${flags[*]} ${target_argv[*]}"
+echo "running: mcp-probe ${shown[*]} ${target_argv[*]}"
 
 set +e
 node "$MCP_PROBE_BIN" "${flags[@]}" "${target_argv[@]}" > "$out"
@@ -153,6 +213,10 @@ fi
   echo "### mcp-probe"
   echo
   echo "- target: \`$target_label\`"
+  # Whether a credential was sent, never which one. Same reasoning as the
+  # report's own http.auth field: two runs of one endpoint have to be tellable
+  # apart, and a 401 with "credential: none" explains itself.
+  echo "- credential: $credential"
   echo "- result: $([ "$code" -eq 0 ] && echo 'healthy' || echo 'unhealthy')"
   echo "- exit code: \`$code\`"
   echo "- report: \`$out\`"
